@@ -4,12 +4,13 @@
 import json
 from io import StringIO
 from typing import Callable
+
 import pandas as pd
 from flask import Response, request
 
 from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
-from cadenzaanalytics.data.extension_type import ExtensionType
 from cadenzaanalytics.data.attribute_group import AttributeGroup
+from cadenzaanalytics.data.extension_type import ExtensionType
 from cadenzaanalytics.data.parameter import Parameter
 from cadenzaanalytics.request.analytics_request import AnalyticsRequest
 from cadenzaanalytics.request.request_metadata import RequestMetadata
@@ -49,7 +50,7 @@ class CadenzaAnalyticsExtension:
         return analytics_response.get_response()
 
     def get_capabilities(self) -> Response:
-        return Response(response=self._analytics_extension.to_json(), status=200,  mimetype="application/json")
+        return Response(response=self._analytics_extension.to_json(), status=200, mimetype="application/json")
 
     def _get_request_data(self, multipart_request) -> AnalyticsRequest:
         metadata_dict = json.loads(multipart_request.form['metadata'])

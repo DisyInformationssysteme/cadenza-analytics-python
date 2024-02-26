@@ -1,5 +1,6 @@
-from flask import Response
 import json
+
+from flask import Response
 
 from cadenzaanalytics.response.extension_response import ExtensionResponse
 
@@ -20,4 +21,4 @@ class ErrorResponse(ExtensionResponse):
         return json.dumps(error_message)
 
     def _create_response(self, message: str):
-        return Response(response=self._get_response_json(message), status=self._status,  mimetype="application/json")
+        return Response(response=self._get_response_json(message), status=self._status, mimetype="application/json")

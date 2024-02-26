@@ -1,4 +1,7 @@
-class MeasureAggregation:
+from enum import Enum
+
+
+class MeasureAggregation(Enum):
     COUNT = "count"
     COUNT_DISTINCT = "countDistinct"
     SUM = "sum"

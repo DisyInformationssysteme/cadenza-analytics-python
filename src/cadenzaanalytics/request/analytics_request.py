@@ -9,7 +9,7 @@ class AnalyticsRequest:
     @property
     def metadata(self) -> RequestMetadata:
         return self._metadata
-    
+
     @property
     def data(self):
         return self._data

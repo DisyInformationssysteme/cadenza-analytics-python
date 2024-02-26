@@ -1,4 +1,7 @@
-class GeometryType:
+from enum import Enum
+
+
+class GeometryType(Enum):
     POINT = "point"
     LINESTRING = "linestring"
     POLYGON = "polygon"

@@ -1,6 +1,7 @@
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 
 
+# pylint: disable=protected-access
 class RequestMetadata:
     def __init__(self, request_metadata: dict):
         self._request_metadata = request_metadata
@@ -12,7 +13,7 @@ class RequestMetadata:
                     return ColumnMetadata._from_dict(column)
 
         return None
-    
+
     def get_columns_by_attribute_group(self) -> dict[str, list[ColumnMetadata]] | None:
         if self.has_columns():
             grouped_columns = {}
@@ -33,12 +34,8 @@ class RequestMetadata:
     def get_parameter(self, name: str) -> str:
         if name in self._request_metadata['parameters']:
             return self._request_metadata['parameters'][name]
-        else:
-            return ""
+        return ""
 
     def has_columns(self) -> bool:
-        if (len(self._request_metadata['dataContainers']) > 0
-                and "columns" in self._request_metadata['dataContainers'][0]):
-            return True
-        else:
-            return False
+        return (len(self._request_metadata['dataContainers']) > 0
+                and "columns" in self._request_metadata['dataContainers'][0])

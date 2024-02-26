@@ -1,4 +1,8 @@
-class DataType:
+from enum import Enum
+
+
+# pylint: disable=duplicate-code
+class DataType(Enum):
     STRING = "string"
     INT64 = "int64"
     FLOAT64 = "float64"

@@ -1,17 +1,17 @@
+from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.extension_type import ExtensionType
-from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.data.parameter import Parameter
 
 
 class AnalyticsExtension(DataObject):
     _attribute_mapping = {
-            "printName": "_print_name",
-            "extensionType": "_extension_type",
-            "attributeGroups": "_attribute_groups",
-            "parameters": "_parameters"
+        "printName": "_print_name",
+        "extensionType": "_extension_type",
+        "attributeGroups": "_attribute_groups",
+        "parameters": "_parameters"
     }
-    
+
     def __init__(self,
                  print_name: str,
                  extension_type: ExtensionType,

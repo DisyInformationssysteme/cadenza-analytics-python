@@ -1,11 +1,13 @@
-from flask import Response
-from requests_toolbelt import MultipartEncoder
 import json
 
-from cadenzaanalytics.response.extension_response import ExtensionResponse
+from flask import Response
+from requests_toolbelt import MultipartEncoder
+
 from cadenzaanalytics.data.data_container_metadata import DataContainerMetadata
+from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
+# pylint: disable=protected-access
 class ExtensionDataResponse(ExtensionResponse):
     def __init__(self, content_type, data_container_name='response-data'):
         self._content_type = content_type

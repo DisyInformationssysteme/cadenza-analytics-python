@@ -1,6 +1,7 @@
 import json
 
 
+# pylint: disable=protected-access
 class DataObject:
     _attribute_mapping = {}
 
@@ -23,9 +24,9 @@ class DataObject:
                     result[key] = result_list
                 else:
                     result[key] = value
-            
+
         return result
-    
+
     def to_json(self, indent=None) -> str:
         return json.dumps(self._to_dict(), indent=indent)
 
