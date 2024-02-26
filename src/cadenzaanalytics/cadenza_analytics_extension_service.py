@@ -1,6 +1,8 @@
+"""Configures and starts the service that runs a http server to allow disy Cadenza to detect individual extensions
+and execute their analytics function."""
+import json
 from flask import Flask, Response
 from flask_cors import CORS
-import json
 
 from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtension
 
