@@ -4,7 +4,8 @@
 Currently, this package is in **beta status**: it can be used for testing, but there
 may be breaking changes before a full release.
 
-
+[![CI](https://github.com/DisyInformationssysteme/cadenza-analytics-python/actions/workflows/ci.yml/badge.svg)](https://github.com/DisyInformationssysteme/cadenza-analytics-python/actions/workflows/ci.yml)
+[![Pylint](https://github.com/DisyInformationssysteme/cadenza-analytics-python/actions/workflows/pylint.yml/badge.svg)](https://github.com/DisyInformationssysteme/cadenza-analytics-python/actions/workflows/pylint.yml)
 ## Development of Cadenza Analytics Python
 
 ### Development Environment
