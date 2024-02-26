@@ -1,7 +1,10 @@
+"""Example module for running a disy Cadenza analytics extension that
+ will show a (static) image in disy Cadenza"""
 import cadenzaanalytics as ca
 
 
 def specific_analytics_function(metadata: ca.RequestMetadata, data):
+    # pylint: disable=unused-argument
     with open("example_image.png", "rb") as image_file:
         image = image_file.read()
 

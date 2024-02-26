@@ -1,0 +1,7 @@
+[MASTER]
+disable=
+    C0115, # missing-class-docstring
+    CO116, # missing-function-docstring
+
+[FORMAT]
+max-line-length=120
