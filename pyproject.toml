@@ -24,7 +24,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-Flask = "^2.2.2"
+Flask = "^2.2.5"
 Flask-Cors = "^3.0.10"
 requests-toolbelt = " ^1.0.0"
 pandas = " ^2.0.2"
