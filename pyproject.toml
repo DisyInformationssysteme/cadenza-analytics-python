@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cadenzaanalytics"
+authors = [
+    {name = "Julian Janßen", email = "julian.janssen@disy.net"}
+]
+dynamic = ["version"]
+description = "Official Python Package for creation of disy Cadenza analytics extensions"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Natural Language :: English",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python"
+]
+dependencies = [
+    "Flask>=2.2.2",
+    "Flask-Cors>=3.0.10",
+    "requests-toolbelt>=1.0.0",
+    "pandas>=2.0.2"
+]
+
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
+
+[project.urls]
+Repository = "https://github.com/DisyInformationssysteme/cadenza-analytics-python"
