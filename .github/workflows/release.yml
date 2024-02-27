@@ -69,7 +69,7 @@ jobs:
 
     - name: Bump package version
       run: |
-        echo "NEW_VERSION=$(poetry version ${{ github.event.inputs.release-type }})" >> $GITHUB_ENV
+        echo "NEW_VERSION=$(poetry version ${{ github.event.inputs.release-type }} -s | head -n 1)" >> $GITHUB_ENV
         echo "RELEASE_TAG=latest" >> $GITHUB_ENV
 
     # Update changelog unreleased section with new version
