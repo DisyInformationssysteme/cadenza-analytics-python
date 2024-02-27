@@ -11,3 +11,10 @@ class DataType(Enum):
 
     def __str__(self):
         return self.value
+
+    def pandas_type(self):
+        if self.value == 'int64':
+            return "Int64"
+        if self.value == 'float64':
+            return "Float64"
+        return "string"
