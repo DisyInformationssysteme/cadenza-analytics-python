@@ -18,7 +18,7 @@ class ErrorResponse(ExtensionResponse):
             "message": message
         }
 
-        return json.dumps(error_message)
+        return json.dumps(error_message, default=str)
 
     def _create_response(self, message: str):
         return Response(response=self._get_response_json(message), status=self._status, mimetype="application/json")

@@ -8,3 +8,6 @@ class MeasureAggregation(Enum):
     AVERAGE = "average"
     MIN = "min"
     MAX = "max"
+
+    def __str__(self):
+        return self.value

@@ -8,3 +8,6 @@ class GeometryType(Enum):
     MULTIPOINT = "multipoint"
     MULTILINESTRING = "multilinestring"
     MULTIPOLYGON = "multipolygon"
+
+    def __str__(self):
+        return self.value

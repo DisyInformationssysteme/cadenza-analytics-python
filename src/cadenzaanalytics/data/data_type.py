@@ -8,3 +8,6 @@ class DataType(Enum):
     FLOAT64 = "float64"
     ZONEDDATETIME = "zonedDateTime"
     GEOMETRY = "geometry"
+
+    def __str__(self):
+        return self.value

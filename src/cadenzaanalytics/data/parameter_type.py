@@ -9,3 +9,6 @@ class ParameterType(Enum):
     GEOMETRY = "geometry"
     SELECT = "select"
     BOOLEAN = "boolean"
+
+    def __str__(self):
+        return self.value

@@ -23,7 +23,7 @@ class ExtensionDataResponse(ExtensionResponse):
             ]
         }
 
-        return json.dumps(metadata)
+        return json.dumps(metadata, default=str)
 
     def _create_response(self, data, column_metadata=None):
         multipart_response = MultipartEncoder(

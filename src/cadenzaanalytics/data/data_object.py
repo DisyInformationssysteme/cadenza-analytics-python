@@ -28,7 +28,7 @@ class DataObject:
         return result
 
     def to_json(self, indent=None) -> str:
-        return json.dumps(self._to_dict(), indent=indent)
+        return json.dumps(self._to_dict(), indent=indent, default=str)
 
     @classmethod
     def _from_dict(cls, data: dict):

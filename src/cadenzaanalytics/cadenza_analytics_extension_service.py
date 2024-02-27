@@ -41,4 +41,4 @@ class CadenzaAnalyticsExtensionService:
                                               'extensionPrintName': extension.print_name,
                                               'extensionType': extension.extension_type})
 
-        return Response(response=json.dumps(result_dict), status=200, mimetype="application/json")
+        return Response(response=json.dumps(result_dict, default=str), status=200, mimetype="application/json")
