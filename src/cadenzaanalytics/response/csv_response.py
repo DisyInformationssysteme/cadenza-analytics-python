@@ -16,7 +16,7 @@ class CsvResponse(ExtensionDataResponse):
         self._column_meta_data = column_metadata
 
     def get_response(self):
-        python_3_12 = (3,12)
+        python_3_12 = (3, 12)
         if sys.version_info >= python_3_12:
             csv_data = self._data.to_csv(
                 sep=';',

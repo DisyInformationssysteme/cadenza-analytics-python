@@ -28,17 +28,11 @@ jobs:
 
     steps:
 
-    - name: FixupAppId
-      run: |
-        RETRIEVED_DISY_RELEASE_APP_SECRET="${{ secrets.DISY_RELEASE_APP_SECRET }}"
-        REPLACED_DISY_RELEASE_APP_SECRET=$(echo $RETRIEVED_DISY_RELEASE_APP_SECRET | sed 's/\\n/\n/g')
-        echo "FIXED_DISY_RELEASE_APP_SECRET=$REPLACED_DISY_RELEASE_APP_SECRET" >> $GITHUB_ENV
-
     - uses: actions/create-github-app-token@v1
       id: app-token
       with:
         app-id: ${{ vars.DISY_RELEASE_APP_ID }}
-        private-key: ${{ env.FIXED_DISY_RELEASE_APP_SECRET }}
+        private-key: ${{ secrets.DISY_RELEASE_APP_SECRET }}
 
     - name: Checkout
       uses: actions/checkout@v4
