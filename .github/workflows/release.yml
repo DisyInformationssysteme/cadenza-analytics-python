@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing to pypi.org and test.pypi.org
+      contents: write  # needed for the softprops/action-gh-release GitHub release step
 
     steps:
 
