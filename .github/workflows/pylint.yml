@@ -4,13 +4,13 @@ on:
   push:
     branches: [ "main" ]
     paths-ignore:
-      - '.github/workflows/ci.yml'
-      - '.github/workflows/release.yml'
+      - '/.github/workflows/ci.yml'
+      - '/.github/workflows/release.yml'
   pull_request:
     branches: [ "main" ]
     paths-ignore:
-      - '.github/workflows/ci.yml'
-      - '.github/workflows/release.yml'
+      - '/.github/workflows/ci.yml'
+      - '/.github/workflows/release.yml'
 
 jobs:
   build:
