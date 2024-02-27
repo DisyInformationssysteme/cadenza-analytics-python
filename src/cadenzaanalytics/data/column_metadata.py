@@ -14,6 +14,11 @@ class ColumnMetadata(DataObject):
         "measureAggregation": "_measure_aggregation",
         "format": "_format",
     }
+    _attribute_constructors = {
+        "dataType": DataType,
+        "role": AttributeRole,
+        "measureAggregation": MeasureAggregation
+    }
 
     # pylint: disable=redefined-builtin
     def __init__(self,

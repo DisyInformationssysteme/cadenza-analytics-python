@@ -4,6 +4,7 @@ import json
 # pylint: disable=protected-access
 class DataObject:
     _attribute_mapping = {}
+    _attribute_constructors = {}  # required for enums that are deserialized
 
     def _to_dict(self) -> dict:
         result = {}
@@ -41,6 +42,8 @@ class DataObject:
                 # get the constructor parameter key be removing underscore from attribute mapping
                 parameter_key = cls._attribute_mapping[key][1:]
 
+                if key in cls._attribute_constructors:
+                    value = cls._attribute_constructors[key](value)
                 constructor_parameters[parameter_key] = value
 
         return cls(**constructor_parameters)
