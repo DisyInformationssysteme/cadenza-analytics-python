@@ -31,7 +31,7 @@ jobs:
     - name: FixupAppId
       run: |
         RETRIEVED_DISY_RELEASE_APP_SECRET="${{ secrets.DISY_RELEASE_APP_SECRET }}"
-        REPLACED_DISY_RELEASE_APP_SECRET=$(echo "$RETRIEVED_DISY_RELEASE_APP_SECRET" | sed 's/\\\\n/\n/g')
+        REPLACED_DISY_RELEASE_APP_SECRET=$(echo $RETRIEVED_DISY_RELEASE_APP_SECRET | sed 's/\\\\n/\n/g')
         echo "FIXED_DISY_RELEASE_APP_SECRET=$REPLACED_DISY_RELEASE_APP_SECRET" >> $GITHUB_ENV
 
     - uses: actions/create-github-app-token@v1
