@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
 
       # ADJUST THIS: install all dependencies (including pdoc)
-      - run: pip install -e .
+      - run: pip install pdoc
       # build documentation into docs/.
       - run: pdoc -o docs/ --no-show-source src/cadenzaanalytics
 
