@@ -25,9 +25,9 @@ jobs:
 
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: |
-        python -m pip install --upgrade pip
-        pip install pdoc
-        pip install .
+          python -m pip install --upgrade pip
+          pip install pdoc
+          pip install .
       # build documentation into docs/.
       - run: pdoc -o docs/ --no-show-source src/cadenzaanalytics
 
