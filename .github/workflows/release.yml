@@ -109,6 +109,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    # necessary to avoid having the old /dist version as well, we only want to publish the bumped version
+    - name: Clean
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: git clean -fx
+
+    # Create a /dist for the bumped version
     - name: Build
       run: |
         poetry build
