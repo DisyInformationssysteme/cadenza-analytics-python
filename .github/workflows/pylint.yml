@@ -6,13 +6,13 @@ on:
     paths-ignore:
       - '/.github/workflows/ci.yml'
       - '/.github/workflows/release.yml'
-      - '/docs/**'
+      - 'docs/**'
   pull_request:
     branches: [ "main" ]
     paths-ignore:
       - '/.github/workflows/ci.yml'
       - '/.github/workflows/release.yml'
-      - '/docs/**'
+      - 'docs/**'
 
 jobs:
   build:
