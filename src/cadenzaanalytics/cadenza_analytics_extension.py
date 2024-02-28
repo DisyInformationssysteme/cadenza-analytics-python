@@ -58,9 +58,8 @@ class CadenzaAnalyticsExtension:
 
         if metadata.has_columns():
             type_mapping = {}
-            for columns in metadata.get_columns_by_attribute_group().values():
-                for column in columns:
-                    type_mapping[column.name] = column.data_type.pandas_type()
+            for column in metadata.get_all_columns():
+                type_mapping[column.name] = column.data_type.pandas_type()
             csv_data = StringIO(multipart_request.form['data'])
             df_data = pd.read_csv(csv_data, sep=";", dtype=type_mapping)
         else:
