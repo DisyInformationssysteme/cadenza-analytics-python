@@ -109,12 +109,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-tags: ${{ env.NEW_VERSION }}
-        token: ${{ steps.app-token.outputs.token }}
-
     - name: Build
       run: |
         poetry build
