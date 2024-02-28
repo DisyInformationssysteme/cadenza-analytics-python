@@ -6,18 +6,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 0.1.8 - 2024-02-28
-
-## 0.1.7 - 2024-02-28
-
-## 0.1.6 - 2024-02-28
-
-## 0.1.5 - 2024-02-28
-
-## 0.1.4 - 2024-02-27
-
-## 0.1.3 - 2024-02-27
-
-## 0.1.2 - 2024-02-27
 ### Added
-- First beta version of cadenzaanalytics python library
+- First beta version of cadenzaanalytics python library that is also available on PyPi
