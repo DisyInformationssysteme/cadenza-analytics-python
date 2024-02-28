@@ -14,7 +14,7 @@ def image_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
 
 
 def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    return ca.CsvResponse(data, metadata.get_columns_by_attribute_group()['any_data'])
+    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
 
 
 image_attribute_group = ca.AttributeGroup(
@@ -52,5 +52,5 @@ analytics_service = ca.CadenzaAnalyticsExtensionService()
 analytics_service.add_analytics_extension(image_extension)
 analytics_service.add_analytics_extension(echo_extension)
 
-# run development server, remove in production environment
-analytics_service.run(5005)
+if __name__ == '__main__':
+    analytics_service.run_development_server(5005)

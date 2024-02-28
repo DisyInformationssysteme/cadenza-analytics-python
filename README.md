@@ -51,6 +51,16 @@ Make sure to check the following
 - Do you want to make a test release to https://test.pypi.org? This is helpful to test `cadenzaanalytics` with existing extensions. To get the latest version immediately it might be good to disable caches, e.g. via `pip install --upgrade cadenzaanalytics --extra-index-url https://test.pypi.org/simple --no-cache-dir`. For a first installation in a new (virtual) environment, you can use `pip install cadenzaanalytics --extra-index-url https://test.pypi.org/simple` 
 - To make a non-test release, choose the pypi.org deployment environment in the release dialog.
 
+### Dockerized Example Extension
+To run the example (and your production application) in a docker container you will need to define the wsgi server that will run the flask app.  
+The provided Dockerfile in the examples uses gunicorn with some example options, for more details consult the [documentation](https://docs.gunicorn.org/en/latest/settings.html). Important is that gunicorn has access to a function creating or providing the flask app object, which for `cadenzanalytics` is the `CadenzaAnalyticsExtensionService`.
+The requirements file can use test releases when adding `--extra-index-url https://test.pypi.org/simple` in the first line. It can (re)define versions of its own or transient dependencies, but most importantly needs the `cadenzaanalytics` dependency.
+```commandline
+cd /examples
+docker build . -t cadenza-analytics-example
+docker image list
+docker run YOUR_CREATED_IMAGE_ID
+```
 ### Technical notes
 The release process uses PyPi's [trusted publishing](https://docs.pypi.org/trusted-publishers/), so is based on
 OIDC id token and uses no API token from PyPi. The relevant permission `id-token: write` must be given to the release-job.
