@@ -47,20 +47,17 @@ jobs:
       with:
         python-version: ${{ vars.PYTHON_VERSION }}
 
-    # version management
+    # poetry is needed for building and for poetry-bumpversion for version management
     - name: Install poetry
       run: |
         pipx install poetry
         poetry self add poetry-bumpversion
 
+    # install dependencies early in case there are problems, do not build yet, or we will have a dist with wrong version
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install .
-
-    - name: Build
-      run: |
-        poetry build
 
     # Needed for creating the tag
     - name: Configure Git
@@ -109,17 +106,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # necessary to avoid having the old /dist version as well, we only want to publish the bumped version
-    - name: Clean
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: git clean -fx
 
-    # Create a /dist for the bumped version
+    # Create a dist/wheel for the bumped version now after "poetry version" has run
     - name: Build
       run: |
         poetry build
 
+    # either push to test.pypi.org or pypi.org depending on user input
     - name: Publish package distributions to Test (!) PyPI
       if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
       uses: pypa/gh-action-pypi-publish@release/v1
