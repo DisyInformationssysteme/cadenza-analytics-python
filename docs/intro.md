@@ -6,7 +6,7 @@
 
 </pre>
 
-Cadenza Analytics is the offical package for fast and easy creation of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) Analytics Extensions with Python. The purpose of this module is to encapsule the communication via the Cadenza API.
+`cadenzaanalytics` is the offical package for fast and easy creation of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) Analytics Extensions with Python. The purpose of this module is to encapsule the communication via the Cadenza API.
 
 # Cadenza Analytics Extensions
 
@@ -27,7 +27,7 @@ As of Cadenza Autumn 2023 (9.3), the following types and capabilities of analysi
 # Installation
 As this package is currently only available on GitHub, an installation via source is necessary. In the near future this package will also be made available via the Python Package Index (PyPI).
 
-To install the package the [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python) needs to be cloned. Once the repository is locally available the package can be installed via pip. Navigate to the root folder of the project and run:
+To install the package the [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python) needs to be cloned. Once the repository is locally available the package can be installed via `pip`. Navigate to the root folder of the project and run:
 
 ```
 pip install .
