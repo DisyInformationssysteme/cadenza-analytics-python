@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.1.10 - 2024-02-28
 ### Fixed
 - Compatibility problem when using cadenzaanalytics with python 3.8
 
