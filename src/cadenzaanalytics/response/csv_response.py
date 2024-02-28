@@ -1,5 +1,6 @@
 import csv
 import sys
+from typing import List
 
 from pandas import DataFrame
 
@@ -8,7 +9,7 @@ from cadenzaanalytics.response.extension_data_response import ExtensionDataRespo
 
 
 class CsvResponse(ExtensionDataResponse):
-    def __init__(self, data: DataFrame, column_metadata: list[ColumnMetadata]):
+    def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata]):
         content_type = 'text/csv'
         super().__init__(content_type)
 

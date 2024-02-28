@@ -3,7 +3,7 @@
  with a POST on the relative path."""
 import json
 from io import StringIO
-from typing import Callable
+from typing import Callable, List
 
 import pandas as pd
 from flask import Response, request
@@ -23,8 +23,8 @@ class CadenzaAnalyticsExtension:
                  analytics_function: Callable[[RequestMetadata, pd.DataFrame], ExtensionResponse],
                  print_name: str,
                  extension_type: ExtensionType,
-                 attribute_groups: list[AttributeGroup],
-                 parameters: list[Parameter] = None):
+                 attribute_groups: List[AttributeGroup],
+                 parameters: List[Parameter] = None):
         self._relative_path = relative_path
         self._analytics_function = analytics_function
 

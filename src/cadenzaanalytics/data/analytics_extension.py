@@ -1,3 +1,5 @@
+from typing import List
+
 from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.extension_type import ExtensionType
@@ -15,8 +17,8 @@ class AnalyticsExtension(DataObject):
     def __init__(self,
                  print_name: str,
                  extension_type: ExtensionType,
-                 attribute_groups: list[AttributeGroup],
-                 parameters: list[Parameter] = None):
+                 attribute_groups: List[AttributeGroup],
+                 parameters: List[Parameter] = None):
         self._print_name = print_name
         self._extension_type = extension_type
         self._attribute_groups = attribute_groups

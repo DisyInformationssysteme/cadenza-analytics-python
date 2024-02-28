@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 
 
@@ -21,7 +23,7 @@ class RequestMetadata:
                     return ColumnMetadata._from_dict(column)
         return None
 
-    def get_all_columns_by_attribute_groups(self) -> dict[str, list[ColumnMetadata]]:
+    def get_all_columns_by_attribute_groups(self) -> Dict[str, List[ColumnMetadata]]:
         grouped_columns = {}
         columns = self._get_columns() if self.has_columns() else []
         for column in columns:
@@ -32,11 +34,11 @@ class RequestMetadata:
 
         return grouped_columns
 
-    def get_all_columns(self) -> list[ColumnMetadata]:
+    def get_all_columns(self) -> List[ColumnMetadata]:
         columns = self._get_columns() if self.has_columns() else []
         return [ColumnMetadata._from_dict(column) for column in columns]
 
-    def get_parameters(self) -> dict[str, str]:
+    def get_parameters(self) -> Dict[str, str]:
         return self._request_metadata['parameters']
 
     def get_parameter(self, name: str) -> str | None:

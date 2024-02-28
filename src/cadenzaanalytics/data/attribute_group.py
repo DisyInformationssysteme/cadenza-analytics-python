@@ -1,3 +1,5 @@
+from typing import List
+
 from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.data_type import DataType
 
@@ -15,8 +17,8 @@ class AttributeGroup(DataObject):
     def __init__(self,
                  name: str,
                  print_name: str,
-                 data_types: list[DataType],
-                 geometry_types: list = None,
+                 data_types: List[DataType],
+                 geometry_types: List = None,
                  min_attributes: int = 0,
                  max_attributes: int = None):
         self._name = name
