@@ -12,7 +12,7 @@ class CadenzaAnalyticsExtensionService:
     def __init__(self):
         self._analytics_extensions = []
 
-        self._app = Flask(__name__)
+        self._app = Flask('cadenzaanalytics')
         CORS(self._app)
 
         self._app.add_url_rule("/", view_func=self._list_extensions)
@@ -29,8 +29,7 @@ class CadenzaAnalyticsExtensionService:
                                endpoint=analytics_extension.relative_path + "_post",
                                methods=['POST'])
 
-    # TODO: refactor / remove (only for development)
-    def run(self, port: int = 5000):
+    def run_development_server(self, port: int = 5000):
         self._app.run(port=port)
 
     def _list_extensions(self):
