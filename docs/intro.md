@@ -6,11 +6,6 @@
 
 </pre>
 
-> ** !! This module is currently in beta status **
->
->   It can be used for testing, but there may be breaking changes before a full release.
->   This documentation is still under developement as well.
-
 # Cadenza Analytics 
 Cadenza Analytics is the offical package for fast and easy creation of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) Analytics Extensions with Python. The purpose of this module is to encapsule the communication via the Cadenza API.
 
