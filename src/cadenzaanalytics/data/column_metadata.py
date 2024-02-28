@@ -1,9 +1,11 @@
+from cadenzaanalytics.data.geometry_type import GeometryType
 from cadenzaanalytics.data.attribute_role import AttributeRole
 from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.data.measure_aggregation import MeasureAggregation
 
 
+# pylint: disable=too-many-instance-attributes
 class ColumnMetadata(DataObject):
     _attribute_mapping = {
         "name": "_name",
@@ -13,11 +15,13 @@ class ColumnMetadata(DataObject):
         "role": "_role",
         "measureAggregation": "_measure_aggregation",
         "format": "_format",
+        "geometryType": "_geometry_type"
     }
     _attribute_constructors = {
         "dataType": DataType,
         "role": AttributeRole,
-        "measureAggregation": MeasureAggregation
+        "measureAggregation": MeasureAggregation,
+        "geometryType": GeometryType
     }
 
     # pylint: disable=redefined-builtin
@@ -28,7 +32,8 @@ class ColumnMetadata(DataObject):
                  data_type: DataType,
                  role: AttributeRole,
                  measure_aggregation: MeasureAggregation = None,
-                 format: str = None):
+                 format: str = None,
+                 geometry_type: str = None):
         self._name = name
         self._print_name = print_name
         self._attribute_group_name = attribute_group_name
@@ -36,6 +41,7 @@ class ColumnMetadata(DataObject):
         self._role = role
         self._measure_aggregation = measure_aggregation
         self._format = format
+        self._geometry_type = geometry_type
 
     @property
     def name(self) -> str:
@@ -64,3 +70,7 @@ class ColumnMetadata(DataObject):
     @property
     def format(self) -> str:
         return self._format
+
+    @property
+    def geometry_type(self) -> str:
+        return self._geometry_type
