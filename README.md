@@ -59,7 +59,7 @@ The requirements file can use test releases when adding `--extra-index-url https
 cd /examples
 docker build . -t cadenza-analytics-example
 docker image list
-docker run YOUR_CREATED_IMAGE_ID
+docker run -p 8080:8080 YOUR_CREATED_IMAGE_ID 
 ```
 ### Technical notes
 The release process uses PyPi's [trusted publishing](https://docs.pypi.org/trusted-publishers/), so is based on
