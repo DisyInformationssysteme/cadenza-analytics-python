@@ -40,3 +40,19 @@ pip install .
 * Pandas
 * requests-toolbelt
 
+
+
+# Supported Data Types
+
+Currently, the following Cadenza attribute types can be passed to an Analytics Extension.
+The table shows the mapping to Python data types:
+
+| Cadenza Attribute Type              | Pandas Column Type |  Example Value       | Notes |
+|-------------------------------------|-----------|--------------------------|-------|
+| Text (String)                       | string    | `"Text"`                 | |
+| Number (Integer)                    | pandas.Int64Dtype     | `1`                      | |
+| Number (Long)                       | pandas.Long64Dtype    | `1`                      | |
+| Floating point number (Double)      | pandas.Float64Dtype   | `1.23`                   | |
+| Date                                | string    | `"2022-11-12T12:34:56+13:45[Pacific/Chatham]"` | A date is represented as an [ISO string with time zone offset from UTC](https://en.wikipedia.org/wiki/ISO_8601#Coordinated_Universal_Time_(UTC)) (UTC) and additional time zone identifier in brackets. |
+| Geometry                            | string    | `"POINT(8.41594949941623, 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. | 
+
