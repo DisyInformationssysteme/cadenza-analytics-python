@@ -1,5 +1,10 @@
-"""cadenzaanalytics provides functionality to extend disy Cadenza with functionality to create,
-extend or visualize data"""
+"""The `cadenzaanalytics` module provides functionality to extend the business
+and location intelligence software [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) 
+with analytics extensions, which may be used to create Python code, e.g. to create,
+enrich or visualize data using Python.
+
+.. include:: ../../docs/intro.md
+"""
 from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtension
 from cadenzaanalytics.cadenza_analytics_extension_service import CadenzaAnalyticsExtensionService
 from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
