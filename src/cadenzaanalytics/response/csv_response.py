@@ -34,7 +34,10 @@ class CsvResponse(ExtensionDataResponse):
                 index=False,
                 quotechar='"',
                 lineterminator='\r\n')
-            # needed to make sure we sent NULL/None values and not empty strings
-            csv_data.replace('""', '')
+            # Needed to make sure we sent NULL/None values and not empty strings.
+            # This replacement might be problematic for escaped quotes within a string.
+            # As the proper solution is to use python 3.12,
+            # we do not support more sophisticated support for missing values here.
+            csv_data = csv_data.replace('""', '')
 
         return self._create_response(csv_data, self._column_meta_data)
