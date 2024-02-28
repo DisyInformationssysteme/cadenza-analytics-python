@@ -33,7 +33,7 @@ class ColumnMetadata(DataObject):
                  role: AttributeRole,
                  measure_aggregation: MeasureAggregation = None,
                  format: str = None,
-                 geometry_type: str = None):
+                 geometry_type: GeometryType = None):
         self._name = name
         self._print_name = print_name
         self._attribute_group_name = attribute_group_name
@@ -72,5 +72,5 @@ class ColumnMetadata(DataObject):
         return self._format
 
     @property
-    def geometry_type(self) -> str:
+    def geometry_type(self) -> GeometryType:
         return self._geometry_type
