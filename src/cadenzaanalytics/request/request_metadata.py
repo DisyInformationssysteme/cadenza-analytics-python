@@ -39,10 +39,10 @@ class RequestMetadata:
     def get_parameters(self) -> dict[str, str]:
         return self._request_metadata['parameters']
 
-    def get_parameter(self, name: str) -> str:
+    def get_parameter(self, name: str) -> str | None:
         if name in self._request_metadata['parameters']:
             return self._request_metadata['parameters'][name]
-        return ""
+        return None
 
     def has_columns(self) -> bool:
         return (len(self._request_metadata['dataContainers']) > 0
