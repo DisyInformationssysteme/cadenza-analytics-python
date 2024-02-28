@@ -109,6 +109,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ steps.app-token.outputs.token }}
+
     - name: Publish package distributions to Test (!) PyPI
       if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
       uses: pypa/gh-action-pypi-publish@release/v1
