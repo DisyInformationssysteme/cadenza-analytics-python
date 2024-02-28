@@ -1,3 +1,5 @@
+from typing import Optional
+
 from cadenzaanalytics.data.geometry_type import GeometryType
 from cadenzaanalytics.data.attribute_role import AttributeRole
 from cadenzaanalytics.data.data_object import DataObject
@@ -64,7 +66,7 @@ class ColumnMetadata(DataObject):
         return self._role
 
     @property
-    def measure_aggregation(self) -> MeasureAggregation | None:
+    def measure_aggregation(self) -> Optional[MeasureAggregation]:
         return self._measure_aggregation
 
     @property

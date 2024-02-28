@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 
@@ -8,7 +8,7 @@ class RequestMetadata:
     def __init__(self, request_metadata: dict):
         self._request_metadata = request_metadata
 
-    def get_column(self, name: str) -> ColumnMetadata | None:
+    def get_column(self, name: str) -> Optional[ColumnMetadata]:
         if self.has_columns():
             for column in self._get_columns():
                 if column["name"] == name:
@@ -16,7 +16,7 @@ class RequestMetadata:
 
         return None
 
-    def get_column_by_attribute_group(self, attribute_group) -> ColumnMetadata | None:
+    def get_column_by_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
         if self.has_columns():
             for column in self._get_columns():
                 if column['attributeGroupName'] == attribute_group:
@@ -41,7 +41,7 @@ class RequestMetadata:
     def get_parameters(self) -> Dict[str, str]:
         return self._request_metadata['parameters']
 
-    def get_parameter(self, name: str) -> str | None:
+    def get_parameter(self, name: str) -> Optional[str]:
         if name in self._request_metadata['parameters']:
             return self._request_metadata['parameters'][name]
         return None
