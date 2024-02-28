@@ -32,6 +32,9 @@ class CadenzaAnalyticsExtensionService:
     def run_development_server(self, port: int = 5000):
         self._app.run(port=port)
 
+    def __call__(self, *args, **kwargs):
+        return self._app
+
     def _list_extensions(self):
         result_dict = {'extensions': []}
 
