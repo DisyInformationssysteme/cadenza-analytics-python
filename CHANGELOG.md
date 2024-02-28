@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Compatibility problem when using cadenzaanalytics with python 3.8
+
 ## 0.1.9 - 2024-02-28
 ### Added
 - First beta version of cadenzaanalytics python library that is also available on PyPi
