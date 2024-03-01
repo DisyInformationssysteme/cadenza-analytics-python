@@ -7,11 +7,11 @@
 </pre>
 
 
-# Cadenza Analytics Extensions
+# disy Cadenza Analytics Extensions
 
-An Analytics Extension extends the functional spectrum of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) with an analysis function or a visualisation type. An Analytics Extension is a web service that exchanges structured data with Cadenza via the Cadenza API. A user can integrate an analysis extension into Cadenza via the Cadenza Management Center and manage it there (if they have the appropriate rights).
+An Analytics Extension extends the functional spectrum of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) with an analysis function or a visualisation type. An Analytics Extension is a web service that exchanges structured data with disy Cadenza via the Cadenza API. A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if they have the appropriate rights).
 
-As of Cadenza Autumn 2023 (9.3), the following types and capabilities of analysis extensions are officially supported:
+As of disy Cadenza Autumn 2023 (9.3), the following types and capabilities of analysis extensions are officially supported:
 
 - **Visualization** 
   The Analytics Extension type `visualization` provides a new visualization type for displaying a bitmap image (PNG).
@@ -24,14 +24,14 @@ As of Cadenza Autumn 2023 (9.3), the following types and capabilities of analysi
 
 ## Communication
 
-An Analytics Extension defines one endpoint that, depending in the HTTP method of the request, is used to supply the Extension's configuration to Cadenza, or exchange data and results with Cadenza respectively.
+An Analytics Extension defines one endpoint that, depending in the HTTP method of the request, is used to supply the Extension's configuration to disy Cadenza, or exchange data and results with Cadenza respectively.
 
 <!--- Beware: path to image must not be relative to this document, but relative to the one that includes this md file! (in this case: src/cadenzaanalytics/__init__.py--->
-<img src="../../docs/communication.png" alt="Image: Communication between disy Cadenza and Analytics Extension" width="800">
+<img src="../../docs/communication.png" alt="(Image: Communication between disy Cadenza and Analytics Extension)" width="800">
 
-The endpoint, which, when receiving an `HTTP(S) GET` request, returns a JSON representation of the extention's configuration. This step is executed once when registering the Analytics Extension from the Cadenza Managemnt Center GUI and does not need to be repeated unless the extension's configuration changes.
+When receiving an `HTTP(S) GET` request, the endpoint returns a JSON representation of the extention's configuration. This step is executed once when registering the Analytics Extension from the disy Cadenza Management Center GUI and does not need to be repeated unless the extension's configuration changes.
 
-By sending an `HTTP(S) POST` request to the same endpoint and including the data, metadata and parameters as specified in the extension's configuration in the body, the extension is executed. This step is executed each time that the Analytics Extension is invoked from the Cadenza GUI and Cadenza takes care of formatting the payload.
+By sending an `HTTP(S) POST` request to the same endpoint and including the data, metadata and parameters as specified in the extension's configuration as payload, the extension is executed. This step is executed each time that the Analytics Extension is invoked from the disy Cadenza GUI and Cadenza takes care of properly formatting the payload.
 
 The `cadenzaanalytics` module provides the functionality to abstract the required communication and easily configure the Analytics Extension's responses to the above requests. 
 
@@ -57,7 +57,7 @@ pip install .
 
 # Usage
 
-The following code snippets show the steps that are needed to develop and deploy custom functionality as a Cadenza Analytics extension.
+The following code snippets show the steps that are needed to develop and deploy custom functionality as a disy Cadenza Analytics Extension.
 
 Full, working examples can be found in the [module's GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main) in the `examples` folder.
 
@@ -70,7 +70,7 @@ import cadenzaanalytics as ca
 
 ## Defining Expected Data
 
-We specify what data can be passed from Cadenza to the Anylytics Extension by defining at least one `cadenzaanalytics.data.attribute_group`.
+We specify what data can be passed from disy Cadenza to the Anylytics Extension by defining at least one `cadenzaanalytics.data.attribute_group`.
 
 ```
 my_attribute_group = ca.AttributeGroup(
@@ -83,7 +83,7 @@ my_attribute_group = ca.AttributeGroup(
                      )
 ```
 
-This object requires a `name`, a `print_name` and defines the respective `data_types` (cmp. `cadenzaanalytics.data.data_type`) that will later be available for selection in Cadenza when invoking the extension's execution.
+This object requires a `name`, a `print_name` and defines the respective `data_types` (cmp. `cadenzaanalytics.data.data_type`) that will later be available for selection in disy Cadenza when invoking the extension's execution.
 Optionally, the number of individual attributes (i.e. data columns) that may be passed to the extension can be constrained.
 
 Multiple `AttributeGroup` objects may be defined.
@@ -121,7 +121,7 @@ my_param2 = ca.Parameter(
 
 ## Configuring the Extension
 
-To specify the endpoint where the extension expects to receive from Cadenza and tie the previous configration together, a `CadenzaAnalyticsExtension()` must be defined.
+To specify the endpoint where the extension expects to receive from disy Cadenza and tie the previous configration together, a `CadenzaAnalyticsExtension()` must be defined.
 
 ```
 my_extension = ca.CadenzaAnalyticsExtension(
@@ -143,7 +143,7 @@ The `analytics_function` is the name of the Python method that should be invoked
 ## Including Custom Analytics Code
 
 The analysis function `analytics_function` is the method that contains the specific functionality for the extension. 
-It implements what the extension should be doing when being invoked from Cadenza. 
+It implements what the extension should be doing when being invoked from disy Cadenza. 
 This method takes two arguments,  `metadata` and `data`.
 
 ```
