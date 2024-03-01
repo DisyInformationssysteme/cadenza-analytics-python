@@ -6,11 +6,10 @@
 
 </pre>
 
-`cadenzaanalytics` is the offical package for fast and easy creation of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) Analytics Extensions with Python. The purpose of this module is to encapsulate the communication via the Cadenza API.
 
 # Cadenza Analytics Extensions
 
-An Analytics Extension extends the functional spectrum of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) with an analysis function or a visualisation type. An Analytics Extension exchanges structured data with Cadenza via the Cadenza API and both receives data from and returns data to Cadenza. A user can integrate an analysis extension into Cadenza via the Cadenza Management Center and manage it there (if they have the appropriate rights).
+An Analytics Extension extends the functional spectrum of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) with an analysis function or a visualisation type. An Analytics Extension is a web service that exchanges structured data with Cadenza via the Cadenza API. A user can integrate an analysis extension into Cadenza via the Cadenza Management Center and manage it there (if they have the appropriate rights).
 
 As of Cadenza Autumn 2023 (9.3), the following types and capabilities of analysis extensions are officially supported:
 
@@ -22,6 +21,19 @@ As of Cadenza Autumn 2023 (9.3), the following types and capabilities of analysi
 
 - **Data generation**
   The Analytics Extension type `calculation` provides a result data set that is created as a new Cadenza object type.
+
+## Communication
+
+An Analytics Extension defines one endpoint that, depending in the HTTP method of the request, is used to supply the Extension's configuration to Cadenza, or exchange data and results with Cadenza respectively.
+
+<!--- Beware: path to image must not be relative to this document, but relative to the one that includes this md file! (in this case: src/cadenzaanalytics/__init__.py--->
+<img src="../../docs/communication.png" alt="Image: Communication between disy Cadenza and Analytics Extension" width="800">
+
+The endpoint, which, when receiving an `HTTP(S) GET` request, returns a JSON representation of the extention's configuration. This step is executed once when registering the Analytics Extension from the Cadenza Managemnt Center GUI and does not need to be repeated unless the extension's configuration changes.
+
+By sending an `HTTP(S) POST` request to the same endpoint and including the data, metadata and parameters as specified in the extension's configuration in the body, the extension is executed. This step is executed each time that the Analytics Extension is invoked from the Cadenza GUI and Cadenza takes care of formatting the payload.
+
+The `cadenzaanalytics` module provides the functionality to abstract the required communication and easily configure the Analytics Extension's responses to the above requests. 
 
 
 # Installation
@@ -47,7 +59,7 @@ pip install .
 
 The following code snippets show the steps that are needed to develop and deploy custom functionality as a Cadenza Analytics extension.
 
-Full, working examples can be found in the [example folder of the module's GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main/examples).
+Full, working examples can be found in the [module's GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main) in the `examples` folder.
 
 Initially, the module must be imported:
 
@@ -66,13 +78,13 @@ my_attribute_group = ca.AttributeGroup(
                          print_name='Any numeric attribute',
                          data_types=[ca.DataType.INT64, 
                                      ca.DataType.FLOAT64],
-                         min_attributes=2,
-                         max_attributes=5
+                         min_attributes=1,
+                         max_attributes=1
                      )
 ```
 
 This object requires a `name`, a `print_name` and defines the respective `data_types` (cmp. `cadenzaanalytics.data.data_type`) that will later be available for selection in Cadenza when invoking the extension's execution.
-Optionally, the number of individual attributes that may be passed to the extension can be constrained.
+Optionally, the number of individual attributes (i.e. data columns) that may be passed to the extension can be constrained.
 
 Multiple `AttributeGroup` objects may be defined.
 
@@ -159,12 +171,12 @@ The table shows the mapping to Pyton data types:
 | Date                                | string    | `"2022-11-12T12:34:56+13:45[Pacific/Chatham]"` | A date is represented as an [ISO string with time zone offset from UTC](https://en.wikipedia.org/wiki/ISO_8601#Coordinated_Universal_Time_(UTC)) (UTC) and additional time zone identifier in brackets. |
 | Geometry                            | string    | `"POINT(8.41594949941623, 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. | 
 
-The same is true for the `cadenzaanalytics.request.request_metadata` object, which automatically is available as `metadata` 
+The same is true for the `cadenzaanalytics.request.request_metadata` object, which automatically is available as `metadata`. 
 
 Parameters are always passed as `string` and can be read through the `cadenzaanalytics.request.request_metadata` methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
 
 ```
-metadata.get_parameter('flag')
+param_flag = metadata.get_parameter('flag')
 ```
 
 ## Returning Data
