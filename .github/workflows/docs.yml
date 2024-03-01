@@ -29,11 +29,11 @@ jobs:
           pip install pdoc
           pip install .
       # build documentation into docs/.
-      - run: pdoc --favicon https://www.disy.net/favicon.ico --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg --logo-link https://www.disy.net/en/products/disy-cadenza -o docs/html/ --no-show-source src/cadenzaanalytics
+      - run: pdoc --favicon https://www.disy.net/favicon.ico --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg --logo-link https://www.disy.net/en/products/disy-cadenza -o docs/ --no-show-source src/cadenzaanalytics
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/html/
+          path: docs/
 
   # Deploy the artifact to GitHub pages.
   # This is a separate job so that only actions/deploy-pages has the necessary permissions.
