@@ -27,7 +27,7 @@ As of disy Cadenza Autumn 2023 (9.3), the following types and capabilities of an
 An Analytics Extension defines one endpoint that, depending in the HTTP method of the request, is used to supply the Extension's configuration to disy Cadenza, or exchange data and results with Cadenza respectively.
 
 <!--- Beware: path to image must not be relative to this document, but relative to the one that includes this md file! (in this case: src/cadenzaanalytics/__init__.py--->
-<img src="../../docs/communication.png" alt="(Image: Communication between disy Cadenza and Analytics Extension)" width="800">
+<img src="docs/communication.png" alt="(Image: Communication between disy Cadenza and Analytics Extension)" width="800">
 
 When receiving an `HTTP(S) GET` request, the endpoint returns a JSON representation of the extention's configuration. This step is executed once when registering the Analytics Extension from the disy Cadenza Management Center GUI and does not need to be repeated unless the extension's configuration changes.
 
