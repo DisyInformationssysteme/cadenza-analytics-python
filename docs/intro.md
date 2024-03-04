@@ -3,7 +3,7 @@
 
     It can be used for testing, but there may be breaking changes before a full release.
     This documentation is still under developement as well.
-    It is not yet recommended to use disy Cadenza Analytics Extension in production.
+    It is not yet recommended to use disy Cadenza Analytics Extensions in production.
 
 </pre>
 
@@ -107,7 +107,7 @@ my_param = ca.Parameter(
            )
 ```
 This object again requires a `name` and a `print_name`, as well as a `cadenzaanalytics.data.parameter_type`.
-Optionally, we can specify whether an attribute needs to be specified and/or a default value.
+Optionally, we can specify whether a parameter is mandatory and/or a default value for it.
 Multiple parameters can be defined. 
 
 As an alternative to requesting input of a parameter in one of the standard data types, a list from which a user selects a value can be defined via the `SELECT` type:
@@ -146,12 +146,12 @@ The `analytics_function` is the name of the Python method that should be invoked
 
 ## Including Custom Analytics Code
 
-The analysis function `analytics_function` is the method that contains the specific functionality for the extension. 
+The analysis function `my_analytics_function` (or whatever you choose to name it) is the method that contains the specific functionality for the extension. 
 It implements what the extension should be doing when being invoked from disy Cadenza. 
-This method takes two arguments,  `metadata` and `data`.
+This method takes two arguments,  `metadata` and `data`, which both will be passed to it automatically when the extension is invoked from Cadenza.
 
 ```
-def analytics_function (metadata: ca.RequestMetadata, data: pd.DataFrame):
+def my_analytics_function (metadata: ca.RequestMetadata, data: pd.DataFrame):
     # do something
     return #something
 ```
@@ -161,7 +161,17 @@ The actual content and return type of this function will depend both on the exte
 ### Reading Data, Metadata and Parameters
 
 Accessing the data that is transferred from Cadenza is very simple.
-Within the defined analytics function, a [pandas DataFrame](https://pandas.pydata.org/) `data` is available that can be directly accessed.
+Within the defined analytics function, a [pandas DataFrame](https://pandas.pydata.org/) `data` is available from which columns can be directly accessed by name 
+
+```
+my_data = data['my_data']
+```
+
+or by index
+
+```
+my_data = data.iloc[:, 0]
+```
 
 Currently, the following Cadenza attribute types can be passed to an Analytics Extension.
 The table shows the mapping to Pyton data types:
@@ -175,9 +185,20 @@ The table shows the mapping to Pyton data types:
 | Date                                | string    | `"2022-11-12T12:34:56+13:45[Pacific/Chatham]"` | A date is represented as an [ISO string with time zone offset from UTC](https://en.wikipedia.org/wiki/ISO_8601#Coordinated_Universal_Time_(UTC)) (UTC) and additional time zone identifier in brackets. |
 | Geometry                            | string    | `"POINT(8.41594949941623, 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. | 
 
-The same is true for the `cadenzaanalytics.request.request_metadata` object, which automatically is available as `metadata`. 
 
-Parameters are always passed as `string` and can be read through the `cadenzaanalytics.request.request_metadata` methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
+Same as the `data` object, the `cadenzaanalytics.request.request_metadata` object is also automatically available in the analysis function as `metadata`. 
+The `metadata` object contains information on the columns in the `data` DataFrame, such as their print name and type in disy Cadenza, their column name in the pandas DataFrame, or additional information like a `geometry_type`, where applicable.
+
+This information can also be used to access the `data` DataFrame's columns by the attribute group's name.
+
+```
+my_data_column = metadata.get_column_by_attribute_group('my_data')
+
+if my_data_column is not None:
+    my_data = data[my_data_column.name]
+```
+
+Parameters are stored in `metadata` as well. They are always passed as `string` and can be read through the `cadenzaanalytics.request.request_metadata` methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
 
 ```
 param_flag = metadata.get_parameter('flag')
@@ -185,7 +206,45 @@ param_flag = metadata.get_parameter('flag')
 
 ## Returning Data
 
-TBD
+Depending on the extension type, there are specific objects for returning the response.
+
+### Data Generation
+
+TODO
+
+### Data Enrichment
+
+A `cadenzaanalytics.response.csv_response` is used for enrichments. 
+The response must be in the format of a text, a CSV file or a DataFrame so that it fits. 
+
+TODO
+
+The metadata must be adapted and also returned to disy Cadenza via the response method.
+
+TODO
+
+### Visualization
+As result of a visualization extension, an `cadenzaanalytics.response.image_response` must be returned.
+Visualization extensions return a bitmap image in PNG format.
+
+The image can be created in various ways, e.g. by using FigureCanvas from matplotlib to render a plot or image.
+The following snippet shows returning an image loaded from a file.
+
+```
+with open("example_image.png", "rb") as image_file:
+    image = image_file.read()
+
+return ca.ImageResponse(image)
+```
+
+
+### Returning an Error
+In order to abort the execution of the function with an error and pass an according message to disy Cadenza, a `cadenzaanalytics.response.error_response` can be returned.
+
+```
+if my_data is None:
+        return ca.ErrorResponse('"Didn't find expected attribute "my_data".', 400)
+```
 
 ## Registering the Extension
 
