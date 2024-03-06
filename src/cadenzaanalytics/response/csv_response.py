@@ -16,7 +16,7 @@ class CsvResponse(ExtensionDataResponse):
         self._data = data
         self._column_meta_data = column_metadata
 
-    def get_response(self):
+    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
         python_3_12 = (3, 12)
         if sys.version_info >= python_3_12:
             csv_data = self._data.to_csv(

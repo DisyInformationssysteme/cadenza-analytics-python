@@ -1,7 +1,10 @@
 import json
+from typing import List
 
 from flask import Response
+from pandas import DataFrame
 
+from cadenzaanalytics.data.column_metadata import ColumnMetadata
 from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
@@ -10,7 +13,7 @@ class ErrorResponse(ExtensionResponse):
         self._message = message
         self._status = status
 
-    def get_response(self):
+    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
         return self._create_response(self._message)
 
     def _get_response_json(self, message: str):

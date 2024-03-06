@@ -47,7 +47,7 @@ class CadenzaAnalyticsExtension:
 
         analytics_response = self._analytics_function(analytics_request.metadata, analytics_request.data)
 
-        return analytics_response.get_response()
+        return analytics_response.get_response(analytics_request.metadata.get_all_columns(), analytics_request.data)
 
     def get_capabilities(self) -> Response:
         return Response(response=self._analytics_extension.to_json(), status=200, mimetype="application/json")

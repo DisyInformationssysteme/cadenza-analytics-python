@@ -13,8 +13,17 @@ def image_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
     return ca.ImageResponse(image)
 
 
-def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
+def calculation_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
     return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
+
+
+def enrichment_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
+    # pylint: disable=unused-argument
+    response_columns = metadata.get_all_columns_by_attribute_groups()['any_data']
+    response_column_names = [c.name for c in response_columns]
+    return ca.RowWiseMappingCsvResponse(
+        response_columns,
+        lambda row: row[response_column_names])
 
 
 image_attribute_group = ca.AttributeGroup(
@@ -40,17 +49,26 @@ image_extension = ca.CadenzaAnalyticsExtension(
     attribute_groups=[image_attribute_group]
 )
 
-echo_extension = ca.CadenzaAnalyticsExtension(
-    relative_path="echo-extension",
-    analytics_function=echo_analytics_function,
+calculation_echo_extension = ca.CadenzaAnalyticsExtension(
+    relative_path="calculation-echo-extension",
+    analytics_function=calculation_echo_analytics_function,
     print_name="Example Echo Calculation Extension",
     extension_type=ca.ExtensionType.CALCULATION,
     attribute_groups=[any_attribute_group]
 )
 
+enrichment_echo_extension = ca.CadenzaAnalyticsExtension(
+    relative_path="echo-extension",
+    analytics_function=enrichment_echo_analytics_function,
+    print_name="Example Echo Enrichment Extension",
+    extension_type=ca.ExtensionType.ENRICHMENT,
+    attribute_groups=[any_attribute_group]
+)
+
 analytics_service = ca.CadenzaAnalyticsExtensionService()
 analytics_service.add_analytics_extension(image_extension)
-analytics_service.add_analytics_extension(echo_extension)
+analytics_service.add_analytics_extension(calculation_echo_extension)
+analytics_service.add_analytics_extension(enrichment_echo_extension)
 
 if __name__ == '__main__':
     analytics_service.run_development_server(5005)

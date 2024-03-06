@@ -4,6 +4,9 @@ from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.data_type import DataType
 
 
+KEY_ATTRIBUTE_GROUP_NAME = 'net.disy.cadenza.keyAttributeGroup'
+
+
 class AttributeGroup(DataObject):
     _attribute_mapping = {
         "name": "_name",

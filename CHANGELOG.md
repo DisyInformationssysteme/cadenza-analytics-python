@@ -6,21 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 0.1.18 - 2024-02-29
-
-## 0.1.17 - 2024-02-29
-
-## 0.1.16 - 2024-02-28
-
-## 0.1.15 - 2024-02-28
-
-## 0.1.14 - 2024-02-28
-
-## 0.1.13 - 2024-02-28
-
-## 0.1.12 - 2024-02-28
-
-## 0.1.11 - 2024-02-28
+### Added
+- Support for common use case which maps one input row to one output row, especially interesting for extensions of type ENRICHMENT
 
 ## 0.1.10 - 2024-02-28
 ### Fixed
