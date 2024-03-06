@@ -10,9 +10,10 @@ from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
 class RowWiseMappingCsvResponse(ExtensionResponse):
-    def __init__(self, response_columns: List[ColumnMetadata], row_mapper: Callable):
+    def __init__(self, response_columns: List[ColumnMetadata], row_mapper: Callable, closure: Callable=None):
         self._response_columns = response_columns
         self._row_mapper = row_mapper
+        self._closure = closure
 
     def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
         key_attribute_columns = [c for c in original_column_metadata
@@ -25,4 +26,7 @@ class RowWiseMappingCsvResponse(ExtensionResponse):
                 f"Expected  {len(result_data.columns)} response columns but got {len(self._response_columns)}", 500)
         extended_result_data = result_data.join(original_data.loc[:, key_attribute_column_names])
         csv_response = CsvResponse(extended_result_data, self._response_columns + key_attribute_columns)
-        return csv_response.get_response(original_column_metadata, original_data)
+        response = csv_response.get_response(original_column_metadata, original_data)
+        if self._closure is not None:
+            self._closure(result_data)
+        return response
