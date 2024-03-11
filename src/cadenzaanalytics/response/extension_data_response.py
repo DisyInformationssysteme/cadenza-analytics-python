@@ -9,6 +9,13 @@ from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 # pylint: disable=protected-access
 class ExtensionDataResponse(ExtensionResponse):
+    """A class representing a data response from an extension.
+
+    Parameters
+    ----------
+    ExtensionResponse : type
+        The base extension response type from which ExtensionDataResponse inherits.
+    """    
     def __init__(self, content_type, data_container_name='response-data'):
         self._content_type = content_type
         self._data_container_name = data_container_name

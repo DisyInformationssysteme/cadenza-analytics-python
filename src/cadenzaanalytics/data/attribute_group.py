@@ -5,6 +5,13 @@ from cadenzaanalytics.data.data_type import DataType
 
 
 class AttributeGroup(DataObject):
+    """A class representing a group of attributes such as name, print_name, data_types, geometry_types, min_attributes and max_attributes.
+
+    Parameters
+    ----------
+    DataObject : type
+        The base data object type from which AttributeGroup inherits.
+    """ 
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",
