@@ -3,6 +3,13 @@ import json
 
 # pylint: disable=protected-access
 class DataObject:
+    """A class representing a data object that can be serialized to JSON.
+
+    Returns
+    -------
+    dict
+        Serialize the data object to a JSON string.
+    """   
     _attribute_mapping = {}
     _attribute_constructors = {}  # required for enums that are deserialized
 
@@ -29,6 +36,18 @@ class DataObject:
         return result
 
     def to_json(self, indent=None) -> str:
+        """Serialize the data object to a JSON string.
+
+        Parameters
+        ----------
+        indent : int, optional
+            The number of spaces to use for indentation, by default None
+
+        Returns
+        -------
+        str
+            A JSON string representing the data object.
+        """  
         return json.dumps(self._to_dict(), indent=indent, default=str)
 
     @classmethod

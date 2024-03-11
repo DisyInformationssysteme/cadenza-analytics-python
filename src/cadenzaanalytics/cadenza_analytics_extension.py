@@ -18,6 +18,8 @@ from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
 class CadenzaAnalyticsExtension:
+    """A class representing an analytics extension in Cadenza.
+    """
     def __init__(self,
                  relative_path: str,
                  analytics_function: Callable[[RequestMetadata, pd.DataFrame], ExtensionResponse],
@@ -32,17 +34,45 @@ class CadenzaAnalyticsExtension:
 
     @property
     def relative_path(self) -> str:
+        """Get the relative path of the extension.
+
+        Returns
+        -------
+        str
+            The relative path of the extension.
+        """ 
         return self._relative_path
 
     @property
     def print_name(self) -> str:
+        """Get the printable name of the extension.
+
+        Returns
+        -------
+        str
+            The printable name of the extension.
+        """  
         return self._analytics_extension.print_name
 
     @property
     def extension_type(self) -> ExtensionType:
+        """Get the type of the extension.
+
+        Returns
+        -------
+        str
+            The type of the extension.
+        """
         return self._analytics_extension.extension_type
 
     def handle_request(self) -> Response:
+        """Handle incoming requests to the extension.
+
+        Returns
+        -------
+        Response
+            The response to the request.
+        """            
         analytics_request = self._get_request_data(request)
 
         analytics_response = self._analytics_function(analytics_request.metadata, analytics_request.data)
@@ -50,6 +80,13 @@ class CadenzaAnalyticsExtension:
         return analytics_response.get_response(analytics_request.metadata.get_all_columns(), analytics_request.data)
 
     def get_capabilities(self) -> Response:
+        """Get the capabilities of the extension.
+
+        Returns
+        -------
+        Response
+            The capabilities of the extension.
+        """ 
         return Response(response=self._analytics_extension.to_json(), status=200, mimetype="application/json")
 
     def _get_request_data(self, multipart_request) -> AnalyticsRequest:

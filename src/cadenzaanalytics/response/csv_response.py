@@ -9,6 +9,13 @@ from cadenzaanalytics.response.extension_data_response import ExtensionDataRespo
 
 
 class CsvResponse(ExtensionDataResponse):
+    """A class representing a CSV response from an extension.
+
+    Parameters
+    ----------
+    ExtensionDataResponse : type
+        The base extension data response type from which CsvResponse inherits.
+    """
     def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata]):
         content_type = 'text/csv'
         super().__init__(content_type)
@@ -17,6 +24,13 @@ class CsvResponse(ExtensionDataResponse):
         self._column_meta_data = column_metadata
 
     def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+        """Get the CSV response.
+
+        Returns
+        -------
+        Response
+            The CSV response.
+        """   
         python_3_12 = (3, 12)
         if sys.version_info >= python_3_12:
             csv_data = self._data.to_csv(

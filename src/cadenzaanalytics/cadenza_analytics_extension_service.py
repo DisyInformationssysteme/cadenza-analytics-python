@@ -9,6 +9,8 @@ from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtensi
 
 
 class CadenzaAnalyticsExtensionService:
+    """A service for managing Cadenza analytics extensions.
+    """
     def __init__(self):
         self._analytics_extensions = []
 
@@ -18,6 +20,13 @@ class CadenzaAnalyticsExtensionService:
         self._app.add_url_rule("/", view_func=self._list_extensions)
 
     def add_analytics_extension(self, analytics_extension: CadenzaAnalyticsExtension):
+        """Add an analytics extension to the service.
+
+        Parameters:
+        ----------
+        analytics_extension : CadenzaAnalyticsExtension
+            The analytics extension to add.
+        """        
         self._analytics_extensions.append(analytics_extension)
 
         self._app.add_url_rule("/" + analytics_extension.relative_path,
@@ -30,6 +39,13 @@ class CadenzaAnalyticsExtensionService:
                                methods=['POST'])
 
     def run_development_server(self, port: int = 5000):
+        """Run the service.
+
+        Parameters:
+        ----------
+        port : int, optional
+            The port to run the service on, by default 5000.
+        """        
         self._app.run(port=port)
 
     def __call__(self, *args, **kwargs):

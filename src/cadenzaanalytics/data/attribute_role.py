@@ -2,6 +2,8 @@ from enum import Enum
 
 
 class AttributeRole(Enum):
+    """A class representing attribute roles in data modeling like dimension and measure.
+    """ 
     DIMENSION = "dimension"
     MEASURE = "measure"
 
