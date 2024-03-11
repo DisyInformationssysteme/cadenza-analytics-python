@@ -9,6 +9,18 @@ from cadenzaanalytics.data.measure_aggregation import MeasureAggregation
 
 # pylint: disable=too-many-instance-attributes
 class ColumnMetadata(DataObject):
+    """A class representing metadata for columns such as the name, print_name, attribute_group_name, data_type, role, measure_aggregation, format and gemetry_type.
+
+    Parameters
+    ----------
+    DataObject : type
+        The base data object type from which ColumnMetadata inherits.
+
+    Returns
+    -------
+    type
+        Description of what the method returns.
+    """  
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",
@@ -47,32 +59,88 @@ class ColumnMetadata(DataObject):
 
     @property
     def name(self) -> str:
+        """Get the name of the column.
+
+        Returns
+        -------
+        str
+            The name of the column.
+        """  
         return self._name
 
     @property
     def print_name(self) -> str:
+        """Get the print name of the column.
+
+        Returns
+        -------
+        str
+            The print name of the column.
+        """   
         return self._print_name
 
     @property
     def attribute_group_name(self) -> str:
+        """Get the attribute group name of the column.
+
+        Returns
+        -------
+        str
+            The attribute group name of the column.
+        """ 
         return self._attribute_group_name
 
     @property
     def data_type(self) -> DataType:
+        """Get the data type of the column.
+
+        Returns
+        -------
+        DataType
+            The data type of the column.
+        """  
         return self._data_type
 
     @property
     def role(self) -> AttributeRole:
+        """Get the role of the column.
+
+        Returns
+        -------
+        AttributeRole
+            The role of the column.
+        """    
         return self._role
 
     @property
     def measure_aggregation(self) -> Optional[MeasureAggregation]:
+        """Get the measure aggregation of the column.
+
+        Returns
+        -------
+        MeasureAggregation
+            The measure aggregation of the column.
+        """     
         return self._measure_aggregation
 
     @property
     def format(self) -> str:
+        """Get the format of the column.
+
+        Returns
+        -------
+        str
+            The format of the column.
+        """   
         return self._format
 
     @property
     def geometry_type(self) -> GeometryType:
+        """Get the geometry type of the column.
+
+        Returns
+        -------
+        GeometryType
+            The geometry type of the column.
+        """   
         return self._geometry_type

@@ -7,6 +7,13 @@ from cadenzaanalytics.response.extension_data_response import ExtensionDataRespo
 
 
 class ImageResponse(ExtensionDataResponse):
+    """A class representing an image response from an extension.
+
+    Parameters
+    ----------
+    ExtensionDataResponse : type
+        The base extension data response type from which ImageResponse inherits.
+    """
     def __init__(self, image):
         content_type = 'image/png'
         super().__init__(content_type)
@@ -14,4 +21,11 @@ class ImageResponse(ExtensionDataResponse):
         self._image = image
 
     def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+        """Get the image response.
+
+        Returns
+        -------
+        Response
+            The image response.
+        """
         return self._create_response(self._image)

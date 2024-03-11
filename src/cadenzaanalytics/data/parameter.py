@@ -5,6 +5,13 @@ from cadenzaanalytics.data.parameter_type import ParameterType
 
 
 class Parameter(DataObject):
+    """A class representing parameters such as name, print_name, parameter_type, options, required and default_value used in data objects.
+
+    Parameters
+    ----------
+    DataObject : type
+        The base data object type from which Parameter inherits.
+    """  
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",
