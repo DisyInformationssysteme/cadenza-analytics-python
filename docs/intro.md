@@ -25,7 +25,7 @@ As of disy Cadenza Autumn 2023 (9.3), the following types and capabilities of an
 
 ## Communication
 
-An Analytics Extension defines one endpoint that, depending in the HTTP method of the request, is used to supply the Extension's configuration to disy Cadenza, or exchange data and results with Cadenza respectively.
+An Analytics Extension defines one endpoint that, depending on the HTTP method of the request, is used to supply the Extension's configuration to disy Cadenza, or exchange data and results with Cadenza respectively.
 
 <!--- Beware: when building documentation locally, path to image must not be relative to this document, but relative to the one that includes this md file! 
              (in this case: src/cadenzaanalytics/__init__.py  ->  <img src="../../docs/communication.png"... )
@@ -42,21 +42,38 @@ The `cadenzaanalytics` module provides the functionality to abstract the require
 
 # Installation
 
-As long as this package is in beta, it is only available on GitHub, and an installation via source is necessary. In the near future this package will also be made available via the Python Package Index (PyPI).
+As long as this package is in beta, it is only available on GitHub, and an installation via source is necessary. In the near future this package will also be made available via the Python Package Index (PyPI). 
 
-To install the package the [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python) needs to be cloned. Once the repository is locally available the package can be installed via `pip`. Navigate to the root folder of the project and run:
+Furthermore, a corresponding version will be packaged as source code with each release of disy Cadenza.
+
+## Requirements and Dependencies
+
+The `cadenzaanalytics` package has the following dependencies:
+
+* Python 3
+* [Flask](https://flask.palletsprojects.com/en/3.0.x/)
+* [Pandas](https://pandas.pydata.org/)
+* requests-toolbelt
+
+The first version of disy Cadenza that supports Analytics Extensions is disy Cadenza Autumn 2023 (9.3). For each disy Cadenza version, the correct corresponding library version needs to be used:
+
+|disy Cadenza version | cadenzaanalytics version|
+|---------------------|-------------------------|
+| 9.3 (Autumn 2023)   |             < 0.2 (beta)|
+
+
+
+
+## Installation from Source
+To install the package from source, the [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python) needs to be cloned. Once the repository is locally available the package can be installed via `pip`. 
+
+TODO: offline source code as packaged in the distributions `developer.zip`.
+
+Navigate to the root folder of the project and run:
 
 ```
 pip install .
 ```
-
-
-## Dependencies
-
-* Python 3
-* Flask
-* Pandas
-* requests-toolbelt
 
 
 # Usage
@@ -125,7 +142,7 @@ my_param2 = ca.Parameter(
 
 ## Configuring the Extension
 
-To specify the endpoint where the extension expects to receive from disy Cadenza and tie the previous configration together, a `CadenzaAnalyticsExtension()` must be defined.
+To specify the endpoint where the extension expects to receive from disy Cadenza and tie the previous configuration together, a [`CadenzaAnalyticsExtension()`](cadenzaanalytics/cadenza_analytics_extension.html) must be defined.
 
 ```
 my_extension = ca.CadenzaAnalyticsExtension(
@@ -160,18 +177,22 @@ The actual content and return type of this function will depend both on the exte
 
 ### Reading Data, Metadata and Parameters
 
-Accessing the data that is transferred from Cadenza is very simple.
-Within the defined analytics function, a [pandas DataFrame](https://pandas.pydata.org/) `data` is available from which columns can be directly accessed by name 
+Accessing the data that is transferred from Cadenza is simple.
+Within the defined analytics function, a [Pandas DataFrame](https://pandas.pydata.org/) `data` is automatically available, which holds all the data passed from Cadenza.
+
+Same as the `data` object, the `cadenzaanalytics.request.request_metadata` object is also automatically available in the analysis function as `metadata`. 
+
+The `metadata` object contains information on the columns in the `data` DataFrame, such as their print name and type in disy Cadenza, their column name in the pandas DataFrame, or additional information like a `geometry_type`, where applicable.
+
+This information can be used to access the `data` DataFrame's columns by the attribute group's name.
 
 ```
-my_data = data['my_data']
+my_data_column = metadata.get_column_by_attribute_group('my_data')
+
+if my_data_column is not None:
+    my_data = data[my_data_column.name]
 ```
 
-or by index
-
-```
-my_data = data.iloc[:, 0]
-```
 
 Currently, the following Cadenza attribute types can be passed to an Analytics Extension.
 The table shows the mapping to Pyton data types:
@@ -186,17 +207,6 @@ The table shows the mapping to Pyton data types:
 | Geometry                            | string    | `"POINT(8.41594949941623, 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. | 
 
 
-Same as the `data` object, the `cadenzaanalytics.request.request_metadata` object is also automatically available in the analysis function as `metadata`. 
-The `metadata` object contains information on the columns in the `data` DataFrame, such as their print name and type in disy Cadenza, their column name in the pandas DataFrame, or additional information like a `geometry_type`, where applicable.
-
-This information can also be used to access the `data` DataFrame's columns by the attribute group's name.
-
-```
-my_data_column = metadata.get_column_by_attribute_group('my_data')
-
-if my_data_column is not None:
-    my_data = data[my_data_column.name]
-```
 
 Parameters are stored in `metadata` as well. They are always passed as `string` and can be read through the `cadenzaanalytics.request.request_metadata` methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
 
@@ -210,11 +220,20 @@ Depending on the extension type, there are specific objects for returning the re
 
 ### Data Generation
 
-TODO
+A `cadenzaanalytics.response.csv_response` is used for calculations.
+The response must include the data and the proper metadata 
+
+The following example returns the data received from disy Cadenza back to it.
+```
+def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
+    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
+```
+
+TODO: response columns
 
 ### Data Enrichment
 
-A `cadenzaanalytics.response.csv_response` is used for enrichments. 
+A `cadenzaanalytics.response.csv_response` is used for enrichments as well.
 The response must be in the format of a text, a CSV file or a DataFrame so that it fits. 
 
 TODO
@@ -250,7 +269,23 @@ if my_data is None:
 
 TBD
 
+```
+analytics_service = ca.CadenzaAnalyticsExtensionService()
+analytics_service.add_analytics_extension(my_extension)
+```
+
+TODO "directory" service multiple extensions
+
 # Deployment 
 
-TBD
+Since `cadenzaanalytics` is built on the [Flask framework](https://flask.palletsprojects.com/en/3.0.x/), ...
 
+## Local Execution
+
+```
+if __name__ == '__main__':
+    analytics_service.run_development_server(8080)
+
+```
+
+## WSGI Deployment
