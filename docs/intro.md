@@ -3,7 +3,6 @@
 
     It can be used for testing, but there may be breaking changes before a full release.
     This documentation is still under developement as well.
-    It is not yet recommended to use disy Cadenza Analytics Extensions in production.
 
 </pre>
 
@@ -245,6 +244,7 @@ The following example returns the data received from disy Cadenza back to it.
 def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
     return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
 ```
+
 
 ### Data Enrichment
 
