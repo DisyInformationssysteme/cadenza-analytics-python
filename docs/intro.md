@@ -104,7 +104,7 @@ import cadenzaanalytics as ca
 
 ## Defining Expected Data
 
-We specify what data can be passed from disy Cadenza to the Anylytics Extension by defining at least one `cadenzaanalytics.data.attribute_group`.
+We specify what data can be passed from disy Cadenza to the Anylytics Extension by defining at least one [`AttributeGroup()`](cadenzaanalytics/data/attribute_group.html).
 
 ```
 my_attribute_group = ca.AttributeGroup(
@@ -117,15 +117,15 @@ my_attribute_group = ca.AttributeGroup(
                      )
 ```
 
-This object requires a `name`, a `print_name` and defines the respective `data_types` (cmp. `cadenzaanalytics.data.data_type`) that will later be available for selection in disy Cadenza when invoking the extension's execution.
-Optionally, the number of individual attributes (i.e. data columns) that may be passed to the extension can be constrained.
+This object requires a `name`, a `print_name` and a list defining the possible [`DataType`](cadenzaanalytics/data/data_type.html) that will later be available for selection in disy Cadenza when invoking the extension's execution.
+Optionally, the number of individual attributes (i.e. data columns) that may be passed to the extension as part of the `AttributeGroup` can be constrained.
 
-Multiple `AttributeGroup` objects may be defined.
+Generally, one `AttributeGroup` can contain multiple attributes and multiple `AttributeGroup` objects may be defined.
 
 ## Defining Expected Parameters
 
 An extension may or may not require parametrization beyond the actual data that is passed to it.
-A parameter can be optionally defined by creating a `cadenzaanalytics.data.parameter` object.
+A parameter can be optionally defined by creating a [`Parameter()`](cadenzaanalytics/data/parameter.html) object.
 
 
 ```
@@ -136,7 +136,7 @@ my_param = ca.Parameter(
                default_value='True'
            )
 ```
-This object again requires a `name` and a `print_name`, as well as a `cadenzaanalytics.data.parameter_type`.
+This object again requires a `name` and a `print_name`, as well as a [`ParameterType`](cadenzaanalytics/data/parameter_type.html).
 Optionally, we can specify whether a parameter is mandatory and/or a default value for it.
 Multiple parameters can be defined. 
 
@@ -170,7 +170,7 @@ my_extension = ca.CadenzaAnalyticsExtension(
 
 The `relative_path` defines the endpoint, i.e. the subdirectory of the URL under wich the extension will be available after deployment.
 Further parameters include the `print_name` shown in Cadenza, and the attribute groups and parameters defined above. 
-Additionally, the appropriate `cadenzaanalytics.data.extension_type` (visualization, enrichment, or calculation) must be specified.
+Additionally, the appropriate [`ExtensionType`](cadenzaanalytics/data/extension_type.html) (visualization, enrichment, or calculation) must be specified.
 
 The `analytics_function` is the name of the Python method that should be invoked (see next section).
 
@@ -193,7 +193,7 @@ The actual content and return type of this function will depend both on the exte
 Accessing the data that is transferred from Cadenza is simple.
 Within the defined analytics function, a [Pandas DataFrame](https://pandas.pydata.org/) `data` is automatically available, which holds all the data passed from Cadenza.
 
-Same as the `data` object, the `cadenzaanalytics.request.request_metadata` object is also automatically available in the analysis function as `metadata`. 
+Same as the `data` object, the [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) object is also automatically available in the analysis function as `metadata`. 
 
 The `metadata` object contains information on the columns in the `data` DataFrame, such as their print name and type in disy Cadenza, their column name in the pandas DataFrame, or additional information like a `geometry_type`, where applicable.
 
@@ -224,7 +224,7 @@ The table shows the mapping to Pyton data types:
 | Geometry                            | string    | `"POINT(8.41594949941623, 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. | 
 
 
-Parameters are stored in `metadata` as well. They are always passed as `string` and can be read through the `cadenzaanalytics.request.request_metadata` methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
+Parameters are stored in `metadata` as well. They are always passed as `string` and can be read through the [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
 
 ```
 param_flag = metadata.get_parameter('flag')
@@ -236,19 +236,40 @@ Depending on the extension type, there are specific objects for returning the re
 
 ### Data Generation
 
-A `cadenzaanalytics.response.csv_response` is used for calculations.
-The response must include the data and the proper metadata 
+A [`CsvResponse`](cadenzaanalytics/response/csv_response.html) is used for calculations.
+The response must include the data and the proper metadata.
 
-The following example returns the data received from disy Cadenza back to it.
+The following minimal example echos the data received from disy Cadenza as part of an `AttributeGroup` named `'any_data'` back to it without modification.
+
 ```
 def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
     return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
 ```
 
+For a real extension with actually calculated data, the `metadata` is built as a list of [`ColumnMetadata()`](cadenzaanalytics/data/column_metadata.html) objects:
+
+```
+response_columns = [ca.ColumnMetadata(
+    name='Geometry',
+    print_name='Geometry',
+    attribute_group_name='geo',
+    data_type=ca.DataType.GEOMETRY,
+    role=ca.AttributeRole.DIMENSION,
+    geometry_type=ca.GeometryType.POLYGON
+),
+ca.ColumnMetadata(
+    name='WeightedValue',
+    print_name='Value (IDW)',
+    attribute_group_name='value',
+    data_type=ca.DataType.FLOAT64,
+    role=ca.AttributeRole.MEASURE,
+    measure_aggregation=ca.MeasureAggregation.AVERAGE
+)]
+```
 
 ### Data Enrichment
 
-A `cadenzaanalytics.response.csv_response` is used for enrichments as well.
+A [`CsvResponse`](cadenzaanalytics/response/csv_response.html) is used for enrichments as well.
 The response must be in the format of a text, a CSV file or a DataFrame so that it fits. 
 
 TODO
@@ -258,7 +279,7 @@ The metadata must be adapted and also returned to disy Cadenza via the response 
 TODO
 
 ### Visualization
-As result of a visualization extension, an `cadenzaanalytics.response.image_response` must be returned.
+As result of a visualization extension, an [`ImageResponse`](cadenzaanalytics/response/image_response.html) must be returned.
 Visualization extensions return a bitmap image in PNG format.
 
 The image can be created in various ways, e.g. by using FigureCanvas from matplotlib to render a plot or image.
