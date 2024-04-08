@@ -63,13 +63,27 @@ The first version of disy Cadenza that supports Analytics Extensions is disy Cad
 
 
 
+<!-- 
+## Installation via PyPI
+
+The simplest way to install `cadenzaanalytics` is from the [Python Package Index (PyPI)](https://pypi.org/project/cadenzaanalytics/) using the package installer [`pip`](https://pypi.org/project/pip/). To install the most recent version, simply execute
+```
+pip install cadenzaanalytics
+```
+
+In order to install a specific version of `cadenzaanalytics`, e.g. to develop an Analytics Extension for an older version of disy Cadenza, specify the version in the `pip` call:
+
+```
+pip install cadenzaanalytics==0.1.21
+```
+-->
+
 
 ## Installation from Source
-To install the package from source, the [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python) needs to be cloned. Once the repository is locally available the package can be installed via `pip`. 
+The source of the package can be obtained from the project's public [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python). Alternatively with each release of disy Cadenza, the offline source code of the matching version of `cadenzaanalytics` is packaged in the distributions `developer.zip`.
 
-TODO: offline source code as packaged in the distributions `developer.zip`.
-
-Navigate to the root folder of the project and run:
+Once the repository is locally available, the package can be installed using the package installer [`pip`](https://pypi.org/project/pip/). 
+To install the package from source, navigate to the root folder of the project and run:
 
 ```
 pip install .
@@ -187,11 +201,15 @@ The `metadata` object contains information on the columns in the `data` DataFram
 This information can be used to access the `data` DataFrame's columns by the attribute group's name.
 
 ```
-my_data_column = metadata.get_column_by_attribute_group('my_data')
+all_data_columns = metadata.get_all_columns_by_attribute_groups()
 
-if my_data_column is not None:
-    my_data = data[my_data_column.name]
+my_data_columns = all_data_columns.get('my_data')
+
+if my_data_columns is not None:
+    my_data = data[my_data_columns[0].name]
 ```
+
+While it is also possible to directly access the columns of `data` by name or by index, this is less robust, since the actual column names of the dataframe depend on their configuration in disy Cadenza and changing them there might lead to the extension not functioning properly anymore.
 
 
 Currently, the following Cadenza attribute types can be passed to an Analytics Extension.
@@ -205,7 +223,6 @@ The table shows the mapping to Pyton data types:
 | Floating point number (Double)      | pandas.Float64Dtype   | `1.23`                   | |
 | Date                                | string    | `"2022-11-12T12:34:56+13:45[Pacific/Chatham]"` | A date is represented as an [ISO string with time zone offset from UTC](https://en.wikipedia.org/wiki/ISO_8601#Coordinated_Universal_Time_(UTC)) (UTC) and additional time zone identifier in brackets. |
 | Geometry                            | string    | `"POINT(8.41594949941623, 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. | 
-
 
 
 Parameters are stored in `metadata` as well. They are always passed as `string` and can be read through the `cadenzaanalytics.request.request_metadata` methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
@@ -228,8 +245,6 @@ The following example returns the data received from disy Cadenza back to it.
 def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
     return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
 ```
-
-TODO: response columns
 
 ### Data Enrichment
 
@@ -262,7 +277,7 @@ In order to abort the execution of the function with an error and pass an accord
 
 ```
 if my_data is None:
-        return ca.ErrorResponse('"Didn't find expected attribute "my_data".', 400)
+        return ca.ErrorResponse('Didn't find expected attribute "my_data".', 400)
 ```
 
 ## Registering the Extension
