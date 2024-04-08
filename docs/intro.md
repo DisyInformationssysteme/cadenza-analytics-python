@@ -298,7 +298,7 @@ In order to abort the execution of the function with an error and pass an accord
 
 ```python
 if my_data is None:
-        return ca.ErrorResponse('Didn't find expected attribute "my_data".', 400)
+        return ca.ErrorResponse('Didn\'t find expected attribute "my_data".', 400)
 ```
 
 ## Registering the Extension
