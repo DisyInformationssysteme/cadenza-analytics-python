@@ -66,13 +66,13 @@ The first version of disy Cadenza that supports Analytics Extensions is disy Cad
 ## Installation via PyPI
 
 The simplest way to install `cadenzaanalytics` is from the [Python Package Index (PyPI)](https://pypi.org/project/cadenzaanalytics/) using the package installer [`pip`](https://pypi.org/project/pip/). To install the most recent version, simply execute
-```
+```console
 pip install cadenzaanalytics
 ```
 
 In order to install a specific version of `cadenzaanalytics`, e.g. to develop an Analytics Extension for an older version of disy Cadenza, specify the version in the `pip` call:
 
-```
+```console
 pip install cadenzaanalytics==0.1.21
 ```
 -->
@@ -84,7 +84,7 @@ The source of the package can be obtained from the project's public [GitHub repo
 Once the repository is locally available, the package can be installed using the package installer [`pip`](https://pypi.org/project/pip/). 
 To install the package from source, navigate to the root folder of the project and run:
 
-```
+```console
 pip install .
 ```
 
@@ -97,7 +97,7 @@ Full, working examples can be found in the [module's GitHub repository](https://
 
 Initially, the module must be imported:
 
-```
+```python
 import cadenzaanalytics as ca
 ```
 
@@ -106,7 +106,7 @@ import cadenzaanalytics as ca
 
 We specify what data can be passed from disy Cadenza to the Anylytics Extension by defining at least one [`AttributeGroup()`](cadenzaanalytics/data/attribute_group.html).
 
-```
+```python
 my_attribute_group = ca.AttributeGroup(
                          name='my_data',
                          print_name='Any numeric attribute',
@@ -128,7 +128,7 @@ An extension may or may not require parametrization beyond the actual data that 
 A parameter can be optionally defined by creating a [`Parameter()`](cadenzaanalytics/data/parameter.html) object.
 
 
-```
+```python
 my_param = ca.Parameter(
                name='flag',
                print_name='Some flag that my analysis needs',
@@ -142,7 +142,7 @@ Multiple parameters can be defined.
 
 As an alternative to requesting input of a parameter in one of the standard data types, a list from which a user selects a value can be defined via the `SELECT` type:
 
-```
+```python
 my_param2 = ca.Parameter(
                 name='dropdown',
                 print_name='Select option'
@@ -157,7 +157,7 @@ my_param2 = ca.Parameter(
 
 To specify the endpoint where the extension expects to receive from disy Cadenza and tie the previous configuration together, a [`CadenzaAnalyticsExtension()`](cadenzaanalytics/cadenza_analytics_extension.html) must be defined.
 
-```
+```python
 my_extension = ca.CadenzaAnalyticsExtension(
                    relative_path='my-extension',
                    analytics_function=my_analytics_function,
@@ -180,7 +180,7 @@ The analysis function `my_analytics_function` (or whatever you choose to name it
 It implements what the extension should be doing when being invoked from disy Cadenza. 
 This method takes two arguments,  `metadata` and `data`, which both will be passed to it automatically when the extension is invoked from Cadenza.
 
-```
+```python
 def my_analytics_function (metadata: ca.RequestMetadata, data: pd.DataFrame):
     # do something
     return #something
@@ -199,7 +199,7 @@ The `metadata` object contains information on the columns in the `data` DataFram
 
 This information can be used to access the `data` DataFrame's columns by the attribute group's name.
 
-```
+```python
 all_data_columns = metadata.get_all_columns_by_attribute_groups()
 
 my_data_columns = all_data_columns.get('my_data')
@@ -226,7 +226,7 @@ The table shows the mapping to Pyton data types:
 
 Parameters are stored in `metadata` as well. They are always passed as `string` and can be read through the [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
 
-```
+```python
 param_flag = metadata.get_parameter('flag')
 ```
 
@@ -241,14 +241,14 @@ The response must include the data and the proper metadata.
 
 The following minimal example echos the data received from disy Cadenza as part of an `AttributeGroup` named `'any_data'` back to it without modification.
 
-```
+```python
 def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
     return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
 ```
 
 For a real extension with actually calculated data, the `metadata` is built as a list of [`ColumnMetadata()`](cadenzaanalytics/data/column_metadata.html) objects:
 
-```
+```python
 response_columns = [ca.ColumnMetadata(
     name='Geometry',
     print_name='Geometry',
@@ -285,7 +285,7 @@ Visualization extensions return a bitmap image in PNG format.
 The image can be created in various ways, e.g. by using FigureCanvas from matplotlib to render a plot or image.
 The following snippet shows returning an image loaded from a file.
 
-```
+```python
 with open("example_image.png", "rb") as image_file:
     image = image_file.read()
 
@@ -296,7 +296,7 @@ return ca.ImageResponse(image)
 ### Returning an Error
 In order to abort the execution of the function with an error and pass an according message to disy Cadenza, a `cadenzaanalytics.response.error_response` can be returned.
 
-```
+```python
 if my_data is None:
         return ca.ErrorResponse('Didn't find expected attribute "my_data".', 400)
 ```
@@ -305,7 +305,7 @@ if my_data is None:
 
 TBD
 
-```
+```python
 analytics_service = ca.CadenzaAnalyticsExtensionService()
 analytics_service.add_analytics_extension(my_extension)
 ```
@@ -318,7 +318,7 @@ Since `cadenzaanalytics` is built on the [Flask framework](https://flask.pallets
 
 ## Local Execution
 
-```
+```python
 if __name__ == '__main__':
     analytics_service.run_development_server(8080)
 
