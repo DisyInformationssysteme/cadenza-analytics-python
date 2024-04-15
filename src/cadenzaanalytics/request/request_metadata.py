@@ -5,13 +5,13 @@ from cadenzaanalytics.data.column_metadata import ColumnMetadata
 
 # pylint: disable=protected-access
 class RequestMetadata:
-    """A class representing metadata for an analytics request.
+    """A class representing the metadata for an analytics request.
     """
     def __init__(self, request_metadata: dict):
         self._request_metadata = request_metadata
 
     def get_column(self, name: str) -> Optional[ColumnMetadata]:
-        """Get metadata for a specific column by name.
+        """Retruns the column metadata object for a specific column accessed by its name.
 
         Parameters
         ----------
@@ -30,13 +30,13 @@ class RequestMetadata:
 
         return None
 
-    def get_column_by_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
-        """Get a column by its attribute group.
+    def get_first_column_of_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
+        """Returns the first column metadata object of the given attribute group.
 
         Returns
         -------
         Optional[ColumnMetadata]
-            The column metadata corresponding to the given attribute group, if found; otherwise, None.
+            The column metadata of the first column in the given attribute group. If no column metadata for the attribute group was send None is returned.
         """        
         if self.has_columns():
             for column in self._get_columns():
@@ -44,8 +44,8 @@ class RequestMetadata:
                     return ColumnMetadata._from_dict(column)
         return None
 
-    def get_all_columns_by_attribute_groups(self) -> Dict[str, List[ColumnMetadata]]:
-        """Get all columns grouped by attribute groups.
+    def get_columns_by_attribute_groups(self) -> Dict[str, List[ColumnMetadata]]:
+        """Returns all column metadata objects grouped by its attribute groups.
 
         Returns
         -------
@@ -62,8 +62,8 @@ class RequestMetadata:
 
         return grouped_columns
 
-    def get_all_columns(self) -> List[ColumnMetadata]:
-        """Get a list of all column metadata objects.
+    def get_columns(self) -> List[ColumnMetadata]:
+        """Returns a list of all column metadata objects.
 
         Returns
         -------
@@ -74,7 +74,7 @@ class RequestMetadata:
         return [ColumnMetadata._from_dict(column) for column in columns]
 
     def get_parameters(self) -> Dict[str, str]:
-        """Get all parameters of the request.
+        """Retruns all parameters of the request.
 
         Returns
         -------
@@ -84,7 +84,7 @@ class RequestMetadata:
         return self._request_metadata['parameters']
 
     def get_parameter(self, name: str) -> Optional[str]:
-        """Get a specific parameter value by name.
+        """Retruns a specific parameter value.
 
         Parameters
         ----------
