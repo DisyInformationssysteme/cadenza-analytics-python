@@ -5,7 +5,7 @@ from cadenzaanalytics.data.column_metadata import ColumnMetadata
 
 # pylint: disable=protected-access
 class RequestMetadata:
-    """A class representing metadata for a request.
+    """A class representing metadata for an analytics request.
     """
     def __init__(self, request_metadata: dict):
         self._request_metadata = request_metadata
@@ -50,7 +50,7 @@ class RequestMetadata:
         Returns
         -------
         Dict[str, List[ColumnMetadata]]
-            A dictionary where keys are attribute group names and values are lists of corresponding column metadata.
+            A dictionary where the keys are the attribute group names and values are lists of corresponding column metadata objects.
         """        
         grouped_columns = {}
         columns = self._get_columns() if self.has_columns() else []
@@ -63,18 +63,18 @@ class RequestMetadata:
         return grouped_columns
 
     def get_all_columns(self) -> List[ColumnMetadata]:
-        """Get all columns.
+        """Get a list of all column metadata objects.
 
         Returns
         -------
         List[ColumnMetadata]
-            A list of all column metadata.
+            A list of all column metadata objects.
         """     
         columns = self._get_columns() if self.has_columns() else []
         return [ColumnMetadata._from_dict(column) for column in columns]
 
     def get_parameters(self) -> Dict[str, str]:
-        """Get parameters of the request.
+        """Get all parameters of the request.
 
         Returns
         -------
@@ -101,12 +101,12 @@ class RequestMetadata:
         return None
 
     def has_columns(self) -> bool:
-        """Check if the request has columns metadata.
+        """Check if the analytics request has columns with coresponding metadata.
 
         Returns
         -------
         bool
-            True if the request has columns metadata, False otherwise.
+            True if the request has columns with coresponding metadata, False otherwise.
         """ 
         return (len(self._request_metadata['dataContainers']) > 0
                 and "columns" in self._request_metadata['dataContainers'][0])
