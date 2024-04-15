@@ -1,5 +1,5 @@
-"""Configures and starts the service that runs a http server to allow disy Cadenza to detect individual extensions
-and execute their analytics function."""
+"""Provides a service which encapsulates the configuration and execution of individual analytics extensions. Runs a http server which
+executes the individual extensions analytics function and serves an extension discovery endpoint."""
 import json
 
 from flask import Flask, Response
@@ -9,7 +9,7 @@ from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtensi
 
 
 class CadenzaAnalyticsExtensionService:
-    """A service for managing Cadenza analytics extensions.
+    """A service that runs and manages Cadenza analytics extensions.
     """
     def __init__(self):
         self._analytics_extensions = []
@@ -25,7 +25,7 @@ class CadenzaAnalyticsExtensionService:
         Parameters:
         ----------
         analytics_extension : CadenzaAnalyticsExtension
-            The analytics extension to add.
+            The analytics extension to be added.
         """        
         self._analytics_extensions.append(analytics_extension)
 
@@ -39,12 +39,12 @@ class CadenzaAnalyticsExtensionService:
                                methods=['POST'])
 
     def run_development_server(self, port: int = 5000):
-        """Run the service.
+        """Start a development server wich runs the service.
 
         Parameters:
         ----------
         port : int, optional
-            The port to run the service on, by default 5000.
+            The port where the service is exposed, default 5000.
         """        
         self._app.run(port=port)
 
