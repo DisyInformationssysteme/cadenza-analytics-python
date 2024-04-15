@@ -1,6 +1,6 @@
-"""Represents a disy Cadenza analytics extension that is accessible via disy Cadenza at entry points
- depending on the extension type. The extension will run its main analytics function when invoked
- with a POST on the relative path."""
+"""Represents a disy Cadenza analytics extension and holds its configuration. In conenction with the
+`cadenza anayltics extension service` the extension handels the processing of analytics requests, when
+invoked via HTTP POST on the relative path."""
 import json
 from io import StringIO
 from typing import Callable, List
@@ -18,7 +18,7 @@ from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
 class CadenzaAnalyticsExtension:
-    """A class representing an analytics extension in Cadenza.
+    """Class representing a Cadenza analytics extension.
     """
     def __init__(self,
                  relative_path: str,
@@ -34,7 +34,7 @@ class CadenzaAnalyticsExtension:
 
     @property
     def relative_path(self) -> str:
-        """Get the relative path of the extension.
+        """Getter for the relative path of the extension.
 
         Returns
         -------
@@ -45,7 +45,7 @@ class CadenzaAnalyticsExtension:
 
     @property
     def print_name(self) -> str:
-        """Get the printable name of the extension.
+        """Getter for the printable name of the extension.
 
         Returns
         -------
@@ -56,7 +56,7 @@ class CadenzaAnalyticsExtension:
 
     @property
     def extension_type(self) -> ExtensionType:
-        """Get the type of the extension.
+        """Getter for the type of the extension.
 
         Returns
         -------
@@ -66,7 +66,7 @@ class CadenzaAnalyticsExtension:
         return self._analytics_extension.extension_type
 
     def handle_request(self) -> Response:
-        """Handle incoming requests to the extension.
+        """Handle the processing of extension requests.
 
         Returns
         -------
