@@ -126,6 +126,7 @@ Generally, one `AttributeGroup` can contain multiple attributes and multiple `At
 
 An extension may or may not require parametrization beyond the actual data that is passed to it.
 A parameter can be optionally defined by creating a [`Parameter()`](cadenzaanalytics/data/parameter.html) object.
+Parameters are _not_ available for Analytics Extensions of the type `visualization`.
 
 
 ```python
