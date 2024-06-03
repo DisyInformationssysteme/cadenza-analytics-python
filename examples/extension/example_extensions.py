@@ -14,12 +14,12 @@ def image_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
 
 
 def calculation_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
+    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_group()['any_data'])
 
 
 def enrichment_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
     # pylint: disable=unused-argument
-    response_columns = metadata.get_all_columns_by_attribute_groups()['any_data']
+    response_columns = metadata.get_all_columns_by_attribute_group()['any_data']
     response_column_names = [c.name for c in response_columns]
     return ca.RowWiseMappingCsvResponse(
         response_columns,

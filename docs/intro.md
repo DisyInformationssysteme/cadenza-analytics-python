@@ -247,7 +247,7 @@ The following minimal example echos the data received from disy Cadenza as part 
 
 ```python
 def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_groups()['any_data'])
+    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_group()['any_data'])
 ```
 
 For a real extension with actually calculated data, the `metadata` is built as a list of [`ColumnMetadata()`](cadenzaanalytics/data/column_metadata.html) objects:
