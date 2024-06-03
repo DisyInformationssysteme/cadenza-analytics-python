@@ -13,7 +13,7 @@ class AnalyticsExtension(DataObject):
     ----------
     DataObject : type
         The base data object type from which AnalyticsExtension inherits.
-    """    
+    """
     _attribute_mapping = {
         "printName": "_print_name",
         "extensionType": "_extension_type",
@@ -39,7 +39,7 @@ class AnalyticsExtension(DataObject):
         -------
         str
             The print name of the analytics extension.
-        """   
+        """
         return self._print_name
 
     @property
@@ -50,5 +50,5 @@ class AnalyticsExtension(DataObject):
         -------
         ExtensionType
             The extension type of the analytics extension.
-        """   
+        """
         return self._extension_type

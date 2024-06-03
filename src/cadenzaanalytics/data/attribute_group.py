@@ -14,7 +14,7 @@ class AttributeGroup(DataObject):
     ----------
     DataObject : type
         The base data object type from which AttributeGroup inherits.
-    """ 
+    """
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",

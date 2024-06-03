@@ -20,7 +20,7 @@ class ColumnMetadata(DataObject):
     -------
     type
         Description of what the method returns.
-    """  
+    """
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",
@@ -65,7 +65,7 @@ class ColumnMetadata(DataObject):
         -------
         str
             The name of the column.
-        """  
+        """
         return self._name
 
     @property
@@ -76,7 +76,7 @@ class ColumnMetadata(DataObject):
         -------
         str
             The print name of the column.
-        """   
+        """
         return self._print_name
 
     @property
@@ -87,7 +87,7 @@ class ColumnMetadata(DataObject):
         -------
         str
             The attribute group name of the column.
-        """ 
+        """
         return self._attribute_group_name
 
     @property
@@ -98,7 +98,7 @@ class ColumnMetadata(DataObject):
         -------
         DataType
             The data type of the column.
-        """  
+        """
         return self._data_type
 
     @property
@@ -109,7 +109,7 @@ class ColumnMetadata(DataObject):
         -------
         AttributeRole
             The role of the column.
-        """    
+        """
         return self._role
 
     @property
@@ -120,7 +120,7 @@ class ColumnMetadata(DataObject):
         -------
         MeasureAggregation
             The measure aggregation of the column.
-        """     
+        """
         return self._measure_aggregation
 
     @property
@@ -131,7 +131,7 @@ class ColumnMetadata(DataObject):
         -------
         str
             The format of the column.
-        """   
+        """
         return self._format
 
     @property
@@ -142,5 +142,5 @@ class ColumnMetadata(DataObject):
         -------
         GeometryType
             The geometry type of the column.
-        """   
+        """
         return self._geometry_type

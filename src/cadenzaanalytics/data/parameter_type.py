@@ -8,7 +8,7 @@ class ParameterType(Enum):
     -------
     str
         A string representing the parameter type.
-    """    
+    """
     STRING = "string"
     INT64 = "int64"
     FLOAT64 = "float64"

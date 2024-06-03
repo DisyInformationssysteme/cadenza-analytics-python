@@ -11,7 +11,7 @@ class Parameter(DataObject):
     ----------
     DataObject : type
         The base data object type from which Parameter inherits.
-    """  
+    """
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",

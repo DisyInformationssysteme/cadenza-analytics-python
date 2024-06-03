@@ -9,7 +9,7 @@ class DataObject:
     -------
     dict
         Serialize the data object to a JSON string.
-    """   
+    """
     _attribute_mapping = {}
     _attribute_constructors = {}  # required for enums that are deserialized
 
@@ -47,7 +47,7 @@ class DataObject:
         -------
         str
             A JSON string representing the data object.
-        """  
+        """
         return json.dumps(self._to_dict(), indent=indent, default=str)
 
     @classmethod
