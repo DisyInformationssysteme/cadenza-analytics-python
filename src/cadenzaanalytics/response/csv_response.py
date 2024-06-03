@@ -30,7 +30,7 @@ class CsvResponse(ExtensionDataResponse):
         -------
         Response
             The CSV response.
-        """   
+        """
         python_3_12 = (3, 12)
         if sys.version_info >= python_3_12:
             csv_data = self._data.to_csv(

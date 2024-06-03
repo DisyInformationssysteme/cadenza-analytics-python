@@ -15,7 +15,7 @@ class ErrorResponse(ExtensionResponse):
     ----------
     ExtensionResponse : type
         The base extension response type from which ErrorResponse inherits.
-    """   
+    """
     def __init__(self, message: str, status: int = 400):
         self._message = message
         self._status = status
@@ -27,7 +27,7 @@ class ErrorResponse(ExtensionResponse):
         -------
         Response
             The error response.
-        """        
+        """
         return self._create_response(self._message)
 
     def _get_response_json(self, message: str):

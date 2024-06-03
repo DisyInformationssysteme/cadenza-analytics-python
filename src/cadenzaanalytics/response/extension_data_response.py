@@ -15,7 +15,7 @@ class ExtensionDataResponse(ExtensionResponse):
     ----------
     ExtensionResponse : type
         The base extension response type from which ExtensionDataResponse inherits.
-    """    
+    """
     def __init__(self, content_type, data_container_name='response-data'):
         self._content_type = content_type
         self._data_container_name = data_container_name
