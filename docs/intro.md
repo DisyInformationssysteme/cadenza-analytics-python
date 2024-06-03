@@ -200,12 +200,11 @@ The `metadata` object contains information on the columns in the `data` DataFram
 This information can be used to access the `data` DataFrame's columns by the attribute group's name.
 
 ```python
-all_data_columns = metadata.get_all_columns_by_attribute_groups()
+columns_by_attribute_group = metadata.get_columns_by_attribute_group()
 
-my_data_columns = all_data_columns.get('my_data')
-
-if my_data_columns is not None:
-    my_data = data[my_data_columns[0].name]
+if 'my_data' in columns_by_attribute_group:
+    for column in columns_by_attribute_group['my_data']
+        my_data = data[column.name]
 ```
 
 While it is also possible to directly access the columns of `data` by name or by index, this is less robust, since the actual column names of the dataframe depend on their configuration in disy Cadenza and changing them there might lead to the extension not functioning properly anymore.
