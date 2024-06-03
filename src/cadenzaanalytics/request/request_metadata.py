@@ -44,7 +44,7 @@ class RequestMetadata:
                     return ColumnMetadata._from_dict(column)
         return None
 
-    def get_columns_by_attribute_groups(self) -> Dict[str, List[ColumnMetadata]]:
+    def get_columns_by_attribute_group(self) -> Dict[str, List[ColumnMetadata]]:
         """Returns all column metadata objects grouped by its attribute groups.
 
         Returns
