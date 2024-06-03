@@ -77,7 +77,7 @@ class CadenzaAnalyticsExtension:
 
         analytics_response = self._analytics_function(analytics_request.metadata, analytics_request.data)
 
-        return analytics_response.get_response(analytics_request.metadata.get_all_columns(), analytics_request.data)
+        return analytics_response.get_response(analytics_request.metadata.get_columns(), analytics_request.data)
 
     def get_capabilities(self) -> Response:
         """Get the capabilities of the extension.
@@ -95,7 +95,7 @@ class CadenzaAnalyticsExtension:
 
         if metadata.has_columns():
             type_mapping = {}
-            for column in metadata.get_all_columns():
+            for column in metadata.get_columns():
                 type_mapping[column.name] = column.data_type.pandas_type()
             csv_data = StringIO(multipart_request.form['data'])
             df_data = pd.read_csv(csv_data, sep=";", dtype=type_mapping)
