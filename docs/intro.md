@@ -1,9 +1,8 @@
 <pre>    
- <b>!! This module is currently in beta status !!</b>
+    <b>!! This module is currently in beta status !!</b>
 
     It can be used for testing, but there may be breaking changes before a full release.
     This documentation is still under developement as well.
-
 </pre>
 
 
@@ -104,7 +103,7 @@ import cadenzaanalytics as ca
 
 ## Defining Expected Data
 
-We specify what data can be passed from disy Cadenza to the Anylytics Extension by defining at least one [`AttributeGroup()`](cadenzaanalytics/data/attribute_group.html).
+We specify what data can be passed from disy Cadenza to the Anylytics Extension by defining an [`AttributeGroup()`](cadenzaanalytics/data/attribute_group.html).
 
 ```python
 my_attribute_group = ca.AttributeGroup(
@@ -160,11 +159,11 @@ To specify the endpoint where the extension expects to receive from disy Cadenza
 ```python
 my_extension = ca.CadenzaAnalyticsExtension(
                    relative_path='my-extension',
-                   analytics_function=my_analytics_function,
                    print_name='My extension's print name in Cadenza', ,
                    extension_type=ca.ExtensionType.CALCULATION,
                    attribute_groups=[my_attribute_group],
-                   parameters=[my_param, my_param2]
+                   parameters=[my_param, my_param2],
+                   analytics_function=my_analytics_function
                )
 ```
 
@@ -176,9 +175,9 @@ The `analytics_function` is the name of the Python method that should be invoked
 
 ## Including Custom Analytics Code
 
-The analysis function `my_analytics_function` (or whatever you choose to name it) is the method that contains the specific functionality for the extension. 
+The analysis function `my_analytics_function` (or whatever you choose to name it) is the method that contains the specific functionality for the extension.
 It implements what the extension should be doing when being invoked from disy Cadenza. 
-This method takes two arguments,  `metadata` and `data`, which both will be passed to it automatically when the extension is invoked from Cadenza.
+This method takes two arguments, `metadata` and `data`, which both will be passed to it automatically when the extension is invoked from Cadenza.
 
 ```python
 def my_analytics_function (metadata: ca.RequestMetadata, data: pd.DataFrame):
@@ -193,7 +192,7 @@ The actual content and return type of this function will depend both on the exte
 Accessing the data that is transferred from Cadenza is simple.
 Within the defined analytics function, a [Pandas DataFrame](https://pandas.pydata.org/) `data` is automatically available, which holds all the data passed from Cadenza.
 
-Same as the `data` object, the [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) object is also automatically available in the analysis function as `metadata`. 
+Same as the `data` object, a [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) object is also automatically available in the analysis function as `metadata`. 
 
 The `metadata` object contains information on the columns in the `data` DataFrame, such as their print name and type in disy Cadenza, their column name in the pandas DataFrame, or additional information like a `geometry_type`, where applicable.
 
