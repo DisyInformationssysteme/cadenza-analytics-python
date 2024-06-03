@@ -252,22 +252,24 @@ def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
 For a real extension with actually calculated data, the `metadata` is built as a list of [`ColumnMetadata()`](cadenzaanalytics/data/column_metadata.html) objects:
 
 ```python
-response_columns = [ca.ColumnMetadata(
-    name='Geometry',
-    print_name='Geometry',
-    attribute_group_name='geo',
-    data_type=ca.DataType.GEOMETRY,
-    role=ca.AttributeRole.DIMENSION,
-    geometry_type=ca.GeometryType.POLYGON
-),
-ca.ColumnMetadata(
-    name='WeightedValue',
-    print_name='Value (IDW)',
-    attribute_group_name='value',
-    data_type=ca.DataType.FLOAT64,
-    role=ca.AttributeRole.MEASURE,
-    measure_aggregation=ca.MeasureAggregation.AVERAGE
-)]
+response_columns = [
+    ca.ColumnMetadata(
+        name='Geometry',
+        print_name='Geometry',
+        attribute_group_name='geo',
+        data_type=ca.DataType.GEOMETRY,
+        role=ca.AttributeRole.DIMENSION,
+        geometry_type=ca.GeometryType.POLYGON
+    ),
+    ca.ColumnMetadata(
+        name='WeightedValue',
+        print_name='Value (IDW)',
+        attribute_group_name='value',
+        data_type=ca.DataType.FLOAT64,
+        role=ca.AttributeRole.MEASURE,
+        measure_aggregation=ca.MeasureAggregation.AVERAGE
+    )
+]
 ```
 
 ### Data Enrichment
