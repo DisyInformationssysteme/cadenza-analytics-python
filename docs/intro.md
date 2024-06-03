@@ -299,7 +299,7 @@ return ca.ImageResponse(image)
 
 
 ### Returning an Error
-In order to abort the execution of the function with an error and pass an according message to disy Cadenza, a `cadenzaanalytics.response.error_response` can be returned.
+In order to abort the execution of the function with an error and pass an according message to disy Cadenza, a [`ErrorResponse`](cadenzaanalytics/response/error_response.html) can be returned.
 
 ```python
 if my_data is None:
