@@ -206,7 +206,12 @@ if 'my_data' in columns_by_attribute_group:
         my_data = data[column.name]
 ```
 
-While it is also possible to directly access the columns of `data` by name or by index, this is less robust, since the actual column names of the dataframe depend on their configuration in disy Cadenza and changing them there might lead to the extension not functioning properly anymore.
+While it is also possible to directly access the columns of `data` by name or by index, this is less robust, since the actual column names of the dataframe depend on their configuration in disy Cadenza and changing them there might lead to the extension not functioning properly anymore. However it is possible to get the metadata to a specific colum of the `data` DataFrame.
+
+```python
+for column_name, column_data in data.items():
+    column_metadata = metadata.get_column(column_name)
+```
 
 
 Currently, the following Cadenza attribute types can be passed to an Analytics Extension.
