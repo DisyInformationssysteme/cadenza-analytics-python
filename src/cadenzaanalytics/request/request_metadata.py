@@ -37,7 +37,7 @@ class RequestMetadata:
         -------
         Optional[ColumnMetadata]
             The column metadata of the first column in the given attribute group. If no column metadata for the attribute group was send None is returned.
-        """        
+        """
         if self.has_columns():
             for column in self._get_columns():
                 if column['attributeGroupName'] == attribute_group:
@@ -51,7 +51,7 @@ class RequestMetadata:
         -------
         Dict[str, List[ColumnMetadata]]
             A dictionary where the keys are the attribute group names and values are lists of corresponding column metadata objects.
-        """        
+        """
         grouped_columns = {}
         columns = self._get_columns() if self.has_columns() else []
         for column in columns:
@@ -69,7 +69,7 @@ class RequestMetadata:
         -------
         List[ColumnMetadata]
             A list of all column metadata objects.
-        """     
+        """
         columns = self._get_columns() if self.has_columns() else []
         return [ColumnMetadata._from_dict(column) for column in columns]
 
@@ -80,7 +80,7 @@ class RequestMetadata:
         -------
         dict[str, str]
             Parameters of the request.
-        """  
+        """
         return self._request_metadata['parameters']
 
     def get_parameter(self, name: str) -> Optional[str]:
@@ -107,7 +107,7 @@ class RequestMetadata:
         -------
         bool
             True if the request has columns with coresponding metadata, False otherwise.
-        """ 
+        """
         return (len(self._request_metadata['dataContainers']) > 0
                 and "columns" in self._request_metadata['dataContainers'][0])
 

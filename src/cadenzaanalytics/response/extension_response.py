@@ -10,5 +10,5 @@ class ExtensionResponse:
     """
     def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
         """Get the response from the extension.
-        """ 
+        """
         pass

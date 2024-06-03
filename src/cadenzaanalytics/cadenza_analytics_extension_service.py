@@ -26,7 +26,7 @@ class CadenzaAnalyticsExtensionService:
         ----------
         analytics_extension : CadenzaAnalyticsExtension
             The analytics extension to be added.
-        """        
+        """
         self._analytics_extensions.append(analytics_extension)
 
         self._app.add_url_rule("/" + analytics_extension.relative_path,
@@ -45,7 +45,7 @@ class CadenzaAnalyticsExtensionService:
         ----------
         port : int, optional
             The port where the service is exposed, default 5000.
-        """        
+        """
         self._app.run(port=port)
 
     def __call__(self, *args, **kwargs):
