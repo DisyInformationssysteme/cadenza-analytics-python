@@ -40,7 +40,7 @@ class CadenzaAnalyticsExtension:
         -------
         str
             The relative path of the extension.
-        """ 
+        """
         return self._relative_path
 
     @property
@@ -51,7 +51,7 @@ class CadenzaAnalyticsExtension:
         -------
         str
             The printable name of the extension.
-        """  
+        """
         return self._analytics_extension.print_name
 
     @property
@@ -72,7 +72,7 @@ class CadenzaAnalyticsExtension:
         -------
         Response
             The response to the request.
-        """            
+        """
         analytics_request = self._get_request_data(request)
 
         analytics_response = self._analytics_function(analytics_request.metadata, analytics_request.data)
@@ -86,7 +86,7 @@ class CadenzaAnalyticsExtension:
         -------
         Response
             The capabilities of the extension.
-        """ 
+        """
         return Response(response=self._analytics_extension.to_json(), status=200, mimetype="application/json")
 
     def _get_request_data(self, multipart_request) -> AnalyticsRequest:
