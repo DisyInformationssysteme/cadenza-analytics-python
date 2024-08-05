@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.1.22 - 2024-08-05
+
 ## 0.1.21 - 2024-03-06
 - Row wise mapped results can now be list of values instead of pandas Series if they respect the index order
 
