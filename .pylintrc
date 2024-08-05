@@ -11,3 +11,6 @@ max-line-length=120
 
 [MISCELLANEOUS]
 notes=FIXME
+
+[MESSAGES CONTROL]
+disable=duplicate-code
