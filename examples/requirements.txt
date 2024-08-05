@@ -1,7 +1,0 @@
---extra-index-url https://test.pypi.org/simple
-Flask==2.2.5
-Flask-Cors==3.0.10
-gunicorn==20.1.0
-requests-toolbelt==1.0.0
-pandas==2.0.2
-cadenzaanalytics

@@ -9,7 +9,8 @@ from cadenzaanalytics.data.measure_aggregation import MeasureAggregation
 
 # pylint: disable=too-many-instance-attributes
 class ColumnMetadata(DataObject):
-    """A class representing metadata for columns such as the name, print_name, attribute_group_name, data_type, role, measure_aggregation, format and gemetry_type.
+    """A class representing metadata for columns such as the name, print_name, attribute_group_name, data_type, role,
+     measure_aggregation, format and geometry_type.
 
     Parameters
     ----------

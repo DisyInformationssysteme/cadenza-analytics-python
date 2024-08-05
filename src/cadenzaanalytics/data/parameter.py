@@ -5,7 +5,8 @@ from cadenzaanalytics.data.parameter_type import ParameterType
 
 
 class Parameter(DataObject):
-    """A class representing parameters such as name, print_name, parameter_type, options, required and default_value used in data objects.
+    """A class representing parameters such as name, print_name, parameter_type, options, required
+    and default_value used in data objects.
 
     Parameters
     ----------

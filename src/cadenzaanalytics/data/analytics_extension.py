@@ -7,7 +7,8 @@ from cadenzaanalytics.data.parameter import Parameter
 
 
 class AnalyticsExtension(DataObject):
-    """A class representing an analytics extension containing print_name, extension_type, attribute_groups and parameters.
+    """A class representing an analytics extension containing print_name, extension_type, attribute_groups
+     and parameters.
 
     Parameters
     ----------

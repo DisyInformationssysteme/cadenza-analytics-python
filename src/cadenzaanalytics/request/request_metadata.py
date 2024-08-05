@@ -11,7 +11,7 @@ class RequestMetadata:
         self._request_metadata = request_metadata
 
     def get_column(self, name: str) -> Optional[ColumnMetadata]:
-        """Retruns the column metadata object for a specific column accessed by its name.
+        """Returns the column metadata object for a specific column accessed by its name.
 
         Parameters
         ----------
@@ -36,7 +36,8 @@ class RequestMetadata:
         Returns
         -------
         Optional[ColumnMetadata]
-            The column metadata of the first column in the given attribute group. If no column metadata for the attribute group was send None is returned.
+            The column metadata of the first column in the given attribute group. If no column metadata for the
+            attribute group was send None is returned.
         """
         if self.has_columns():
             for column in self._get_columns():
@@ -50,7 +51,8 @@ class RequestMetadata:
         Returns
         -------
         Dict[str, List[ColumnMetadata]]
-            A dictionary where the keys are the attribute group names and values are lists of corresponding column metadata objects.
+            A dictionary where the keys are the attribute group names and values are lists of corresponding
+             column metadata objects.
         """
         grouped_columns = {}
         columns = self._get_columns() if self.has_columns() else []
@@ -74,7 +76,7 @@ class RequestMetadata:
         return [ColumnMetadata._from_dict(column) for column in columns]
 
     def get_parameters(self) -> Dict[str, str]:
-        """Retruns all parameters of the request.
+        """Returns all parameters of the request.
 
         Returns
         -------
@@ -84,7 +86,7 @@ class RequestMetadata:
         return self._request_metadata['parameters']
 
     def get_parameter(self, name: str) -> Optional[str]:
-        """Retruns a specific parameter value.
+        """Returns a specific parameter value.
 
         Parameters
         ----------
@@ -101,12 +103,12 @@ class RequestMetadata:
         return None
 
     def has_columns(self) -> bool:
-        """Check if the analytics request has columns with coresponding metadata.
+        """Check if the analytics request has columns with corresponding metadata.
 
         Returns
         -------
         bool
-            True if the request has columns with coresponding metadata, False otherwise.
+            True if the request has columns with corresponding metadata, False otherwise.
         """
         return (len(self._request_metadata['dataContainers']) > 0
                 and "columns" in self._request_metadata['dataContainers'][0])

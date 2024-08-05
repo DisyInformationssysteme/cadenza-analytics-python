@@ -2,7 +2,8 @@ from enum import Enum
 
 
 class GeometryType(Enum):
-    """A class representing different types of geometries such as point, linestring, polygon, multipoint, multilinestring, multipolygon.
+    """A class representing different types of geometries such as point, linestring, polygon, multipoint,
+     multilinestring, multipolygon.
     """
     POINT = "point"
     LINESTRING = "linestring"

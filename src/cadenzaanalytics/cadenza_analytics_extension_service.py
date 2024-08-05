@@ -1,5 +1,6 @@
-"""Provides a service which encapsulates the configuration and execution of individual analytics extensions. Runs a http server which
-executes the individual extensions analytics function and serves an extension discovery endpoint."""
+"""Provides a service which encapsulates the configuration and execution of individual analytics extensions.
+Runs a http server which executes the individual extensions analytics function and serves an extension
+discovery endpoint."""
 import json
 
 from flask import Flask, Response
@@ -39,7 +40,7 @@ class CadenzaAnalyticsExtensionService:
                                methods=['POST'])
 
     def run_development_server(self, port: int = 5000):
-        """Start a development server wich runs the service.
+        """Start a development server which runs the service.
 
         Parameters:
         ----------
