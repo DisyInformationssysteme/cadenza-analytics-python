@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 0.1.25 - 2024-12-19
+
 ## 0.1.24 - 2024-12-19
 - Important: Flask version and Werkzeug version set explicitly as latest flask 2.x pulls in an incompatible Werkzeug 3.1.x version where the form request limit was changed from unlimited to 50kb and cannot be configured yet via flask
 
