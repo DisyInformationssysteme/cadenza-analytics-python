@@ -90,14 +90,14 @@ class CadenzaAnalyticsExtension:
         return Response(response=self._analytics_extension.to_json(), status=200, mimetype="application/json")
 
     def _get_request_data(self, multipart_request) -> AnalyticsRequest:
-        metadata_dict = json.loads(_get_from_request(multipart_request, 'metadata'))
+        metadata_dict = json.loads(self._get_from_request(multipart_request, 'metadata'))
         metadata = RequestMetadata(metadata_dict)
 
         if metadata.has_columns():
             type_mapping = {}
             for column in metadata.get_columns():
                 type_mapping[column.name] = column.data_type.pandas_type()
-            csv_data = StringIO(_get_from_request(multipart_request, 'data'))
+            csv_data = StringIO(self._get_from_request(multipart_request, 'data'))
             df_data = pd.read_csv(csv_data, sep=";", dtype=type_mapping)
         else:
             df_data = pd.DataFrame()
