@@ -30,6 +30,9 @@ Flask-Cors = "3.0.10"
 requests-toolbelt = "1.0.0"
 pandas = " ^2.0.2"
 
+[project]
+name = "cadenzaanalytics"
+
 [project.urls]
 Repository = "https://github.com/DisyInformationssysteme/cadenza-analytics-python"
 
