@@ -124,8 +124,9 @@ Generally, one `AttributeGroup` can contain multiple attributes and multiple `At
 ## Defining Expected Parameters
 
 An extension may or may not require parametrization beyond the actual data that is passed to it.
+
 A parameter can be optionally defined by creating a [`Parameter()`](cadenzaanalytics/data/parameter.html) object.
-Parameters are _not_ available for Analytics Extensions of the type `visualization`.
+
 
 
 ```python
@@ -153,6 +154,8 @@ my_param2 = ca.Parameter(
             )
 ```
 
+Note: Parameters for Analytics Extensions of the type `visualization` can currently *not* yet be assigned on the disy Cadenza side when displaying the visualization as a Cadenza view.
+
 ## Configuring the Extension
 
 To specify the endpoint where the extension expects to receive from disy Cadenza and tie the previous configuration together, a [`CadenzaAnalyticsExtension()`](cadenzaanalytics/cadenza_analytics_extension.html) must be defined.
@@ -160,7 +163,7 @@ To specify the endpoint where the extension expects to receive from disy Cadenza
 ```python
 my_extension = ca.CadenzaAnalyticsExtension(
                    relative_path='my-extension',
-                   print_name='My extension's print name in Cadenza', ,
+                   print_name='My extension\'s print name in Cadenza',
                    extension_type=ca.ExtensionType.CALCULATION,
                    attribute_groups=[my_attribute_group],
                    parameters=[my_param, my_param2],
@@ -203,7 +206,7 @@ This information can be used to access the `data` DataFrame's columns by the att
 columns_by_attribute_group = metadata.get_columns_by_attribute_group()
 
 if 'my_data' in columns_by_attribute_group:
-    for column in columns_by_attribute_group['my_data']
+    for column in columns_by_attribute_group['my_data']:
         my_data = data[column.name]
 ```
 
@@ -247,7 +250,7 @@ The following minimal example echos the data received from disy Cadenza as part 
 
 ```python
 def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_group()['any_data'])
+    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_group()['my_data'])
 ```
 
 For a real extension with actually calculated data, the `metadata` is built as a list of [`ColumnMetadata()`](cadenzaanalytics/data/column_metadata.html) objects:
@@ -326,7 +329,7 @@ Since `cadenzaanalytics` is built on the [Flask framework](https://flask.pallets
 
 ```python
 if __name__ == '__main__':
-    analytics_service.run_development_server(8080)
+    analytics_service.run_development_server(8090)
 
 ```
 
