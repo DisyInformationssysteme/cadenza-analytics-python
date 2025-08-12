@@ -39,15 +39,17 @@ class CadenzaAnalyticsExtensionService:
                                endpoint=analytics_extension.relative_path + "_post",
                                methods=['POST'])
 
-    def run_development_server(self, port: int = 5000):
+    def run_development_server(self, port:int=5000, debug:bool=None):
         """Start a development server which runs the service.
 
         Parameters:
         ----------
         port : int, optional
             The port where the service is exposed, default 5000.
+        debug : bool, optional
+            If the debug flag is set the server will automatically reload for code changes and show a debugger in case an exception happened.
         """
-        self._app.run(port=port)
+        self._app.run(port=port, debug=debug)
 
     def __call__(self, *args, **kwargs):
         return self._app
