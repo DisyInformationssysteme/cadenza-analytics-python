@@ -23,17 +23,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ vars.PYTHON_VERSION }}
+            
+      # poetry is needed for building and for poetry-bumpversion for version management
+      - name: Install poetry
+        run: |
+          pipx install poetry
 
       # ADJUST THIS: install all dependencies (including pdoc)
       - run: |
           python -m pip install --upgrade pip
           pip install pdoc
           pip install .
-      # poetry is needed for building and for poetry-bumpversion for version management
-      - name: Install poetry
-        run: |
-          pipx install poetry
-          poetry self add poetry-bumpversion
 
       # get version for URL path and insertion into docs
       - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3)
