@@ -1,24 +1,7 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      release-type:
-        type: choice
-        description: 'Release type'
-        required: true
-        options:
-          - patch
-          - minor
-          - major
-      deployment-env:
-        type: choice
-        description: 'Deployment environment'
-        required: true
-        options:
-          - test.pypi.org
-          - pypi.org
-        default: 'test.pypi.org'
+  workflow_dispatch
 
 jobs:
   release:
@@ -65,25 +48,47 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
 
-    - name: Bump package version
+    - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3)
       run: |
-        echo "NEW_VERSION=$(poetry version ${{ github.event.inputs.release-type }} -s | head -n 1)" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=$(poetry version patch --dry-run -s)" >> $GITHUB_ENV
+
+    - name: Set release tag to 'latest'    
+      run: |
         echo "RELEASE_TAG=latest" >> $GITHUB_ENV
+
+
+    # Create a dist/wheel for the bumped version now after "poetry version" has run
+    - name: Build
+      run: |
+        poetry build
+
+    # either push to test.pypi.org or pypi.org depending on user input
+    - name: Publish package distributions to Test (!) PyPI
+      #  if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
+
+
+          #- name: Publish package distributions to PyPI
+          #  if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
+          #  uses: pypa/gh-action-pypi-publish@release/v1
+
 
     # Update changelog unreleased section with new version
     - name: Update changelog
       uses: superfaceai/release-changelog-action@v2
       with:
         path-to-changelog: CHANGELOG.md
-        version: ${{ env.NEW_VERSION }}
+        version: ${{ env.RELEASE_VERSION }}
         operation: release
 
     - name: Commit and tag changes
       run: |
         git add "pyproject.toml"
         git add "CHANGELOG.md"
-        git commit -m "chore: release ${{ env.NEW_VERSION }}"
-        git tag ${{ env.NEW_VERSION }}
+        git commit -m "chore: release ${{ env.RELEASE_VERSION }}"
+        git tag ${{ env.RELEASE_VERSION }}
 
     - name: Push changes
       env:
@@ -95,31 +100,29 @@ jobs:
       uses: superfaceai/release-changelog-action@v2
       with:
         path-to-changelog: CHANGELOG.md
-        version: ${{ env.NEW_VERSION }}
+        version: ${{ env.RELEASE_VERSION }}
         operation: read
 
     - name: Update GitHub release documentation
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.NEW_VERSION }}
+        tag_name: ${{ env.RELEASE_VERSION }}
         body: ${{ steps.get-changelog.outputs.changelog }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-    # Create a dist/wheel for the bumped version now after "poetry version" has run
-    - name: Build
+    - name: Bump package version to new dev version (e.g. 1.2.3 => 1.2.4-dev)
       run: |
-        poetry build
+        poetry version --dry-run "$(poetry version patch --dry-run -s)-dev"
+        DEV_VERSION=$(poetry version -s) && echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_ENV # Determine DEV_VERSION 
 
-    # either push to test.pypi.org or pypi.org depending on user input
-    - name: Publish package distributions to Test (!) PyPI
-      if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
+    - name: Commit version bump
+      run: |
+        git add "pyproject.toml"
+        git commit -m "chore: bump up version to ${{ env.DEV_VERSION }}"
 
+    - name: Push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: git push origin
 
-    - name: Publish package distributions to PyPI
-      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
-      uses: pypa/gh-action-pypi-publish@release/v1
