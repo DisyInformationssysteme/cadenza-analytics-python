@@ -2,9 +2,10 @@ name: pdoc
 
 # build the documentation whenever there are new commits on main
 on:
-  push:
-    branches:
-      - main
+  push
+  workflow_dispatch
+    #  branches:
+    #    - main
     # Alternative: only build for tags.
     # tags:
     #   - '*'
