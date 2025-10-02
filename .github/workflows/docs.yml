@@ -1,14 +1,14 @@
 name: pdoc
 
-# build the documentation whenever there are new commits on main
+# build the documentation whenever there are new commits
 on:
-  push
-  workflow_dispatch
-    #  branches:
-    #    - main
+  push:
+    branches:
+      - '*'
     # Alternative: only build for tags.
     # tags:
     #   - '*'
+  workflow_dispatch: 
 
 # security: restrict permissions for CI jobs.
 permissions:
