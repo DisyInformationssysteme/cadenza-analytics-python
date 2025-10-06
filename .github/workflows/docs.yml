@@ -41,10 +41,10 @@ jobs:
           echo "BRANCH_NAME=v$(poetry version patch --dry-run -s | cut -d. -f1,2).x" >> $GITHUB_ENV
           echo "RELEASE_VERSION=$(poetry version patch --dry-run -s)" >> $GITHUB_ENV
       # build documentation into docs/.
-      - run: pdoc --favicon https://www.disy.net/favicon.ico --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg --logo-link https://www.disy.net/en/products/disy-cadenza -o docs/${BRANCH_NAME}/ --no-show-source src/cadenzaanalytics
+      - run: pdoc --favicon https://www.disy.net/favicon.ico --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg --logo-link https://www.disy.net/en/products/disy-cadenza -o docs/ --no-show-source src/cadenzaanalytics
       # write version into documentation
       - name: Replace {{version}} placeholder with release version           
-        run: sed -i "s/{{version}}/${RELEASE_VERSION}/" ./docs/${BRANCH_NAME}/cadenzaanalytics.html
+        run: sed -i "s/{{version}}/${RELEASE_VERSION}/" ./docs/cadenzaanalytics.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -61,7 +61,11 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.change-page-url.outputs.new_page_url }}
+#      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Override page_url
+        id: change-page-url
+        run: echo "new_page_url=${{ steps.deployment.outputs.page_url }}${BRANCH_NAME}/" >> $GITHUB_OUTPUT
