@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadenzaanalytics Developer Documentation</title>
+    <style>
+        body, html {
+            font-family: Titillium Web, Arial, sans-serif;
+            width: 100%; 
+            height: 100%; 
+            margin: 0; 
+            padding: 0;
+        }
+        .row-container {
+            display: flex; 
+            width: 100%; 
+            height: 100%; 
+            flex-direction: column; 
+            overflow: hidden;
+        }
+        .select-row {
+            margin: 0;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            background-color: #ddd; 
+        }
+        .select-label {
+            padding-left: 20px;
+        }
+        .iframe-row { 
+            flex-grow: 1; 
+            border: none; 
+            margin: 0; 
+            padding: 0; 
+        }
+    </style>
+</head>
+
+<script>
+    // Change link target of disy logo link after iFrame content has loaded
+    function onIFrameLoad() {
+        var iframe = document.getElementById('branchIframe');
+        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        var elements = innerDoc.getElementsByClassName('logo');
+        if (typeof elements[0] !== 'undefined') {
+            var logoLink = elements[0].parentNode;
+            logoLink.setAttribute("target","_top");
+        }
+    };
+</script>
+
+<body>
+    <div class="row-container">
+        <div class="select-row">
+            <span class="select-label"> Show documentation for <tt>cadenzaanalytics</tt> version
+                <select id="branchSelect">
+                    <option value="" disabled>Select Cadenza Version</option>
+                    <!-- Branch options will be populated here -->
+                </select>
+            </span>
+        </div>
+        <iframe id="branchIframe" src="" frameborder="0" class="iframe-row" onload="onIFrameLoad(this)">
+        </iframe>
+    </div>
+    <script>
+        // Add event listener to change iframe source based on selected branch
+        document.getElementById('branchSelect').addEventListener('change', function() {
+            const selectedBranch = this.value;
+            const iframe = document.getElementById('branchIframe');
+            if (selectedBranch) {
+                iframe.src = `${githubPagesBaseUrl}/${selectedBranch}/`;
+            } else {
+                iframe.src = '';
+            }
+        });
+
+        // Fetch branches from the GitHub API
+        const owner = 'DisyInformationssysteme';
+        const repo = 'cadenza-analytics-python';
+        const githubPagesBaseUrl = `https://${owner}.github.io/${repo}/`;
+
+        fetch(`https://api.github.com/repos/${owner}/${repo}/branches`)
+            .then(response => response.json())
+            .then(data => {
+                const branchSelect = document.getElementById('branchSelect');
+                data.sort((a, b) => a.name.localeCompare(b.name)).reverse(); // Sort by name desc
+                data.forEach(branch => {
+                    if (/^v[0-9.]+\.x$/.test(branch.name)) { // Only list numeric branch names starting with "v", ending in ".x"
+                        const option = document.createElement('option');
+                        option.value = branch.name;
+                        option.textContent = branch.name;
+                        branchSelect.appendChild(option);
+                    }
+                });
+                // Dispatch change event once intially to load content
+                document.querySelector('#branchSelect').dispatchEvent(new Event('change', {}))
+            })
+            .catch(error => console.error('Error fetching branches:', error));
+    </script>
+</body>
+</html>
