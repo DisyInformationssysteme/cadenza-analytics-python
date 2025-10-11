@@ -55,13 +55,11 @@ The `cadenzaanalytics` package has the following dependencies:
 * [Pandas](https://pandas.pydata.org/)
 * requests-toolbelt
 
-The first version of disy Cadenza that supports Analytics Extensions is disy Cadenza Autumn 2023 (9.3). For each disy Cadenza version, the correct corresponding library version needs to be used:
+For each disy Cadenza version, the correct corresponding library version needs to be used.
+The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.
 
-|disy Cadenza version | cadenzaanalytics version|
-|---------------------|-------------------------|
-| 9.3 (Autumn 2023)   |             < 0.2 (beta)|
-
-
+For Cadenza 10.2 and earlier versions, `cadenzaanalytics` used a semantic versioning scheme. 
+The first version of disy Cadenza that supported Analytics Extensions is disy Cadenza Autumn 2023 (9.3). 
 
 <!-- 
 ## Installation via PyPI
