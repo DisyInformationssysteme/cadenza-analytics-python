@@ -57,7 +57,6 @@
                 <select id="branchSelect">
                     <option value="" disabled>Select Cadenza Version</option>
                     <!-- Branch options will be populated here -->
-                    <!-- placeholder -->
                 </select>
             </span>
         </div>
@@ -76,28 +75,8 @@
             }
         });
 
-        // Fetch branches from the GitHub API
-        const owner = 'DisyInformationssysteme';
-        const repo = 'cadenza-analytics-python';
-        const githubPagesBaseUrl = `https://${owner}.github.io/${repo}/`;
-
-        fetch(`https://api.github.com/repos/${owner}/${repo}/branches`)
-            .then(response => response.json())
-            .then(data => {
-                const branchSelect = document.getElementById('branchSelect');
-                data.sort((a, b) => a.name.localeCompare(b.name)).reverse(); // Sort by name desc
-                data.forEach(branch => {
-                    if (/^v[0-9.]+\.x$/.test(branch.name)) { // Only list numeric branch names starting with "v", ending in ".x"
-                        const option = document.createElement('option');
-                        option.value = branch.name;
-                        option.textContent = branch.name;
-                        branchSelect.appendChild(option);
-                    }
-                });
-                // Dispatch change event once intially to load content
-                document.querySelector('#branchSelect').dispatchEvent(new Event('change', {}))
-            })
-            .catch(error => console.error('Error fetching branches:', error));
+        // Dispatch change event once intially to load content on initial load
+        // document.querySelector('#branchSelect').dispatchEvent(new Event('change', {}))
     </script>
 </body>
 </html>
