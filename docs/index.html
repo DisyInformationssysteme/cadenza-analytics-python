@@ -37,19 +37,6 @@
     </style>
 </head>
 
-<script>
-    // Change link target of disy logo link after iFrame content has loaded
-    function onIFrameLoad() {
-        var iframe = document.getElementById('branchIframe');
-        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        var elements = innerDoc.getElementsByClassName('logo');
-        if (typeof elements[0] !== 'undefined') {
-            var logoLink = elements[0].parentNode;
-            logoLink.setAttribute("target","_top");
-        }
-    };
-</script>
-
 <body>
     <div class="row-container">
         <div class="select-row">
@@ -69,14 +56,14 @@
             const selectedBranch = this.value;
             const iframe = document.getElementById('branchIframe');
             if (selectedBranch) {
-                iframe.src = `./${selectedBranch}/`;
+                iframe.src = `./${selectedBranch}/index.html`;
             } else {
                 iframe.src = '';
             }
         });
 
         // Dispatch change event once intially to load content on initial load
-        // document.querySelector('#branchSelect').dispatchEvent(new Event('change', {}))
+        document.querySelector('#branchSelect').dispatchEvent(new Event('change', {}))
     </script>
 </body>
 </html>
