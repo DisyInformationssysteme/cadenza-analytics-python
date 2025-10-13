@@ -69,7 +69,7 @@
             const selectedBranch = this.value;
             const iframe = document.getElementById('branchIframe');
             if (selectedBranch) {
-                iframe.src = `${githubPagesBaseUrl}/${selectedBranch}/`;
+                iframe.src = `./${selectedBranch}/`;
             } else {
                 iframe.src = '';
             }
