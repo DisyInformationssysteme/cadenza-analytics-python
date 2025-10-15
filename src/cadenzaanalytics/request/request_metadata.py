@@ -110,8 +110,8 @@ class RequestMetadata:
         bool
             True if the request has columns with corresponding metadata, False otherwise.
         """
-        return (len(self._request_metadata['dataContainers']) > 0
-                and "columns" in self._request_metadata['dataContainers'][0])
+        return (self._request_metadata['dataContainers'] != []
+                and len(self._request_metadata['dataContainers'][0]['columns']) > 0)
 
     def _get_columns(self):
         return self._request_metadata['dataContainers'][0]['columns']
