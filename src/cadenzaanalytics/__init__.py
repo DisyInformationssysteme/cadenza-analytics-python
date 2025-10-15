@@ -27,5 +27,6 @@ from cadenzaanalytics.response.row_wise_mapping_csv_response import RowWiseMappi
 
 from cadenzaanalytics.response.image_response import ImageResponse
 from cadenzaanalytics.response.text_response import TextResponse
+from cadenzaanalytics.response.url_response import UrlResponse
 
 from cadenzaanalytics.response.error_response import ErrorResponse
