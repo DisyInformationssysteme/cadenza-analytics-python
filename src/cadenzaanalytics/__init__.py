@@ -21,7 +21,11 @@ from cadenzaanalytics.data.measure_aggregation import MeasureAggregation
 from cadenzaanalytics.data.parameter import Parameter
 from cadenzaanalytics.data.parameter_type import ParameterType
 from cadenzaanalytics.request.request_metadata import RequestMetadata
+
 from cadenzaanalytics.response.csv_response import CsvResponse
 from cadenzaanalytics.response.row_wise_mapping_csv_response import RowWiseMappingCsvResponse
-from cadenzaanalytics.response.error_response import ErrorResponse
+
 from cadenzaanalytics.response.image_response import ImageResponse
+from cadenzaanalytics.response.text_response import TextResponse
+
+from cadenzaanalytics.response.error_response import ErrorResponse
