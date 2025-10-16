@@ -37,6 +37,9 @@ for BRANCH in $BRANCHES; do
   RELEASE_VERSION=$(poetry version patch --dry-run -s)
   # TODO double check whether branch (TAG?) name and version in poetry are same?? But not for 10.2.x
 
+  # Install cadenzaanalytics from this branch
+  pip install --upgrade --force-reinstall .
+
   # Run pdoc to generate documentation
   LOGO_LINK="https://www.disy.net/en/products/disy-cadenza/"
   pdoc --favicon https://www.disy.net/favicon.ico \
