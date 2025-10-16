@@ -36,7 +36,6 @@ class CsvResponse(ExtensionDataResponse):
     def disable_runtime_validation(self) -> bool:
         return not self._is_runtime_validation_active
 
-
     """Setter for toggle to disable the runtime validation of the response. Set to True to disable the runtime validation."""
     @disable_runtime_validation.setter
     def disable_runtime_validation(self, value):
@@ -52,25 +51,7 @@ class CsvResponse(ExtensionDataResponse):
             The CSV response.
         """
         if self._is_runtime_validation_active:
-            metadata_column_names = {}
-
-            #prepare dictionary of metadata column name for fast lookup
-            for column in self._column_meta_data:
-                if column.name not in metadata_column_names:
-                    metadata_column_names[column.name] = column.name
-                else:
-                    raise Exception(f"metadata for column \"{column.name}\" is already defined.")
-
-            for df_column_name in list(self._data):
-                if df_column_name in metadata_column_names:
-                    metadata_column_names.pop(df_column_name)
-                else:
-                    # missing metadata for column
-                    raise Exception(f"metadata definition for column \"{df_column_name}\" is missing.")
-
-            # metadata definition without columns in data
-            if len(metadata_column_names) > 0:
-                raise Exception(f"metadata column definition without column in data found. Number of missing columns: {len(metadata_column_names)}")
+            self._validate_response()
 
 
         python_3_12 = (3, 12)
@@ -98,3 +79,26 @@ class CsvResponse(ExtensionDataResponse):
             csv_data = csv_data.replace('""', '')
 
         return self._create_response(csv_data, self._column_meta_data)
+
+
+    def _validate_response(self):
+        metadata_column_names = {}
+
+        # prepare dictionary of metadata column name for fast lookup
+        for column in self._column_meta_data:
+            if column.name not in metadata_column_names:
+                metadata_column_names[column.name] = column.name
+            else:
+                raise Exception(f"metadata for column \"{column.name}\" is already defined.")
+
+        for df_column_name in list(self._data):
+            if df_column_name in metadata_column_names:
+                metadata_column_names.pop(df_column_name)
+            else:
+                # missing metadata for column
+                raise Exception(f"metadata definition for column \"{df_column_name}\" is missing.")
+
+        # metadata definition without columns in data
+        if len(metadata_column_names) > 0:
+            raise Exception(
+                f"metadata column definition without column in data found. Number of missing columns: {len(metadata_column_names)}")
