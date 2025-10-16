@@ -1,0 +1,70 @@
+name: githubpages
+
+# build the documentation for all version branches whenever there are new commits
+on:
+  push:
+    branches:
+      - githubpages
+    # Alternative: only build for tags.
+    # tags:
+    #   - '*'
+  workflow_dispatch: 
+
+# security: restrict permissions for CI jobs.
+permissions:
+  contents: read
+
+jobs:
+  # Build the documentation and upload the static HTML files as an artifact.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed to access all version branches
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ vars.PYTHON_VERSION }}
+            
+      # Poetry is needed for version management
+      - name: Install poetry
+        run: |
+          pipx install poetry
+
+      # Install dependencies and prerequisites for doc generation script
+      - run: |
+          python -m pip install --upgrade pip
+          pip install pdoc
+
+      # # get version for URL path and insertion into docs
+      # - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3)
+      #   run: |
+      #     echo "BRANCH_NAME=v$(poetry version patch --dry-run -s | cut -d. -f1,2).x" >> $GITHUB_ENV
+      #     echo "RELEASE_VERSION=$(poetry version patch --dry-run -s)" >> $GITHUB_ENV
+      # # build documentation into docs/.
+      # - run: pdoc --favicon https://www.disy.net/favicon.ico --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg --logo-link https://www.disy.net/en/products/disy-cadenza -o docs/${BRANCH_NAME}/ --no-show-source src/cadenzaanalytics
+      # # write version into documentation
+      # - name: Replace {{version}} placeholder with release version           
+      #   run: sed -i "s/{{version}}/${RELEASE_VERSION}/" ./docs/${BRANCH_NAME}/cadenzaanalytics.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs_output/
+
+  # Deploy the artifact to GitHub pages.
+  # This is a separate job so that only actions/deploy-pages has the necessary permissions.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
