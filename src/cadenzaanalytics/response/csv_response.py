@@ -89,16 +89,15 @@ class CsvResponse(ExtensionDataResponse):
             if column.name not in metadata_column_names:
                 metadata_column_names[column.name] = column.name
             else:
-                raise Exception(f"metadata for column \"{column.name}\" is already defined.")
+                raise Exception(f"Metadata for column \"{column.name}\" is already defined.")
 
         for df_column_name in list(self._data):
             if df_column_name in metadata_column_names:
                 metadata_column_names.pop(df_column_name)
             else:
                 # missing metadata for column
-                raise Exception(f"metadata definition for column \"{df_column_name}\" is missing.")
+                raise Exception(f"Metadata definition for column \"{df_column_name}\" is missing.")
 
         # metadata definition without columns in data
         if len(metadata_column_names) > 0:
-            raise Exception(
-                f"metadata column definition without column in data found. Number of missing columns: {len(metadata_column_names)}")
+            raise Exception(f"Metadata column definition without column in data found. Number of missing columns: {len(metadata_column_names)}")
