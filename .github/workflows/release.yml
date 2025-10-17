@@ -124,7 +124,7 @@ jobs:
 
     - name: Bump package version to new dev version (e.g. 1.2.3 => 1.2.4-dev)
       run: |
-        poetry version --dry-run "$(poetry version patch --dry-run -s)-dev"
+        poetry version --dry-run "$(poetry version patch --dry-run -s | head -n 1)-dev"
         DEV_VERSION=$(poetry version -s) && echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_ENV # Determine DEV_VERSION 
 
         #- name: Commit version bump
