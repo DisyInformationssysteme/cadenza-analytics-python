@@ -3,8 +3,11 @@ disable=
     missing-class-docstring,
     missing-function-docstring,
     missing-module-docstring,
-    too-many-arguments,
+    too-many-positional-arguments,
     too-few-public-methods,
+
+[DESIGN]
+max-args=9
 
 [FORMAT]
 max-line-length=120
