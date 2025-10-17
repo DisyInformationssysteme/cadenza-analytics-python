@@ -25,7 +25,7 @@ jobs:
       - name: Trigger githubpages workflow
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: githubpages.yaml
+          workflow: githubpages.yml
           ref: githubpages
           # The fine-grained PAT will expire after 1 year and then needs to be renewed!
           token: ${{ secrets.WORKFLOW_TRIGGER_TOKEN || secrets.GITHUB_TOKEN }}
