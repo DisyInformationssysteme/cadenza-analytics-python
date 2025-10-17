@@ -76,7 +76,7 @@ jobs:
 
     # either push to test.pypi.org or pypi.org depending on user input
     - name: Publish package distributions to Test (!) PyPI
-        if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
+      if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
