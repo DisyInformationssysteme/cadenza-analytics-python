@@ -2,11 +2,7 @@ name: githubpages
 
 # build the documentation for all version branches whenever there are new commits
 on:
-  #push:
-  #  branches:
-  #    - githubpages
-  release:
-    types: [published]
+  # only trigger manually or via API call
   workflow_dispatch: 
 
 # security: restrict permissions for CI jobs.
