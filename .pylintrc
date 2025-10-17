@@ -5,6 +5,7 @@ disable=
     missing-module-docstring,
     too-many-positional-arguments,
     too-few-public-methods,
+    duplicate-code
 
 [DESIGN]
 max-args=9
@@ -14,6 +15,3 @@ max-line-length=120
 
 [MISCELLANEOUS]
 notes=FIXME
-
-[MESSAGES CONTROL]
-disable=duplicate-code
