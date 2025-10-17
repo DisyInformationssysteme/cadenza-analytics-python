@@ -47,7 +47,8 @@ class CadenzaAnalyticsExtensionService:
         port : int, optional
             The port where the service is exposed, default 5000.
         debug : bool, optional
-            If the debug flag is set the server will automatically reload for code changes and show a debugger in case an exception happened.
+            If the debug flag is set the server will automatically reload for code changes 
+            and show a debugger in case an exception happened.
         """
         self._app.run(port=port, debug=debug)
 

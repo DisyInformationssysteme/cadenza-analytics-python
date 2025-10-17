@@ -1,10 +1,11 @@
 """The `cadenzaanalytics` module provides functionality to extend the business
-and location intelligence software [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) 
-with Analytics Extensions, which may be used to execute custom Python code, e.g. 
-to create, enrich or visualize data using Python. 
+and location intelligence software [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/)
+with Analytics Extensions, which may be used to execute custom Python code, e.g.
+to create, enrich or visualize data using Python.
 
 The purpose of this module is to encapsulate the communication via the Cadenza API.
 
+This is `cadenzaanalytics` version {{version}}.
 
 .. include:: ../../docs/intro.md
 """

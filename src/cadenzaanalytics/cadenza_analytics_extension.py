@@ -105,4 +105,6 @@ class CadenzaAnalyticsExtension:
         return AnalyticsRequest(metadata, df_data)
 
     def _get_from_request(self, multipart_request, part_name):
-        return multipart_request.form[part_name] if part_name in multipart_request.form else multipart_request.files[part_name].read().decode('UTF-8')
+        if part_name in multipart_request.form:
+            return multipart_request.form[part_name]
+        return multipart_request.files[part_name].read().decode('UTF-8')

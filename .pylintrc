@@ -3,14 +3,15 @@ disable=
     missing-class-docstring,
     missing-function-docstring,
     missing-module-docstring,
-    too-many-arguments,
+    too-many-positional-arguments,
     too-few-public-methods,
+    duplicate-code
+
+[DESIGN]
+max-args=9
 
 [FORMAT]
 max-line-length=120
 
 [MISCELLANEOUS]
 notes=FIXME
-
-[MESSAGES CONTROL]
-disable=duplicate-code
