@@ -33,9 +33,11 @@ An Analytics Extension defines one endpoint that, depending on the HTTP method o
 --->
 <img src="communication.png" alt="(Image: Communication between disy Cadenza and Analytics Extension)" width="800">
 
-When receiving an `HTTP(S) GET` request, the endpoint returns a JSON representation of the extention's configuration. This step is executed once when registering the Analytics Extension from the disy Cadenza Management Center GUI and does not need to be repeated unless the extension's configuration changes.
+When receiving an `HTTP(S) GET` request, the endpoint returns a JSON representation of the extention's configuration.
+This step is executed once when registering the Analytics Extension from the disy Cadenza Management Center GUI and does not need to be repeated unless the extension's configuration changes.
 
-By sending an `HTTP(S) POST` request to the same endpoint and including the data, metadata and parameters as specified in the extension's configuration as payload, the extension is executed. This step is executed each time that the Analytics Extension is invoked from the disy Cadenza GUI and Cadenza takes care of properly formatting the payload.
+By sending an `HTTP(S) POST` request to the same endpoint and including the data, metadata and parameters as specified in the extension's configuration as payload, the extension is executed. 
+This step is executed each time that the Analytics Extension is invoked from the disy Cadenza GUI and Cadenza takes care of properly formatting the payload.
 
 The `cadenzaanalytics` module provides the functionality to abstract the required communication and easily configure the Analytics Extension's responses to the above requests. 
 
@@ -78,7 +80,8 @@ pip install cadenzaanalytics==0.1.21
 
 
 ## Installation from Source
-The source of the package can be obtained from the project's public [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python). Alternatively with each release of disy Cadenza, the offline source code of the matching version of `cadenzaanalytics` is packaged in the distributions `developer.zip`.
+The source of the package can be obtained from the project's public [GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python). 
+Alternatively with each release of disy Cadenza, the offline source code of the matching version of `cadenzaanalytics` is packaged in the distributions `developer.zip`.
 
 Once the repository is locally available, the package can be installed using the package installer [`pip`](https://pypi.org/project/pip/). 
 To install the package from source, navigate to the root folder of the project and run:
@@ -231,7 +234,8 @@ The table shows the mapping to Pyton data types:
 | Geometry                            | string    | `"POINT(8.41594949941623 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. | 
 
 
-Parameters are stored in `metadata` as well. They are always passed as `string` and can be read through the [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
+Parameters are stored in `metadata` as well.
+They are always passed as `string` and can be read through the [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
 
 ```python
 param_flag = metadata.get_parameter('flag')
