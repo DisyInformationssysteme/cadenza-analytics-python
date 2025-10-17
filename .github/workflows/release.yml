@@ -61,7 +61,7 @@ jobs:
 
     - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3)
       run: |
-        echo "RELEASE_VERSION=$(poetry version patch --dry-run -s | head -n 1)" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=$(poetry version patch -s | head -n 1)" >> $GITHUB_ENV
 
     # TODO should this only be done on the main branch? Or how?
     - name: Set release tag to 'latest'    
