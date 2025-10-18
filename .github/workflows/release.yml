@@ -57,7 +57,13 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
 
+    - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3) DRY-RUN FOR TESTING (!)
+      if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
+      run: |
+        echo "RELEASE_VERSION=$(poetry version patch --dry-run -s | head -n 1)" >> $GITHUB_ENV
+
     - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3)
+      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       run: |
         echo "RELEASE_VERSION=$(poetry version patch -s | head -n 1)" >> $GITHUB_ENV
 
