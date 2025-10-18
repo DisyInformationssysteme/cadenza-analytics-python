@@ -1,6 +1,6 @@
-name: githubpages
+name: Build and release docs
 
-# build the documentation for all version branches whenever there are new commits
+# build the documentation for all version branches on dispatch
 on:
   # only trigger manually or via API call
   workflow_dispatch: 
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  # Build the documentation and upload the static HTML files as an artifact.
+  # Build documentation and upload static HTML files as an artifact
   build:
     runs-on: ubuntu-latest
     steps:
@@ -40,8 +40,8 @@ jobs:
         with:
           path: docs_output/
 
-  # Deploy the artifact to GitHub pages.
-  # This is a separate job so that only actions/deploy-pages has the necessary permissions.
+  # Deploy artifact to GitHub pages
+  # This is a separate job so that only actions/deploy-pages has the necessary permissions
   deploy:
     needs: build
     runs-on: ubuntu-latest
