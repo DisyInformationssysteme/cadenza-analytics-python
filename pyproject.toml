@@ -10,7 +10,7 @@ authors = [
     "Daniel Dittmar <daniel.dittmar@disy.net>",
     "Matthias Budde <matthias.budde@disy.net>"
 ]
-version="10.3.0-dev"
+version="10.3.0a0.dev"
 description = "Official Python Package for creation of disy Cadenza analytics extensions"
 readme = "README.md"
 license = "Apache-2.0"
