@@ -61,7 +61,8 @@ jobs:
     - name: Prepare package version (e.g. 1.2.3a0.dev => 1.2.3a0) FOR TEST (!) pre-release
       if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
       run: |
-        echo "RELEASE_VERSION=$(poetry version -s | head -n 1 | sed 's/\.dev//')" >> $GITHUB_ENV
+        poetry version "$(poetry version -s | head -n 1 | sed 's/\.dev$//')"
+        RELEASE_VERSION=$(poetry version -s) && echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV 
 
     - name: Prepare package version (e.g. 1.2.3.dev => 1.2.3, 1.2.3a0.dev => 1.2.3) for release
       if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
