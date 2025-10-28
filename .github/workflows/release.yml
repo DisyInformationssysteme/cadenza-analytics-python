@@ -57,28 +57,24 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
 
-    - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3) DRY-RUN FOR TESTING (!)
+    # either bump release or pre-release version, depending on user input
+    - name: Prepare package version (e.g. 1.2.3.dev => 1.2.3a0, 1.2.3a0.dev => 1.2.3a0) FOR TEST (!) pre-release
       if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
       run: |
-        echo "RELEASE_VERSION=$(poetry version patch --dry-run -s | head -n 1)" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=$(poetry version prerelease -s | head -n 1)" >> $GITHUB_ENV
 
-    - name: Prepare package version (e.g. 1.2.3-dev => 1.2.3)
+    - name: Prepare package version (e.g. 1.2.3.dev => 1.2.3, 1.2.3a0.dev => 1.2.3) for release
       if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       run: |
         echo "RELEASE_VERSION=$(poetry version patch -s | head -n 1)" >> $GITHUB_ENV
-
-    # TODO should this only be done on the main branch? Or how? Is this env var even used?
-    - name: Set release tag to 'latest'    
-      run: |
-        echo "RELEASE_TAG=latest" >> $GITHUB_ENV
 
     # Create a dist/wheel for the bumped version now after "poetry version" has run
     - name: Build
       run: |
         poetry build
 
-    # either push to test.pypi.org or pypi.org depending on user input
-    - name: Publish package distributions to Test (!) PyPI
+    # either push to test.pypi.org or pypi.org, depending on user input
+    - name: Publish package distributions TO TEST (!) PyPI
       if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
@@ -88,29 +84,37 @@ jobs:
       if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       uses: pypa/gh-action-pypi-publish@release/v1
 
-    - name: Update changelog
+    - name: Update changelog, only for proper release
+      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       uses: superfaceai/release-changelog-action@v2
       with:
         path-to-changelog: CHANGELOG.md
         version: ${{ env.RELEASE_VERSION }}
         operation: release
 
-    - name: Commit and tag changes (push happens later)
+    - name: Commit and tag changes without changelog FOR TEST (!) prerelease
+      if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
+      run: |
+        git add "pyproject.toml"
+        git commit -m "Chore: pre-release ${{ env.RELEASE_VERSION }}"
+        git tag ${{ env.RELEASE_VERSION }}
+
+    - name: Commit and tag changes 
+      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       run: |
         git add "pyproject.toml"
         git add "CHANGELOG.md"
         git commit -m "Chore: release ${{ env.RELEASE_VERSION }}"
         git tag ${{ env.RELEASE_VERSION }}
 
-    # TODO why push here already? Should suffice to push in the very end?
-    # only push changes if not a test release    
     - name: Push changes
-      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: git push origin && git push --tags
 
+    # TODO only for full release? What does this action do exactly?
     - id: get-changelog
+      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       name: Get version changelog
       uses: superfaceai/release-changelog-action@v2
       with:
@@ -118,7 +122,9 @@ jobs:
         version: ${{ env.RELEASE_VERSION }}
         operation: read
 
+    # TODO this should only happen when releasing to PyPI, right?
     - name: Update GitHub release documentation
+      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ env.RELEASE_VERSION }}
@@ -126,9 +132,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Bump package version to new dev version (e.g. 1.2.3 => 1.2.4-dev)
+    - name: Bump package version to new prerelease dev version (e.g. 1.2.3 => 1.2.4a0.dev, 1.2.3a0 => 1.2.3a1.dev)
       run: |
-        poetry version --dry-run "$(poetry version patch -s | head -n 1)-dev"
+        poetry version "$(poetry version prerelease --dry-run -s | head -n 1).dev"
         DEV_VERSION=$(poetry version -s) && echo "DEV_VERSION=$DEV_VERSION" >> $GITHUB_ENV # Determine DEV_VERSION 
 
     - name: Commit version bump (push happens later)
@@ -136,9 +142,7 @@ jobs:
         git add "pyproject.toml"
         git commit -m "Chore: bump up version to ${{ env.DEV_VERSION }}"
     
-    # only push changes if not a test release    
     - name: Push changes
-      if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: git push origin
