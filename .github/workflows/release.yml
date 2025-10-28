@@ -58,10 +58,10 @@ jobs:
         git config --global user.name "github-actions[bot]"
 
     # either bump release or pre-release version, depending on user input
-    - name: Prepare package version (e.g. 1.2.3.dev => 1.2.3a0, 1.2.3a0.dev => 1.2.3a0) FOR TEST (!) pre-release
+    - name: Prepare package version (e.g. 1.2.3a0.dev => 1.2.3a0) FOR TEST (!) pre-release
       if: "${{ github.event.inputs.deployment-env == 'test.pypi.org' }}"
       run: |
-        echo "RELEASE_VERSION=$(poetry version prepatch -s | head -n 1)" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=$(poetry version -s | head -n 1 | sed 's/\.dev//')" >> $GITHUB_ENV
 
     - name: Prepare package version (e.g. 1.2.3.dev => 1.2.3, 1.2.3a0.dev => 1.2.3) for release
       if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
