@@ -3,11 +3,12 @@ from typing import List
 from pandas import DataFrame
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
+from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.response.csv_response import CsvResponse
 
 
 class EnrichmentResponse(CsvResponse):
-    """A class representing a enrichment response from an extension.
+    """A class representing an enrichment response from an extension.
 
     Parameters
     ----------
@@ -16,3 +17,27 @@ class EnrichmentResponse(CsvResponse):
     """
     def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata]):
         super().__init__(data, column_metadata)
+
+    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+        """Get the enrichment response.
+
+        Returns
+        -------
+        Response
+            The enrichment response.
+        """
+        if self._is_runtime_validation_active:
+            self._validate_response()
+
+        return super().get_response(original_column_metadata, original_data)
+
+
+    def _validate_response(self):
+        has_id_column_defined = False
+
+        for column in self._column_meta_data:
+            if column.attribute_group_name == AttributeGroup.ID_ATTRIBUTE_GROUP_NAME:
+                has_id_column_defined = True
+
+        if not has_id_column_defined:
+            raise Exception(f"Identifier column missing in metadata definition. This is mandatory for an enrichment.")
