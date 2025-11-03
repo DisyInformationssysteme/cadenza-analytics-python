@@ -5,7 +5,7 @@ from pandas import DataFrame, Series
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 from cadenzaanalytics.response.error_response import ErrorResponse
 from cadenzaanalytics.response.csv_response import CsvResponse
-from cadenzaanalytics.data.attribute_group import KEY_ATTRIBUTE_GROUP_NAME
+from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
@@ -17,7 +17,7 @@ class RowWiseMappingCsvResponse(ExtensionResponse):
 
     def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
         key_attribute_columns = [c for c in original_column_metadata
-                                 if c.attribute_group_name == KEY_ATTRIBUTE_GROUP_NAME]
+                                 if c.attribute_group_name == AttributeGroup.ID_ATTRIBUTE_GROUP_NAME]
         key_attribute_column_names = [c.name for c in key_attribute_columns]
         truncated_original_data = original_data.drop(key_attribute_column_names, axis=1)
         result_data = truncated_original_data.apply(self._apply_and_wrap, axis=1)
