@@ -50,6 +50,13 @@ class DataObject:
         """
         return json.dumps(self._to_dict(), indent=indent, default=str)
 
+    def __str__(self):
+        return self.to_json(indent=4)
+
+    def __repr__(self):
+        return self.__str__()
+
+
     @classmethod
     def _from_dict(cls, data: dict):
         constructor_parameters = {}
@@ -66,10 +73,3 @@ class DataObject:
                 constructor_parameters[parameter_key] = value
 
         return cls(**constructor_parameters)
-
-
-    def __str__(self):
-        return self.to_json(indent=4)
-
-    def __repr__(self):
-        return self.__str__()
