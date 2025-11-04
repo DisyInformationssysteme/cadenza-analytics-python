@@ -8,7 +8,7 @@ on:
         required: true
         description: |
           Next Cadenza Main Version
-          (e.g. '10.4' for setting the main branch up for development against Cadenza 10.4. This would make 10.4.0-dev the new main branch version.)
+          (e.g. '10.4' for setting the main branch up for development against Cadenza 10.4. This would make 10.4.0a0.dev the new main branch version.)
 
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
 
     - name: Bump package version of main
       run: | 
-        poetry version ${{ github.event.inputs.cadenza-version }}.0-dev
+        poetry version ${{ github.event.inputs.cadenza-version }}.0a0.dev
         echo "NEW_VERSION=$(poetry version -s)" >> $GITHUB_ENV
 
     - name: Commit and tag changes
