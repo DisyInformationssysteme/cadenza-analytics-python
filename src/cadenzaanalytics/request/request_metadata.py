@@ -1,6 +1,7 @@
 from typing import List, Dict, Optional
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
+from cadenzaanalytics.data.attribute_group import AttributeGroup
 
 
 # pylint: disable=protected-access
@@ -29,6 +30,16 @@ class RequestMetadata:
                     return ColumnMetadata._from_dict(column)
 
         return None
+
+    def get_id_column(self) -> Optional[ColumnMetadata]:
+        """Returns the id column metadata object.
+
+        Returns
+        -------
+        ColumnMetadata | None
+            Metadata for the column if found, else None.
+        """
+        return self.get_first_column_of_attribute_group(AttributeGroup.ID_ATTRIBUTE_GROUP_NAME)
 
     def get_first_column_of_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
         """Returns the first column metadata object of the given attribute group.
