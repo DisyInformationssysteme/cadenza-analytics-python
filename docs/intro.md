@@ -1,3 +1,5 @@
+This is `cadenzaanalytics` version {{version}}.
+
 <pre>
     <b>!! This module is currently in beta status !!</b>
 

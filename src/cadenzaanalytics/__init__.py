@@ -5,8 +5,6 @@ to create, enrich or visualize data using Python.
 
 The purpose of this module is to encapsulate the communication via the Cadenza API.
 
-This is `cadenzaanalytics` version {{version}}.
-
 .. include:: ../../docs/intro.md
 """
 from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtension
