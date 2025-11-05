@@ -57,6 +57,7 @@ The `cadenzaanalytics` package has the following dependencies:
 * [Flask](https://flask.palletsprojects.com/en/3.0.x/)
 * [Pandas](https://pandas.pydata.org/)
 * requests-toolbelt
+* chardet
 
 For each disy Cadenza version, the correct corresponding library version needs to be used.
 The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.

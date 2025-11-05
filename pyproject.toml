@@ -30,6 +30,7 @@ Werkzeug = "3.0.4"
 Flask-Cors = "3.0.10"
 requests-toolbelt = "1.0.0"
 pandas = " ^2.0.2"
+chardet = "5.2.0"
 
 [project]
 name = "cadenzaanalytics"

@@ -14,7 +14,7 @@ Find the docs at https://disyinformationssysteme.github.io/cadenza-analytics-pyt
 * Flask
 * Pandas
 * requests-toolbelt
-
+* chardet
 
 ## Example:
 Example extensions can be found in [examples](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main/examples).
