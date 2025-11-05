@@ -54,8 +54,13 @@ for BRANCH in $BRANCHES; do
   # Write version into generated docs
   sed -i "s/{{version}}/${RELEASE_VERSION}/" ./${BRANCH_DIR}/cadenzaanalytics.html
 
-  # Patch logo links with target "_top" so that they won't open in outer page, @ as delimiter for sed, since URL contains slashes
+  # Patch links with target "_top" so that they won't open in outer page, @ as delimiter for sed, since URL contains slashes
+  # logo links
   sed -i 's@<a href="'$LOGO_LINK'">@<a href="'$LOGO_LINK'" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
+  # github content may not be embedded into iframes
+  sed -i 's@<a href="https://github.com/DisyInformationssysteme/cadenza-analytics-python">@<a href="https://github.com/DisyInformationssysteme/cadenza-analytics-python" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
+  # pypi content may not be embedded into iframes
+  sed -i 's@<a href="https://pypi.org/project/cadenzaanalytics/">@<a href="https://pypi.org/project/cadenzaanalytics/" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
 
   # Add branch to version picker of outer page (will result in reverse order)
   sed -i "/<!-- Branch options will be populated here -->/a <option value="${BRANCH}">${BRANCH}</option>" ./${OUTPUT_DIR}/index.html
