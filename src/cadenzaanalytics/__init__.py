@@ -27,6 +27,8 @@ from cadenzaanalytics.response.csv_response import CsvResponse
 from cadenzaanalytics.response.row_wise_mapping_csv_response import RowWiseMappingCsvResponse
 from cadenzaanalytics.response.error_response import ErrorResponse
 from cadenzaanalytics.response.image_response import ImageResponse
+from cadenzaanalytics.version import __version__
+
 
 # Logging configuration, format similar to gunicorn
 dictConfig({
