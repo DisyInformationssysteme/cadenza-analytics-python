@@ -113,7 +113,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: git push origin && git push --tags
 
-    # TODO only for full release? What does this action do exactly?
     - id: get-changelog
       if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       name: Get version changelog
@@ -123,7 +122,6 @@ jobs:
         version: ${{ env.RELEASE_VERSION }}
         operation: read
 
-    # TODO this should only happen when releasing to PyPI, right?
     - name: Update GitHub release documentation
       if: "${{ github.event.inputs.deployment-env == 'pypi.org' }}"
       uses: softprops/action-gh-release@v1
