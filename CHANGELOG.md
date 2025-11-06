@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Added
+- Adds basic logging to the cadenzaanalytics module.
+
 ### Changed
 - The version scheme on cadenzaanalytics is now based on the Cadenza main version (starting with Cadenza 10.3). New versions have the format x.x.y, where x.x is the Cadenza main version and y a functional change or bugfix.
 

@@ -2,6 +2,7 @@
 `cadenza anayltics extension service` the extension handels the processing of analytics requests, when
 invoked via HTTP POST on the relative path."""
 import json
+import logging
 from io import StringIO
 from typing import Callable, List
 
@@ -16,6 +17,7 @@ from cadenzaanalytics.request.analytics_request import AnalyticsRequest
 from cadenzaanalytics.request.request_metadata import RequestMetadata
 from cadenzaanalytics.response.extension_response import ExtensionResponse
 
+logger = logging.getLogger('cadenzaanalytics')
 
 class CadenzaAnalyticsExtension:
     """Class representing a Cadenza analytics extension.
@@ -90,7 +92,9 @@ class CadenzaAnalyticsExtension:
         return Response(response=self._analytics_extension.to_json(), status=200, mimetype="application/json")
 
     def _get_request_data(self, multipart_request) -> AnalyticsRequest:
+        logger.info('Processing POST request...')
         metadata_dict = json.loads(self._get_from_request(multipart_request, 'metadata'))
+        logger.debug('Received metadata:\n%s', metadata_dict)
         metadata = RequestMetadata(metadata_dict)
 
         if metadata.has_columns():
@@ -101,6 +105,8 @@ class CadenzaAnalyticsExtension:
             df_data = pd.read_csv(csv_data, sep=";", dtype=type_mapping)
         else:
             df_data = pd.DataFrame()
+
+        logger.debug('Received data:\n%s', df_data.head())
 
         return AnalyticsRequest(metadata, df_data)
 

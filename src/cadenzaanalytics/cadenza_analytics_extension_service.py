@@ -2,12 +2,13 @@
 Runs a http server which executes the individual extensions analytics function and serves an extension
 discovery endpoint."""
 import json
+import errno
+import sys
 
 from flask import Flask, Response
 from flask_cors import CORS
 
 from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtension
-
 
 class CadenzaAnalyticsExtensionService:
     """A service that runs and manages Cadenza analytics extensions.
@@ -17,6 +18,8 @@ class CadenzaAnalyticsExtensionService:
 
         self._app = Flask('cadenzaanalytics')
         CORS(self._app)
+
+        self.logger = self._app.logger
 
         self._app.add_url_rule("/", view_func=self._list_extensions)
 
@@ -28,6 +31,24 @@ class CadenzaAnalyticsExtensionService:
         analytics_extension : CadenzaAnalyticsExtension
             The analytics extension to be added.
         """
+
+        self.logger.info('Registering extension "%s" on relative path "%s"...',
+                analytics_extension.print_name,
+                analytics_extension.relative_path
+            )
+
+        # perform some validation checks
+        if analytics_extension.relative_path in [x.relative_path for x in self._analytics_extensions]:
+            self.logger.critical('Relative path "%s" is already in use by another extension. Exiting...',
+                    analytics_extension.relative_path)
+            sys.exit(errno.EINTR)
+        if analytics_extension._analytics_function.__code__.co_argcount != 2: # pylint: disable=W0212
+            self.logger.critical('The analytics function "%s()" takes 2 positional arguments, but %s given. Exiting...',
+                    analytics_extension._analytics_function.__name__,            # pylint: disable=W0212
+                    analytics_extension._analytics_function.__code__.co_argcount # pylint: disable=W0212
+                )
+            sys.exit(errno.EINTR)
+
         self._analytics_extensions.append(analytics_extension)
 
         self._app.add_url_rule("/" + analytics_extension.relative_path,
@@ -47,7 +68,7 @@ class CadenzaAnalyticsExtensionService:
         port : int, optional
             The port where the service is exposed, default 5000.
         debug : bool, optional
-            If the debug flag is set the server will automatically reload for code changes 
+            If the debug flag is set the server will automatically reload for code changes
             and show a debugger in case an exception happened.
         """
         self._app.run(port=port, debug=debug)

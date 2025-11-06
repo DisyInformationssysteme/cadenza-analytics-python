@@ -317,6 +317,7 @@ if my_data is None:
         return ca.ErrorResponse('Didn\'t find expected attribute "my_data".', 400)
 ```
 
+
 ## Registering the Extension
 
 Finally, the extension needs to be registered with a [`CadenzaAnalyticsExtensionService`](cadenzaanalytics/cadenza_analytics_extension_service.html).
@@ -329,6 +330,17 @@ analytics_service.add_analytics_extension(my_extension)
 ```
 
 <!-- TODO "directory" service multiple extensions -->
+
+## Logging
+`cadenzaanalytics` is built on top op Flask, which in turn uses standard Python logging.
+This logger can also be used to log your own messages for your Analytics Extension, or define your own logger according to [standard Python logging](https://docs.python.org/3/howto/logging.html#):
+
+The default log level of the `cadenzaanalytics` module is `INFO`. 
+To change the log level, set the environment variable `CADENZAANALYTICS_LOG_LVL` accordingly, e.g.
+```console
+export CADENZAANALYTICS_LOG_LVL='DEBUG'
+```
+
 
 # Deployment
 Since `cadenzaanalytics` is built on the [Flask framework](https://flask.palletsprojects.com/en/stable), the deployment options for a Cadenza Analytics Extension are basically the same as for any Flask application.
