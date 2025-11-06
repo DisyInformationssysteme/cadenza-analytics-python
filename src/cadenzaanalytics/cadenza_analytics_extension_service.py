@@ -9,6 +9,7 @@ from flask import Flask, Response
 from flask_cors import CORS
 
 from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtension
+from cadenzaanalytics.version import __version__
 
 class CadenzaAnalyticsExtensionService:
     """A service that runs and manages Cadenza analytics extensions.
@@ -20,6 +21,7 @@ class CadenzaAnalyticsExtensionService:
         CORS(self._app)
 
         self.logger = self._app.logger
+        self.logger.info('Initializing cadenzaanalytics version "%s"...', __version__)
 
         self._app.add_url_rule("/", view_func=self._list_extensions)
 
