@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+## 10.3.0 - 2025-11-06
 ### Added
 - Adds basic logging and version information
 
