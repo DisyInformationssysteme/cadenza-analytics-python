@@ -5,11 +5,11 @@ on:
   release: 
       types: [published]
   push:
-    branches:
-      - '*'
-    ## Alternative: only build for tags.
-    #tags:
+    #branches:
     #  - '*'
+    ## Alternative: only build for tags.
+    tags:
+      - '**'
   workflow_dispatch: 
 
 # security: restrict permissions for CI jobs.
