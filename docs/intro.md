@@ -350,13 +350,16 @@ Below, we present a few options, a more comprehensive overview can be found in t
 For development purposes, using the built-in development server, debugger, and reloader is the most convenient.
 However, it should not be used in production, as it has not been designed for security, stability, or efficiency.
 
-The development server can either be invoked from within the python code...
+The development server can be invoked from within the Python code. 
+If the option `debug` is set to `True`, the Flask development server is started in debug mode, resulting in more verbose logging and automatic reload on code changes.
+See [Flask documentation](https://flask.palletsprojects.com/en/stable/debugging/#the-built-in-debugger) for details. 
 
 ```python
 if __name__ == '__main__':
-    analytics_service.run_development_server(8090)
+    analytics_service.run_development_server(port=5000, debug=True):
 
 ```
+
 
 ## WSGI Deployment
 
