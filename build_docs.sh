@@ -13,7 +13,7 @@ mkdir -p "$OUTPUT_DIR"
 ORIGINAL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # Get all remote branches that match the pattern v[0-9.]+\.x (e.g., v10.4.x, v11.1.x, etc.)
-BRANCHES=$(git branch -r --sort=v:refname | grep -P '^  origin/v[0-9.]+\.x$' | sed 's/origin\///')
+BRANCHES=$(git branch -r --sort=v:refname | grep -P '^  origin/v[0-9.]+\.x$' | sed 's/origin\///' | sed 's/^[[:space:]]*//g')
 
 # Add outer page with version picker
 cp ./docs/index.html  ./${OUTPUT_DIR}/
@@ -25,17 +25,15 @@ for BRANCH in $BRANCHES; do
   # Checkout the version branch
   git switch "$BRANCH"
 
-  # TODO checkout latest tag instead of HEAD? Can I filter this to the current branch?
-  # git tag --sort=-v:refname
-  # git describe --tags --abbrev=0
-
   # Create directory to store docs for this branch
   BRANCH_DIR="$OUTPUT_DIR/$BRANCH"
   mkdir -p "$BRANCH_DIR"
 
-  # Store release version
-  RELEASE_VERSION=$(poetry version patch --dry-run -s)
-  # TODO double check whether branch (TAG?) name and version in poetry are same?? But not for 10.2.x
+  # Store release version of latest non-prerelease tag matching Cadenza version of current branch
+  echo "Determining last release tag..."
+  #LAST_RELEASE_VERSION=$(git tag --sort=-v:refname -l | grep -m1 -P "${BRANCH:1:-1}[0-9]+$")  # does not work for v10.2.x
+  LAST_RELEASE_VERSION=$(git tag --merged "${BRANCH}" --sort=-v:refname | grep -m1 -P "[0-9]+\.[0-9]+\.[0-9]+$")
+  echo $LAST_RELEASE_VERSION
 
   # Install cadenzaanalytics from this branch
   pip install --upgrade --force-reinstall .
@@ -52,14 +50,14 @@ for BRANCH in $BRANCHES; do
   cp ./docs/*.png ./${BRANCH_DIR}/
 
   # Write version into generated docs
-  sed -i "s/{{version}}/${RELEASE_VERSION}/" ./${BRANCH_DIR}/cadenzaanalytics.html
+  sed -i "s/{{version}}/${LAST_RELEASE_VERSION}/" ./${BRANCH_DIR}/cadenzaanalytics.html
 
-  # Patch links with target "_top" so that they won't open in outer page, @ as delimiter for sed, since URL contains slashes
+  # Patch links with target "_top" so that they won't open in inner page, @ as delimiter for sed, since URL contains slashes
   # logo links
   sed -i 's@<a href="'$LOGO_LINK'">@<a href="'$LOGO_LINK'" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
-  # github content may not be embedded into iframes
+  # github content is not allowed to be embedded into iframes
   sed -i 's@<a href="https://github.com/DisyInformationssysteme/cadenza-analytics-python">@<a href="https://github.com/DisyInformationssysteme/cadenza-analytics-python" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
-  # pypi content may not be embedded into iframes
+  # pypi content is not allowed to be embedded into iframes
   sed -i 's@<a href="https://pypi.org/project/cadenzaanalytics/">@<a href="https://pypi.org/project/cadenzaanalytics/" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
 
   # Add branch to version picker of outer page (will result in reverse order)
