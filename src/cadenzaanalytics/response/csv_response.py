@@ -120,12 +120,11 @@ class CsvResponse(ExtensionDataResponse):
                 # missing metadata for column
                 if self._missing_metadata_strategy == MissingMetadataStrategy.ADD_DEFAULT_METADATA:
                     #TODO: Add logging entry when this option is executed
-                    #TODO: Extract Datatype of Dataframe
                     self._column_meta_data.append(
                         ColumnMetadata(
                             name=df_column_name,
                             print_name=df_column_name,
-                            data_type=DataType.STRING,
+                            data_type=DataType.from_pandas_dtype(self._data[df_column_name].dtype),
                             role=AttributeRole.DIMENSION
                         )
                     )
