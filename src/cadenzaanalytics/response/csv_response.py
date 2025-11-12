@@ -5,7 +5,10 @@ from typing import List
 from pandas import DataFrame
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
+from cadenzaanalytics.data.attribute_role import AttributeRole
+from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
+from cadenzaanalytics.response.missing_metadata_strategy import MissingMetadataStrategy
 
 
 class CsvResponse(ExtensionDataResponse):
@@ -16,7 +19,7 @@ class CsvResponse(ExtensionDataResponse):
     ExtensionDataResponse : type
         The base extension data response type from which CsvResponse inherits.
     """
-    def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata]):
+    def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata], missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
         content_type = 'text/csv'
         super().__init__(content_type)
 
@@ -24,6 +27,8 @@ class CsvResponse(ExtensionDataResponse):
         self._column_meta_data = column_metadata
 
         self._is_runtime_validation_active = True
+        self._missing_metadata_strategy = missing_metadata_strategy
+
 
     """Getter for toggle to disable the runtime validation of the response. The runtime validation is enabled by default.
 
@@ -38,8 +43,25 @@ class CsvResponse(ExtensionDataResponse):
 
     """Setter for toggle to disable the runtime validation of the response. Set to True to disable the runtime validation."""
     @disable_runtime_validation.setter
-    def disable_runtime_validation(self, value):
+    def disable_runtime_validation(self, value: bool):
         self._is_runtime_validation_active = not value
+
+
+    """Getter for the strategy of handling missing metadata.
+
+    Returns
+    -------
+    MissingMetadataStrategy
+        Current missing metadata strategy
+    """
+    @property
+    def missing_metadata_strategy(self) -> MissingMetadataStrategy:
+        return self._missing_metadata_strategy
+
+    """Setter for the strategy of handling missing metadata."""
+    @missing_metadata_strategy.setter
+    def missing_metadata_strategy(self, value: MissingMetadataStrategy):
+        self._missing_metadata_strategy = value
 
 
     def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
@@ -96,8 +118,28 @@ class CsvResponse(ExtensionDataResponse):
                 metadata_column_names.pop(df_column_name)
             else:
                 # missing metadata for column
-                raise Exception(f"Metadata definition for column \"{df_column_name}\" is missing.")
+                if self._missing_metadata_strategy == MissingMetadataStrategy.ADD_DEFAULT_METADATA:
+                    #TODO: Add logging entry when this option is executed
+                    #TODO: Extract Datatype of Dataframe
+                    self._column_meta_data.append(
+                        ColumnMetadata(
+                            name=df_column_name,
+                            print_name=df_column_name,
+                            attribute_group_name="data",
+                            data_type=DataType.STRING,
+                            role=AttributeRole.DIMENSION
+                        )
+                    )
+                elif self._missing_metadata_strategy == MissingMetadataStrategy.REMOVE_DATA_COLUMNS:
+                    #TODO: Add logging entry when this option is executed
+                    self._data.drop(df_column_name, axis=1, inplace=True)
+                else:
+                    raise Exception(f"Metadata definition for column \"{df_column_name}\" is missing.")
 
         # metadata definition without columns in data
         if len(metadata_column_names) > 0:
             raise Exception(f"Metadata column definition without column in data found. Number of missing columns: {len(metadata_column_names)}")
+
+        # empty data response
+        if len(self._data.columns) == 0:
+            raise Exception(f"Response without any data column.")
