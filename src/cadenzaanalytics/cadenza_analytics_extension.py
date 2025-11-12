@@ -20,12 +20,12 @@ from cadenzaanalytics.response.extension_response import ExtensionResponse
 class CadenzaAnalyticsExtension:
     """Class representing a Cadenza analytics extension.
     """
-    def __init__(self,
+    def __init__(self, *,
                  relative_path: str,
                  analytics_function: Callable[[RequestMetadata, pd.DataFrame], ExtensionResponse],
                  print_name: str,
                  extension_type: ExtensionType,
-                 attribute_groups: List[AttributeGroup],
+                 attribute_groups: List[AttributeGroup] = [],
                  parameters: List[Parameter] = None):
         self._relative_path = relative_path
         self._analytics_function = analytics_function
