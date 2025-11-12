@@ -125,7 +125,6 @@ class CsvResponse(ExtensionDataResponse):
                         ColumnMetadata(
                             name=df_column_name,
                             print_name=df_column_name,
-                            attribute_group_name="data",
                             data_type=DataType.STRING,
                             role=AttributeRole.DIMENSION
                         )
