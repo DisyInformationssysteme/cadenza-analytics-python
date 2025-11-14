@@ -12,6 +12,7 @@ from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
 from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.data.extension_type import ExtensionType
 from cadenzaanalytics.data.parameter import Parameter
+from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.request.analytics_request import AnalyticsRequest
 from cadenzaanalytics.request.request_metadata import RequestMetadata
 from cadenzaanalytics.response.extension_response import ExtensionResponse
@@ -95,10 +96,17 @@ class CadenzaAnalyticsExtension:
 
         if metadata.has_columns():
             type_mapping = {}
+            datetime_columns = []
+
             for column in metadata.get_columns():
+                if column.data_type == DataType.ZONEDDATETIME:
+                    datetime_columns.append(column.name)
+
                 type_mapping[column.name] = column.data_type.pandas_type()
+
+
             csv_data = StringIO(self._get_from_request(multipart_request, 'data'))
-            df_data = pd.read_csv(csv_data, sep=";", dtype=type_mapping)
+            df_data = pd.read_csv(csv_data, sep=';', dtype=type_mapping, parse_dates=datetime_columns, date_format='ISO8601')
         else:
             df_data = pd.DataFrame()
 
