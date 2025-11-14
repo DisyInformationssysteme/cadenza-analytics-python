@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class ExtensionType(Enum):
-    """A class representing the different types of extensions such as visualization, enrichment, calculation.
+    """A class representing the different types of extensions such as visual, enrichment, data.
     """
     VISUAL = "visualization"
     ENRICHMENT = "enrichment"

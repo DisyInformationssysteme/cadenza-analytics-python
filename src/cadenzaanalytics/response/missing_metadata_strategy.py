@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class MissingMetadataStrategy(Enum):
-    """A class representing the strategies to handle missing metadata for enrichment and calculation responses.
+    """A class representing the strategies to handle missing metadata for enrichment and data responses.
     """
     ADD_DEFAULT_METADATA = "add_default_metadata"
     REMOVE_DATA_COLUMNS = "remove_data_columns"
