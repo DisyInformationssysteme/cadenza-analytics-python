@@ -40,7 +40,7 @@ class ColumnMetadata(DataObject):
     }
 
     # pylint: disable=redefined-builtin
-    def __init__(self,
+    def __init__(self, *,
                  name: str,
                  print_name: str,
                  data_type: DataType,
