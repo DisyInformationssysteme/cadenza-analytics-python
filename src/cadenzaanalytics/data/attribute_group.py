@@ -24,7 +24,7 @@ class AttributeGroup(DataObject):
         "maxAttributes": "_max_attributes"
     }
 
-    def __init__(self,
+    def __init__(self, *,
                  name: str,
                  print_name: str,
                  data_types: List[DataType],
