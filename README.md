@@ -19,7 +19,7 @@ Find the docs at https://disyinformationssysteme.github.io/cadenza-analytics-pyt
 ## Example:
 Example extension can be found in [examples](examples).
 
-To test a example extension, clone this repository, install the dependencies, navigate to the folder, e.g. `examples/calculation/extension`. Run the example file in your python environment e.g.:
+To test a example extension, clone this repository, install the dependencies, navigate to the folder, e.g. `examples/data/extension`. Run the example file in your python environment e.g.:
 ```
 python example_extensions.py
 ```
@@ -56,7 +56,7 @@ To run the example (and your production application) in a docker container you w
 The provided Dockerfile in the examples uses gunicorn with some example options, for more details consult the [documentation](https://docs.gunicorn.org/en/latest/settings.html). Important is that gunicorn has access to a function creating or providing the flask app object, which for `cadenzanalytics` is the `CadenzaAnalyticsExtensionService`.
 The requirements file can use test releases when adding `--extra-index-url https://test.pypi.org/simple` in the first line. It can (re)define versions of its own or transient dependencies, but most importantly needs the `cadenzaanalytics` dependency.
 ```commandline
-cd /examples/calculation
+cd /examples/data
 docker build . -t cadenza-analytics-example
 docker image list
 docker run -p 8080:8080 YOUR_CREATED_IMAGE_ID 
