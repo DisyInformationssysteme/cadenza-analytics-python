@@ -44,4 +44,4 @@ class EnrichmentResponse(CsvResponse):
                 has_id_column_defined = True
 
         if not has_id_column_defined:
-            raise Exception("Identifier column missing in metadata definition. This is mandatory for an enrichment.")
+            raise ValueError("Identifier column missing in metadata definition. This is mandatory for an enrichment.")
