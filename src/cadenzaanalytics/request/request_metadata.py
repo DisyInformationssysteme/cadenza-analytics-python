@@ -43,22 +43,8 @@ class RequestMetadata:
         """
         return self.get_first_column_of_attribute_group(AttributeGroup.ID_ATTRIBUTE_GROUP_NAME)
 
-    def get_first_column_of_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
-        """Returns the first column metadata object of the given attribute group.
-
-        Returns
-        -------
-        Optional[ColumnMetadata]
-            The column metadata of the first column in the given attribute group. If no column metadata for the
-            attribute group was send None is returned.
-        """
-        if self.has_columns():
-            for column in self._get_columns():
-                if column['attributeGroupName'] == attribute_group:
-                    return ColumnMetadata._from_dict(column)
-        return None
-
-    def get_columns_by_attribute_group(self) -> Dict[str, List[ColumnMetadata]]:
+    @property
+    def groups(self) -> Dict[str, List[ColumnMetadata]]:
         """Returns all column metadata objects grouped by its attribute groups.
 
         Returns
@@ -76,6 +62,24 @@ class RequestMetadata:
             grouped_columns[column['attributeGroupName']].append(ColumnMetadata._from_dict(column))
 
         return grouped_columns
+
+
+    def get_first_column_of_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
+        """Returns the first column metadata object of the given attribute group.
+
+        Returns
+        -------
+        Optional[ColumnMetadata]
+            The column metadata of the first column in the given attribute group. If no column metadata for the
+            attribute group was send None is returned.
+        """
+        if self.has_columns():
+            for column in self._get_columns():
+                if column['attributeGroupName'] == attribute_group:
+                    return ColumnMetadata._from_dict(column)
+        return None
+
+
 
     def get_columns(self) -> List[ColumnMetadata]:
         """Returns a list of all column metadata objects.
