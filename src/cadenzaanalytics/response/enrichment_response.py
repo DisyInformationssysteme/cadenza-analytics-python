@@ -16,7 +16,10 @@ class EnrichmentResponse(CsvResponse):
     CsvResponse : type
         The data response type from which EnrichmentResponse inherits.
     """
-    def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata], missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+    def __init__(self,
+                 data: DataFrame, column_metadata: List[ColumnMetadata],
+                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+
         super().__init__(data, column_metadata, missing_metadata_strategy)
 
     def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
@@ -41,4 +44,4 @@ class EnrichmentResponse(CsvResponse):
                 has_id_column_defined = True
 
         if not has_id_column_defined:
-            raise Exception(f"Identifier column missing in metadata definition. This is mandatory for an enrichment.")
+            raise Exception("Identifier column missing in metadata definition. This is mandatory for an enrichment.")
