@@ -16,7 +16,6 @@ from cadenzaanalytics.data.parameter import Parameter
 from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.request.analytics_request import AnalyticsRequest
 from cadenzaanalytics.request.request_parameter import RequestParameter
-from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.request.request_metadata import RequestMetadata
 from cadenzaanalytics.response.extension_response import ExtensionResponse
 
@@ -135,10 +134,10 @@ class CadenzaAnalyticsExtension:
         logger.debug('Received data:\n%s', df_data.head())
 
 
-        request = AnalyticsRequest(parameters)
-        request.add_request_table("table", metadata, df_data)
+        analytics_request = AnalyticsRequest(parameters)
+        analytics_request.add_request_table("table", metadata, df_data)
 
-        return request
+        return analytics_request
 
     def _get_from_request(self, multipart_request, part_name):
         if part_name in multipart_request.form:
