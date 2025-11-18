@@ -43,8 +43,8 @@ class RequestMetadata:
         """
         if len(self.groups[AttributeGroup.ID_ATTRIBUTE_GROUP_NAME]) > 0:
             return self.groups[AttributeGroup.ID_ATTRIBUTE_GROUP_NAME][0]
-        else:
-            return None
+
+        return None
 
     @property
     def groups(self) -> Dict[str, List[ColumnMetadata]]:
