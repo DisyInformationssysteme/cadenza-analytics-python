@@ -23,7 +23,7 @@ To install the most recent version, simply execute
 pip install cadenzaanalytics
 ```
 
-## Example:
+## Examples:
 Example extensions can be found in [examples](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main/examples).
 
 To test an example extension, clone this repository, install the dependencies, navigate to the folder, e.g. `examples/data/extension`.
