@@ -27,7 +27,7 @@ data_echo_extension = ca.CadenzaAnalyticsExtension(
 )
 
 analytics_service = ca.CadenzaAnalyticsExtensionService()
-analytics_service.add_analytics_extension(calculation_echo_extension)
+analytics_service.add_analytics_extension(data_echo_extension)
 
 if __name__ == '__main__':
     analytics_service.run_development_server(5005)
