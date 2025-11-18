@@ -15,5 +15,9 @@ class DataResponse(CsvResponse):
     CsvResponse : type
         The data response type from which DataResponse inherits.
     """
-    def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata], missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+    def __init__(self,
+                 data: DataFrame,
+                 column_metadata: List[ColumnMetadata],
+                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+
         super().__init__(data, column_metadata, missing_metadata_strategy)
