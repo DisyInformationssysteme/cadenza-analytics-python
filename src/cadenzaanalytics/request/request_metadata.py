@@ -33,8 +33,8 @@ class RequestMetadata:
 
         raise KeyError(f"Key '{key}' not found.")
 
-
-    def get_id_column(self) -> Optional[ColumnMetadata]:
+    @property
+    def id(self) -> Optional[ColumnMetadata]:
         """Returns the id column metadata object.
 
         Returns
