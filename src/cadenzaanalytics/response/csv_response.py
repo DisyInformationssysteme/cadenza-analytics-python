@@ -135,9 +135,9 @@ class CsvResponse(ExtensionDataResponse):
             else:
                 # missing metadata for column
                 if self._missing_metadata_strategy == MissingMetadataStrategy.ADD_DEFAULT_METADATA:
-                    logger.info(f'Missing metadata for column "%s": '
-                                f'Column metadata has been added to response. '
-                                f'missing_metadata_strategy=%s', df_column_name, self._missing_metadata_strategy.name)
+                    logger.info('Missing metadata for column "%s": '
+                                'Column metadata has been added to response. '
+                                'missing_metadata_strategy=%s', df_column_name, self._missing_metadata_strategy.name)
 
                     self._column_meta_data.append(
                         ColumnMetadata(
@@ -148,9 +148,9 @@ class CsvResponse(ExtensionDataResponse):
                         )
                     )
                 elif self._missing_metadata_strategy == MissingMetadataStrategy.REMOVE_DATA_COLUMNS:
-                    logger.info(f'Missing metadata for column "%s": '
-                                f'Column has been removed from response. '
-                                f'missing_metadata_strategy=%s', df_column_name, self._missing_metadata_strategy.name)
+                    logger.info('Missing metadata for column "%s": '
+                                'Column has been removed from response. '
+                                'missing_metadata_strategy=%s', df_column_name, self._missing_metadata_strategy.name)
 
                     self._data.drop(df_column_name, axis=1, inplace=True)
                 else:
