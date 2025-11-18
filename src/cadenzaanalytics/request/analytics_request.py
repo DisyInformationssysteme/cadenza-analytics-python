@@ -5,22 +5,10 @@ from cadenzaanalytics.request.request_parameter import RequestParameter
 class AnalyticsRequest:
     """A class representing an analytics request.
     """
-    def __init__(self, metadata: RequestMetadata, data):
-        self._metadata = metadata
+    def __init__(self, metadata: RequestMetadata):
         # TODO: Refactor
         self._request_parameter = RequestParameter(self.metadata)
-        self._data = data
-
-    @property
-    def metadata(self) -> RequestMetadata:
-        """Get the metadata associated with the request.
-
-        Returns
-        -------
-        RequestMetadata
-            The metadata associated with the request.
-        """
-        return self._metadata
+        self._tables = {}
 
     @property
     def parameters(self) -> RequestParameter:
@@ -33,14 +21,7 @@ class AnalyticsRequest:
         """
         return self._request_parameter
 
+    def add_request_table(self, name: str, metadata: RequestMetadata, data):
+        """Add request table to the analytics request"""
 
-    @property
-    def data(self):
-        """Get the data payload of the request.
-
-        Returns
-        -------
-        object
-            The data associated with the request.
-        """
-        return self._data
+        self._tables[name] = RequestTable(metadata=metadata, data=data)
