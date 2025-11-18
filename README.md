@@ -16,6 +16,13 @@ Find the docs at https://disyinformationssysteme.github.io/cadenza-analytics-pyt
 * requests-toolbelt
 * chardet
 
+## Installation:
+The simplest way to install `cadenzaanalytics` is from the [Python Package Index (PyPI)](https://pypi.org/project/cadenzaanalytics/) using the package installer [pip](https://pypi.org/project/pip/).
+To install the most recent version, simply execute
+```console
+pip install cadenzaanalytics
+```
+
 ## Example:
 Example extensions can be found in [examples](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main/examples).
 
