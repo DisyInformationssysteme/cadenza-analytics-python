@@ -1,6 +1,7 @@
 import csv
 import sys
 from typing import List
+import logging
 
 from pandas import DataFrame
 
@@ -9,6 +10,8 @@ from cadenzaanalytics.data.attribute_role import AttributeRole
 from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
 from cadenzaanalytics.response.missing_metadata_strategy import MissingMetadataStrategy
+
+logger = logging.getLogger('cadenzaanalytics')
 
 
 class CsvResponse(ExtensionDataResponse):
@@ -132,7 +135,10 @@ class CsvResponse(ExtensionDataResponse):
             else:
                 # missing metadata for column
                 if self._missing_metadata_strategy == MissingMetadataStrategy.ADD_DEFAULT_METADATA:
-                    #TODO: Add logging entry when this option is executed
+                    logger.info(f'Missing metadata for column \"{df_column_name}\": '
+                                f'Column metadata has been added to response. '
+                                f'missing_metadata_strategy={self._missing_metadata_strategy.name}')
+
                     self._column_meta_data.append(
                         ColumnMetadata(
                             name=df_column_name,
@@ -142,7 +148,10 @@ class CsvResponse(ExtensionDataResponse):
                         )
                     )
                 elif self._missing_metadata_strategy == MissingMetadataStrategy.REMOVE_DATA_COLUMNS:
-                    #TODO: Add logging entry when this option is executed
+                    logger.info(f'Missing metadata for column \"{df_column_name}\": '
+                                f'Column has been removed from response. '
+                                f'missing_metadata_strategy={self._missing_metadata_strategy.name}')
+
                     self._data.drop(df_column_name, axis=1, inplace=True)
                 else:
                     raise ValueError(f"Metadata definition for column \"{df_column_name}\" is missing.")
