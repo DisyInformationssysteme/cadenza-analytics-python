@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional
+from typing import Optional
 
 from cadenzaanalytics.request.view_parameter import ViewParameter
 
