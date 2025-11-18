@@ -12,25 +12,27 @@ class RequestMetadata:
     def __init__(self, request_metadata: dict):
         self._request_metadata = request_metadata
 
-    def get_column(self, name: str) -> Optional[ColumnMetadata]:
+    def __getitem__(self, key) -> ColumnMetadata:
         """Returns the column metadata object for a specific column accessed by its name.
 
         Parameters
         ----------
-        name : str
+        key : str
             The name of the column.
 
         Returns
         -------
-        ColumnMetadata | None
-            Metadata for the column if found, else None.
+        ColumnMetadata
+            Metadata for the column
         """
+
         if self.has_columns():
             for column in self._get_columns():
-                if column["name"] == name:
+                if column["name"] == key:
                     return ColumnMetadata._from_dict(column)
 
-        return None
+        raise KeyError(f"Key '{key}' not found.")
+
 
     def get_id_column(self) -> Optional[ColumnMetadata]:
         """Returns the id column metadata object.
