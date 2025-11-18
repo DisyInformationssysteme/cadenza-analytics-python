@@ -1,4 +1,5 @@
 from cadenzaanalytics.request.request_metadata import RequestMetadata
+from cadenzaanalytics.request.request_parameter import RequestParameter
 
 
 class AnalyticsRequest:
@@ -6,6 +7,8 @@ class AnalyticsRequest:
     """
     def __init__(self, metadata: RequestMetadata, data):
         self._metadata = metadata
+        # TODO: Refactor
+        self._request_parameter = RequestParameter(self.metadata)
         self._data = data
 
     @property
@@ -18,6 +21,18 @@ class AnalyticsRequest:
             The metadata associated with the request.
         """
         return self._metadata
+
+    @property
+    def parameters(self) -> RequestParameter:
+        """Get the parameter associated with the request.
+
+        Returns
+        -------
+        RequestParameter
+            The parameters associated with the request.
+        """
+        return self._request_parameter
+
 
     @property
     def data(self):

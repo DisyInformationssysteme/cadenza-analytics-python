@@ -114,24 +114,6 @@ class RequestMetadata:
             return self._request_metadata['parameters'][name]
         return None
 
-    def get_view_parameter(self) -> ViewParameter:
-        """Returns the view parameters of the request.
-
-        Returns
-        -------
-        ViewParameter
-            View parameter of the request.
-        """
-        width = self.get_parameter(ViewParameter.VIEW_WIDTH_PARAMETER_NAME)
-        height = self.get_parameter(ViewParameter.VIEW_HEIGHT_PARAMETER_NAME)
-        device_pixel_ratio = self.get_parameter(ViewParameter.VIEW_DEVICE_PIXEL_RATIO_PARAMETER_NAME)
-
-        return ViewParameter(
-            width = int(width) if width is not None else None,
-            height = int(height) if height is not None else None,
-            device_pixel_ratio = float(device_pixel_ratio) if device_pixel_ratio is not None else None
-        )
-
     def has_columns(self) -> bool:
         """Check if the analytics request has columns with corresponding metadata.
 
