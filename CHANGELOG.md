@@ -14,8 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Parameter form the Cadenza view of visual analytics request can now be retrieved as ViewParameter object
 - Method to retrieve enrichment ID column
 - Values of type zoned date time send by Cadenza are parsed as pandas Timestamps (pandas equivalent for python datetime.datetime) in ISO8701 format
+- Analytics request object was introduced. This builds new foundation for further extension of requests send from cadenza
 
 ### Changed
+- Function signature of analytics function has changed form (metadata: ca.RequestMetadata, data: pd.DataFrame) to (request: ca.AnalyticsRequest). This changes access to data, metadata and parameters
 - Constructor arguments of AttributeGroup, ColumnMetadata and Parameter are new keyword only arguments
 - Extension types has been renamed. From visualization to visual and calculation to data
 - Response of type CsvResponse was changed as library internal. Please use DataResponse or EnrichmentResponse instead
