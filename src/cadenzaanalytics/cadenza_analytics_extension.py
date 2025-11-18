@@ -110,7 +110,13 @@ class CadenzaAnalyticsExtension:
 
 
             csv_data = StringIO(self._get_from_request(multipart_request, 'data'))
-            df_data = pd.read_csv(csv_data, sep=';', dtype=type_mapping, parse_dates=datetime_columns, date_format='ISO8601')
+            df_data = pd.read_csv(
+                csv_data,
+                sep=';',
+                dtype=type_mapping,
+                parse_dates=datetime_columns,
+                date_format='ISO8601'
+            )
         else:
             df_data = pd.DataFrame()
 
