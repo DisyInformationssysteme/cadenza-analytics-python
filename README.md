@@ -19,7 +19,7 @@ Find the docs at https://disyinformationssysteme.github.io/cadenza-analytics-pyt
 ## Example:
 Example extensions can be found in [examples](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main/examples).
 
-To test an example extension, clone this repository, install the dependencies, navigate to the folder, e.g. `examples/calculation/extension`.
+To test an example extension, clone this repository, install the dependencies, navigate to the folder, e.g. `examples/data/extension`.
 Run the example file in your python environment e.g.:
 ```
 python example_extensions.py

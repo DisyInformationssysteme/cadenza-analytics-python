@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
+### Added
+- New visual response of type text (TextResponse) 
+- New visual response of type url (UrlResponse)
+- New response for type data (DataResponse)
+- New response for type enrichment (EnrichmentResponse)
+- Basic column metadata validation for data and enrichment responses
+- Handling of missing column metadata can be set via MissingMetadataStrategy
+- Parameter form the Cadenza view of visual analytics request can now be retrieved as ViewParameter object
+- Method to retrieve enrichment ID column
+- Values of type zoned date time send by Cadenza are parsed as pandas Timestamps (pandas equivalent for python datetime.datetime) in ISO8701 format
+
+### Changed
+- Constructor arguments of AttributeGroup, ColumnMetadata and Parameter are new keyword only arguments
+- Extension types has been renamed. From visualization to visual and calculation to data
+- Response of type CsvResponse was changed as library internal. Please use DataResponse or EnrichmentResponse instead
+- Development status of library was set to `5 - Production/Stable`
+
+### Removed
+- Response of type RowWiseMappingCsvResponse was removed. Pleas use EnrichmentResponse instead
+
 
 ## 10.3.0 - 2025-11-06
 ### Added

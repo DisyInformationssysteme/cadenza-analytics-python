@@ -23,7 +23,7 @@ image_extension = ca.CadenzaAnalyticsExtension(
     relative_path="image-extension",
     analytics_function=image_analytics_function,
     print_name="Example Image Extension",
-    extension_type=ca.ExtensionType.VISUALIZATION,
+    extension_type=ca.ExtensionType.VISUAL,
     attribute_groups=[image_attribute_group]
 )
 

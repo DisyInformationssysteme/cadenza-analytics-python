@@ -15,7 +15,7 @@ description = "Official Python Package for creation of disy Cadenza analytics ex
 readme = "README.md"
 license = "Apache-2.0"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Natural Language :: English",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",

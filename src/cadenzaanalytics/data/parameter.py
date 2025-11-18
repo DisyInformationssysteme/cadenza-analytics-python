@@ -22,7 +22,7 @@ class Parameter(DataObject):
         "defaultValue": "_default_value"
     }
 
-    def __init__(self,
+    def __init__(self, *,
                  name: str,
                  print_name: str,
                  parameter_type: ParameterType,

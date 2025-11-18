@@ -40,12 +40,12 @@ class ColumnMetadata(DataObject):
     }
 
     # pylint: disable=redefined-builtin
-    def __init__(self,
+    def __init__(self, *,
                  name: str,
                  print_name: str,
-                 attribute_group_name: str,
                  data_type: DataType,
                  role: AttributeRole,
+                 attribute_group_name: str = "data",
                  measure_aggregation: MeasureAggregation = None,
                  format: str = None,
                  geometry_type: GeometryType = None):

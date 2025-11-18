@@ -4,9 +4,6 @@ from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.data_type import DataType
 
 
-KEY_ATTRIBUTE_GROUP_NAME = 'net.disy.cadenza.keyAttributeGroup'
-
-
 class AttributeGroup(DataObject):
     """A class representing a group of attributes such as name, print_name, data_types, geometry_types,
      min_attributes and max_attributes.
@@ -16,6 +13,8 @@ class AttributeGroup(DataObject):
     DataObject : type
         The base data object type from which AttributeGroup inherits.
     """
+    ID_ATTRIBUTE_GROUP_NAME = 'net.disy.cadenza.keyAttributeGroup'
+
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",
@@ -25,7 +24,7 @@ class AttributeGroup(DataObject):
         "maxAttributes": "_max_attributes"
     }
 
-    def __init__(self,
+    def __init__(self, *,
                  name: str,
                  print_name: str,
                  data_types: List[DataType],

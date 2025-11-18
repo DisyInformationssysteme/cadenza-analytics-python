@@ -5,8 +5,8 @@ import pandas as pd
 import cadenzaanalytics as ca
 
 
-def calculation_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    return ca.CsvResponse(data, metadata.get_columns_by_attribute_group()['any_data'])
+def data_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
+    return ca.DataResponse(data, metadata.get_columns_by_attribute_group()['any_data'])
 
 
 any_attribute_group = ca.AttributeGroup(
@@ -18,11 +18,11 @@ any_attribute_group = ca.AttributeGroup(
     min_attributes=1
 )
 
-calculation_echo_extension = ca.CadenzaAnalyticsExtension(
-    relative_path="calculation-echo-extension",
-    analytics_function=calculation_echo_analytics_function,
-    print_name="Example Echo Calculation Extension",
-    extension_type=ca.ExtensionType.CALCULATION,
+data_echo_extension = ca.CadenzaAnalyticsExtension(
+    relative_path="data-echo-extension",
+    analytics_function=data_echo_analytics_function,
+    print_name="Example Echo Data Extension",
+    extension_type=ca.ExtensionType.DATA,
     attribute_groups=[any_attribute_group]
 )
 

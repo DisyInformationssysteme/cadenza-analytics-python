@@ -1,6 +1,8 @@
 from typing import List, Dict, Optional
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
+from cadenzaanalytics.data.attribute_group import AttributeGroup
+from cadenzaanalytics.request.view_parameter import ViewParameter
 
 
 # pylint: disable=protected-access
@@ -29,6 +31,16 @@ class RequestMetadata:
                     return ColumnMetadata._from_dict(column)
 
         return None
+
+    def get_id_column(self) -> Optional[ColumnMetadata]:
+        """Returns the id column metadata object.
+
+        Returns
+        -------
+        ColumnMetadata | None
+            Metadata for the column if found, else None.
+        """
+        return self.get_first_column_of_attribute_group(AttributeGroup.ID_ATTRIBUTE_GROUP_NAME)
 
     def get_first_column_of_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
         """Returns the first column metadata object of the given attribute group.
@@ -102,6 +114,24 @@ class RequestMetadata:
             return self._request_metadata['parameters'][name]
         return None
 
+    def get_view_parameter(self) -> ViewParameter:
+        """Returns the view parameters of the request.
+
+        Returns
+        -------
+        ViewParameter
+            View parameter of the request.
+        """
+        width = self.get_parameter(ViewParameter.VIEW_WIDTH_PARAMETER_NAME)
+        height = self.get_parameter(ViewParameter.VIEW_HEIGHT_PARAMETER_NAME)
+        device_pixel_ratio = self.get_parameter(ViewParameter.VIEW_DEVICE_PIXEL_RATIO_PARAMETER_NAME)
+
+        return ViewParameter(
+            width = int(width) if width is not None else None,
+            height = int(height) if height is not None else None,
+            device_pixel_ratio = float(device_pixel_ratio) if device_pixel_ratio is not None else None
+        )
+
     def has_columns(self) -> bool:
         """Check if the analytics request has columns with corresponding metadata.
 
@@ -110,8 +140,8 @@ class RequestMetadata:
         bool
             True if the request has columns with corresponding metadata, False otherwise.
         """
-        return (len(self._request_metadata['dataContainers']) > 0
-                and "columns" in self._request_metadata['dataContainers'][0])
+        return (self._request_metadata['dataContainers'] != []
+                and len(self._request_metadata['dataContainers'][0]['columns']) > 0)
 
     def _get_columns(self):
         return self._request_metadata['dataContainers'][0]['columns']
