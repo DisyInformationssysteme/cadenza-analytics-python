@@ -87,33 +87,6 @@ class RequestMetadata:
         columns = self._get_columns() if self.has_columns() else []
         return [ColumnMetadata._from_dict(column) for column in columns]
 
-    def get_parameters(self) -> Dict[str, str]:
-        """Returns all parameters of the request.
-
-        Returns
-        -------
-        dict[str, str]
-            Parameters of the request.
-        """
-        return self._request_metadata['parameters']
-
-    def get_parameter(self, name: str) -> Optional[str]:
-        """Returns a specific parameter value.
-
-        Parameters
-        ----------
-        name : str
-            The name of the parameter.
-
-        Returns
-        -------
-        str
-            The value of the parameter if found, else an empty string.
-        """
-        if name in self._request_metadata['parameters']:
-            return self._request_metadata['parameters'][name]
-        return None
-
     def has_columns(self) -> bool:
         """Check if the analytics request has columns with corresponding metadata.
 
