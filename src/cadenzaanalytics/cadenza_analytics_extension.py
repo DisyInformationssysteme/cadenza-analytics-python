@@ -83,7 +83,7 @@ class CadenzaAnalyticsExtension:
         """
         analytics_request = self._get_request_data(request)
 
-        analytics_response = self._analytics_function(analytics_request.metadata, analytics_request.data)
+        analytics_response = self._analytics_function(analytics_request)
 
         return analytics_response.get_response(analytics_request.metadata.get_columns(), analytics_request.data)
 

@@ -24,6 +24,7 @@ from cadenzaanalytics.data.measure_aggregation import MeasureAggregation
 from cadenzaanalytics.data.parameter import Parameter
 from cadenzaanalytics.data.parameter_type import ParameterType
 
+from cadenzaanalytics.request.analytics_request import AnalyticsRequest
 from cadenzaanalytics.request.request_metadata import RequestMetadata
 from cadenzaanalytics.request.view_parameter import ViewParameter
 

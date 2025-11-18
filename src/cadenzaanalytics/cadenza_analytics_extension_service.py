@@ -44,8 +44,8 @@ class CadenzaAnalyticsExtensionService:
             self.logger.critical('Relative path "%s" is already in use by another extension. Exiting...',
                     analytics_extension.relative_path)
             sys.exit(errno.EINTR)
-        if analytics_extension._analytics_function.__code__.co_argcount != 2: # pylint: disable=W0212
-            self.logger.critical('The analytics function "%s()" takes 2 positional arguments, but %s given. Exiting...',
+        if analytics_extension._analytics_function.__code__.co_argcount != 1: # pylint: disable=W0212
+            self.logger.critical('The analytics function "%s()" takes 1 positional arguments, but %s given. Exiting...',
                     analytics_extension._analytics_function.__name__,            # pylint: disable=W0212
                     analytics_extension._analytics_function.__code__.co_argcount # pylint: disable=W0212
                 )
