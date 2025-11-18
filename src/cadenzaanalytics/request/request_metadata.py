@@ -2,7 +2,6 @@ from typing import List, Dict, Optional
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 from cadenzaanalytics.data.attribute_group import AttributeGroup
-from cadenzaanalytics.request.view_parameter import ViewParameter
 
 
 # pylint: disable=protected-access
