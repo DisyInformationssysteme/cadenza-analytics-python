@@ -19,7 +19,11 @@ class CsvResponse(ExtensionDataResponse):
     ExtensionDataResponse : type
         The base extension data response type from which CsvResponse inherits.
     """
-    def __init__(self, data: DataFrame, column_metadata: List[ColumnMetadata], missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+    def __init__(self,
+                 data: DataFrame,
+                 column_metadata: List[ColumnMetadata],
+                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+
         content_type = 'text/csv'
         super().__init__(content_type)
 
@@ -120,7 +124,7 @@ class CsvResponse(ExtensionDataResponse):
             if column.name not in metadata_column_names:
                 metadata_column_names[column.name] = column.name
             else:
-                raise Exception(f"Metadata for column \"{column.name}\" is already defined.")
+                raise ValueError(f"Metadata for column \"{column.name}\" is already defined.")
 
         for df_column_name in list(self._data):
             if df_column_name in metadata_column_names:
@@ -141,13 +145,13 @@ class CsvResponse(ExtensionDataResponse):
                     #TODO: Add logging entry when this option is executed
                     self._data.drop(df_column_name, axis=1, inplace=True)
                 else:
-                    raise Exception(f"Metadata definition for column \"{df_column_name}\" is missing.")
+                    raise ValueError(f"Metadata definition for column \"{df_column_name}\" is missing.")
 
         # metadata definition without columns in data
         if len(metadata_column_names) > 0:
-            raise Exception(f"Metadata column definition without column in data found."
+            raise ValueError(f"Metadata column definition without column in data found."
                             f"Number of missing columns: {len(metadata_column_names)}")
 
         # empty data response
         if len(self._data.columns) == 0:
-            raise Exception("Response without any data column.")
+            raise ValueError("Response without any data column.")
