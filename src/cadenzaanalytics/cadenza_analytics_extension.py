@@ -28,12 +28,17 @@ class CadenzaAnalyticsExtension:
                  analytics_function: Callable[[RequestMetadata, pd.DataFrame], ExtensionResponse],
                  print_name: str,
                  extension_type: ExtensionType,
-                 attribute_groups: List[AttributeGroup] = [],
+                 attribute_groups: List[AttributeGroup] = None,
                  parameters: List[Parameter] = None):
+
         self._relative_path = relative_path
         self._analytics_function = analytics_function
 
+        if attribute_groups is None:
+            attribute_groups = []
+
         self._analytics_extension = AnalyticsExtension(print_name, extension_type, attribute_groups, parameters)
+
 
     @property
     def relative_path(self) -> str:
