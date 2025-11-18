@@ -20,7 +20,7 @@ class UrlResponse(ExtensionDataResponse):
 
         self._url = url
 
-    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+    def get_response(self):
         """Get the url response.
 
         Returns

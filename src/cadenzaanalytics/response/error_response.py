@@ -20,7 +20,7 @@ class ErrorResponse(ExtensionResponse):
         self._message = message
         self._status = status
 
-    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+    def get_response(self):
         """Get the error response.
 
         Returns

@@ -20,7 +20,7 @@ class ImageResponse(ExtensionDataResponse):
 
         self._image = image
 
-    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+    def get_response(self):
         """Get the image response.
 
         Returns

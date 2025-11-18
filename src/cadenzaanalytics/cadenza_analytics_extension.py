@@ -88,8 +88,7 @@ class CadenzaAnalyticsExtension:
 
         analytics_response = self._analytics_function(analytics_request)
 
-        # TODO: Adapt to new analytics request tables
-        return analytics_response.get_response(analytics_request.metadata.get_columns(), analytics_request.data)
+        return analytics_response.get_response()
 
     def get_capabilities(self) -> Response:
         """Get the capabilities of the extension.

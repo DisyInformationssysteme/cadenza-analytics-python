@@ -80,7 +80,7 @@ class CsvResponse(ExtensionDataResponse):
         self._missing_metadata_strategy = value
 
 
-    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+    def get_response(self):
         """Get the CSV response.
 
         Returns

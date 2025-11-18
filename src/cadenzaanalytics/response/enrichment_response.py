@@ -22,7 +22,7 @@ class EnrichmentResponse(CsvResponse):
 
         super().__init__(data, column_metadata, missing_metadata_strategy)
 
-    def get_response(self, original_column_metadata: List[ColumnMetadata], original_data: DataFrame):
+    def get_response(self):
         """Get the enrichment response.
 
         Returns
@@ -33,7 +33,7 @@ class EnrichmentResponse(CsvResponse):
         if self._is_runtime_validation_active:
             self._validate_response()
 
-        return super().get_response(original_column_metadata, original_data)
+        return super().get_response()
 
 
     def _validate_response(self):
