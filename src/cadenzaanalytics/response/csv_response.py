@@ -30,37 +30,46 @@ class CsvResponse(ExtensionDataResponse):
         self._missing_metadata_strategy = missing_metadata_strategy
 
 
-    """Getter for toggle to disable the runtime validation of the response. The runtime validation is enabled by default.
-
-    Returns
-    -------
-    bool
-        Current setting of toggle
-    """
     @property
     def disable_runtime_validation(self) -> bool:
+        """Getter for toggle to disable the runtime validation of the response.
+        The runtime validation is enabled by default.
+
+        Returns
+        -------
+        bool
+            Current setting of toggle
+        """
+
         return not self._is_runtime_validation_active
 
-    """Setter for toggle to disable the runtime validation of the response. Set to True to disable the runtime validation."""
+
     @disable_runtime_validation.setter
     def disable_runtime_validation(self, value: bool):
+        """Setter for toggle to disable the runtime validation of the response.
+        Set to True to disable the runtime validation.
+        """
+
         self._is_runtime_validation_active = not value
 
 
-    """Getter for the strategy of handling missing metadata.
-
-    Returns
-    -------
-    MissingMetadataStrategy
-        Current missing metadata strategy
-    """
     @property
     def missing_metadata_strategy(self) -> MissingMetadataStrategy:
+        """Getter for the strategy of handling missing metadata.
+
+        Returns
+        -------
+        MissingMetadataStrategy
+            Current missing metadata strategy
+        """
+
         return self._missing_metadata_strategy
 
-    """Setter for the strategy of handling missing metadata."""
+
     @missing_metadata_strategy.setter
     def missing_metadata_strategy(self, value: MissingMetadataStrategy):
+        """Setter for the strategy of handling missing metadata."""
+
         self._missing_metadata_strategy = value
 
 
@@ -136,8 +145,9 @@ class CsvResponse(ExtensionDataResponse):
 
         # metadata definition without columns in data
         if len(metadata_column_names) > 0:
-            raise Exception(f"Metadata column definition without column in data found. Number of missing columns: {len(metadata_column_names)}")
+            raise Exception(f"Metadata column definition without column in data found."
+                            f"Number of missing columns: {len(metadata_column_names)}")
 
         # empty data response
         if len(self._data.columns) == 0:
-            raise Exception(f"Response without any data column.")
+            raise Exception("Response without any data column.")
