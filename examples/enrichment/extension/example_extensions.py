@@ -1,17 +1,28 @@
 """Example module for running a disy Cadenza analytics extension that
- will show a (static) image in disy Cadenza"""
+ will execute a basic enrichment."""
 import pandas as pd
 
 import cadenzaanalytics as ca
 
 
-def enrichment_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    # pylint: disable=unused-argument
-    response_columns = metadata.get_columns_by_attribute_group()['any_data']
-    response_column_names = [c.name for c in response_columns]
-    return ca.RowWiseMappingCsvResponse(
-        response_columns,
-        lambda row: row[response_column_names])
+def enrichment_basic_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
+    id_column_metadata = metadata.get_id_column()
+
+    df_data = pd.DataFrame()
+    df_data[id_column_metadata.name] = data[id_column_metadata.name]
+    df_data["new_value"] = "value"
+
+    result_metadata = [
+        id_column_metadata,
+        ca.ColumnMetadata(
+            name="new_value",
+            print_name="New value",
+            data_type= ca.DataType.STRING,
+            role=ca.AttributeRole.DIMENSION
+        )
+    ]
+
+    return ca.EnrichmentResponse(df_data, result_metadata)
 
 
 any_attribute_group = ca.AttributeGroup(
@@ -24,9 +35,9 @@ any_attribute_group = ca.AttributeGroup(
 )
 
 enrichment_echo_extension = ca.CadenzaAnalyticsExtension(
-    relative_path="echo-extension",
-    analytics_function=enrichment_echo_analytics_function,
-    print_name="Example Echo Enrichment Extension",
+    relative_path="basic-extension",
+    analytics_function=enrichment_basic_analytics_function,
+    print_name="Example Basic Enrichment Extension",
     extension_type=ca.ExtensionType.ENRICHMENT,
     attribute_groups=[any_attribute_group]
 )
