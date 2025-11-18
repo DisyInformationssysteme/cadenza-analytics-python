@@ -7,9 +7,8 @@ class RequestParameter:
     """This class holds the parameters of the analytics request send by cadenza.
     """
 
-    def __init__(self, request_metadata: dict):
-        #TODO: Refactor
-        self._request_parameters = request_metadata._request_metadata['parameters']
+    def __init__(self, request_parameters: dict):
+        self._request_parameters = request_parameters
 
 
     @property

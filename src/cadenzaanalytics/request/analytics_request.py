@@ -6,9 +6,8 @@ from cadenzaanalytics.request.request_metadata import RequestMetadata
 class AnalyticsRequest:
     """A class representing an analytics request.
     """
-    def __init__(self, metadata: RequestMetadata):
-        # TODO: Refactor
-        self._request_parameter = RequestParameter(metadata)
+    def __init__(self, parameters: RequestParameter):
+        self._parameters = parameters
         self._tables = {}
 
     def __getitem__(self, key) -> RequestTable:
@@ -37,7 +36,8 @@ class AnalyticsRequest:
         RequestParameter
             The parameters associated with the request.
         """
-        return self._request_parameter
+        return self._parameters
+
 
     def add_request_table(self, name: str, metadata: RequestMetadata, data):
         """Add request table to the analytics request"""

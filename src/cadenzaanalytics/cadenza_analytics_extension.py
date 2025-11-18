@@ -15,8 +15,11 @@ from cadenzaanalytics.data.extension_type import ExtensionType
 from cadenzaanalytics.data.parameter import Parameter
 from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.request.analytics_request import AnalyticsRequest
+from cadenzaanalytics.request.request_parameter import RequestParameter
+from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.request.request_metadata import RequestMetadata
 from cadenzaanalytics.response.extension_response import ExtensionResponse
+
 
 logger = logging.getLogger('cadenzaanalytics')
 
@@ -85,6 +88,7 @@ class CadenzaAnalyticsExtension:
 
         analytics_response = self._analytics_function(analytics_request)
 
+        # TODO: Adapt to new analytics request tables
         return analytics_response.get_response(analytics_request.metadata.get_columns(), analytics_request.data)
 
     def get_capabilities(self) -> Response:
@@ -99,9 +103,13 @@ class CadenzaAnalyticsExtension:
 
     def _get_request_data(self, multipart_request) -> AnalyticsRequest:
         logger.info('Processing POST request...')
+
         metadata_dict = json.loads(self._get_from_request(multipart_request, 'metadata'))
         logger.debug('Received metadata:\n%s', metadata_dict)
+
         metadata = RequestMetadata(metadata_dict)
+        parameters = RequestParameter(metadata_dict['parameters'])
+
 
         if metadata.has_columns():
             type_mapping = {}
@@ -127,7 +135,11 @@ class CadenzaAnalyticsExtension:
 
         logger.debug('Received data:\n%s', df_data.head())
 
-        return AnalyticsRequest(metadata, df_data)
+
+        request = AnalyticsRequest(parameters)
+        request.add_request_table("table", metadata, df_data)
+
+        return request
 
     def _get_from_request(self, multipart_request, part_name):
         if part_name in multipart_request.form:
