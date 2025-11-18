@@ -41,7 +41,10 @@ class RequestMetadata:
         ColumnMetadata | None
             Metadata for the column if found, else None.
         """
-        return self.get_first_column_of_attribute_group(AttributeGroup.ID_ATTRIBUTE_GROUP_NAME)
+        if len(self.groups[AttributeGroup.ID_ATTRIBUTE_GROUP_NAME]) > 0:
+            return self.groups[AttributeGroup.ID_ATTRIBUTE_GROUP_NAME][0]
+        else:
+            return None
 
     @property
     def groups(self) -> Dict[str, List[ColumnMetadata]]:
