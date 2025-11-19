@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, Any
 
+from cadenzaanalytics.data.parameter_value import ParameterValue
 from cadenzaanalytics.request.view_parameter import ViewParameter
 
 
@@ -8,7 +9,7 @@ class RequestParameter:
     """
 
     def __init__(self, request_parameters: dict):
-        self._request_parameters = request_parameters
+        self._request_parameters = {param["name"]: ParameterValue._from_dict(param) for param in request_parameters}
 
 
     @property
@@ -25,13 +26,16 @@ class RequestParameter:
         device_pixel_ratio = self._get_parameter(ViewParameter.VIEW_DEVICE_PIXEL_RATIO_PARAMETER_NAME)
 
         return ViewParameter(
-            width=int(width) if width is not None else None,
-            height=int(height) if height is not None else None,
-            device_pixel_ratio=float(device_pixel_ratio) if device_pixel_ratio is not None else None
+            width=width,
+            height=height,
+            device_pixel_ratio=device_pixel_ratio
         )
 
+    def __getitem__(self, name: str) -> Any:
+        return self._get_parameter(name)
 
-    def _get_parameter(self, name: str) -> Optional[str]:
+
+    def _get_parameter(self, name: str) -> Any:
         """Returns a specific parameter value.
 
         Parameters
@@ -46,5 +50,5 @@ class RequestParameter:
         """
 
         if name in self._request_parameters:
-            return self._request_parameters[name]
+            return self._request_parameters[name].value
         return None

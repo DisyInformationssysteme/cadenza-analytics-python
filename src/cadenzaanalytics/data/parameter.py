@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 
 from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.parameter_type import ParameterType
@@ -28,7 +28,7 @@ class Parameter(DataObject):
                  parameter_type: ParameterType,
                  options: List[str] = None,
                  required: bool = False,
-                 default_value: any = None):
+                 default_value: Any = None):
         self._name = name
         self._print_name = print_name
         self._parameter_type = parameter_type
