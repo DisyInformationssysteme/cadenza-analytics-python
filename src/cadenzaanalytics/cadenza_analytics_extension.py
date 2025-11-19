@@ -27,7 +27,7 @@ class CadenzaAnalyticsExtension:
     """
     def __init__(self, *,
                  relative_path: str,
-                 analytics_function: Callable[[RequestMetadata, pd.DataFrame], ExtensionResponse],
+                 analytics_function: Callable[[AnalyticsRequest], ExtensionResponse],
                  print_name: str,
                  extension_type: ExtensionType,
                  attribute_groups: List[AttributeGroup] = None,

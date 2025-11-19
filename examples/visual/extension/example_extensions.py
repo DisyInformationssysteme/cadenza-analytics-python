@@ -1,11 +1,9 @@
 """Example module for running a disy Cadenza analytics extension that
  will show a (static) image in disy Cadenza"""
-import pandas as pd
-
 import cadenzaanalytics as ca
 
 
-def image_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
+def image_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-argument
     with open("resources/example_image.png", "rb") as image_file:
         image = image_file.read()

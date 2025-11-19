@@ -5,8 +5,8 @@ import pandas as pd
 import cadenzaanalytics as ca
 
 
-def data_echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    return ca.DataResponse(data, metadata.get_columns_by_attribute_group()['any_data'])
+def data_echo_analytics_function(request: ca.AnalyticsRequest):
+    return ca.DataResponse(request["table"].data, request["table"].metadata.groups['any_data'])
 
 
 any_attribute_group = ca.AttributeGroup(

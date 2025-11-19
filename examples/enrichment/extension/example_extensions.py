@@ -5,11 +5,12 @@ import pandas as pd
 import cadenzaanalytics as ca
 
 
-def enrichment_basic_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    id_column_metadata = metadata.get_id_column()
+def enrichment_basic_analytics_function(request: ca.AnalyticsRequest):
+    table = request["table"]
+    id_column_metadata = table.metadata.id
 
     df_data = pd.DataFrame()
-    df_data[id_column_metadata.name] = data[id_column_metadata.name]
+    df_data[id_column_metadata.name] = table.data[id_column_metadata.name]
     df_data["new_value"] = "value"
 
     result_metadata = [

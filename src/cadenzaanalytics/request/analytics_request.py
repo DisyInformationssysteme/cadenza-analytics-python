@@ -1,3 +1,5 @@
+from pandas import DataFrame
+
 from cadenzaanalytics.request.request_parameter import RequestParameter
 from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.request.request_metadata import RequestMetadata
@@ -39,7 +41,7 @@ class AnalyticsRequest:
         return self._parameters
 
 
-    def add_request_table(self, name: str, metadata: RequestMetadata, data):
-        """Add request table to the analytics request"""
+    def add_request_table(self, name: str, metadata: RequestMetadata, data: DataFrame):
+        """Add a request table to the analytics request"""
 
         self._tables[name] = RequestTable(metadata=metadata, data=data)

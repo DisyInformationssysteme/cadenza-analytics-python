@@ -1,10 +1,12 @@
+from pandas import DataFrame
+
 from cadenzaanalytics.request.request_metadata import RequestMetadata
 
 
 class RequestTable:
     """A class representing an analytics request table.
     """
-    def __init__(self, metadata: RequestMetadata, data):
+    def __init__(self, metadata: RequestMetadata, data: DataFrame):
         self._metadata = metadata
         self._data = data
 
@@ -20,7 +22,7 @@ class RequestTable:
         return self._metadata
 
     @property
-    def data(self):
+    def data(self) -> DataFrame:
         """Get the data payload of the request.
 
         Returns
