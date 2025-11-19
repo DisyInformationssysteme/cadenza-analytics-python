@@ -6,9 +6,7 @@ build-backend = "poetry.core.masonry.api"
 package-mode = true
 name = "cadenzaanalytics"
 authors = [
-    "Julian Janßen <julian.janssen@disy.net>",
-    "Daniel Dittmar <daniel.dittmar@disy.net>",
-    "Matthias Budde <matthias.budde@disy.net>"
+    "Disy Informationssysteme GmbH <cadenza-analytics@disy.net>",
 ]
 version="10.4.0a0.dev0"
 description = "Official Python Package for creation of disy Cadenza analytics extensions"
