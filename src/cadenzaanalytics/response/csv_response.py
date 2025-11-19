@@ -170,6 +170,3 @@ class CsvResponse(ExtensionDataResponse):
             raise ValueError(f"Metadata column definition without column in data found."
                             f"Number of missing columns: {len(metadata_column_names)}")
 
-        # empty data response
-        if len(self._data.columns) == 0:
-            raise ValueError("Response without any data column.")
