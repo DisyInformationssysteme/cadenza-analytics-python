@@ -34,12 +34,6 @@ def _parse_wkt(value):
         return None
 
 
-def _parse_datetime(value):
-    if pd.isna(value) or value == '':
-        return None
-    return pd.to_datetime(value, format='ISO8601')
-
-
 class CadenzaAnalyticsExtension:
     """Class representing a Cadenza analytics extension, the central object to create for and register
     in the CadenzaAnalyticsExtensionService.
@@ -166,7 +160,7 @@ class CadenzaAnalyticsExtension:
                 sep=';',
                 dtype=type_mapping,
                 parse_dates=datetime_columns,
-                date_parser=_parse_datetime,
+                date_format='ISO8601',
                 na_values=na_values_mapping,
                 keep_default_na=False,
             )
