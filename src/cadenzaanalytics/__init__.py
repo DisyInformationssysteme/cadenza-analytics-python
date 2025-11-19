@@ -18,6 +18,7 @@ from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.data.attribute_role import AttributeRole
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 from cadenzaanalytics.data.data_type import DataType
+from cadenzaanalytics.data.table import Table
 from cadenzaanalytics.data.extension_type import ExtensionType
 from cadenzaanalytics.data.geometry_type import GeometryType
 from cadenzaanalytics.data.measure_aggregation import MeasureAggregation

@@ -11,10 +11,10 @@ from flask import Response, request
 from shapely import wkt as shapely_wkt
 
 from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
-from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.data.extension_type import ExtensionType
 from cadenzaanalytics.data.parameter import Parameter
 from cadenzaanalytics.data.data_type import DataType
+from cadenzaanalytics.data.table import Table
 from cadenzaanalytics.request.analytics_request import AnalyticsRequest
 from cadenzaanalytics.request.request_parameter import RequestParameter
 from cadenzaanalytics.request.request_metadata import RequestMetadata
@@ -41,22 +41,30 @@ def _parse_datetime(value):
 
 
 class CadenzaAnalyticsExtension:
-    """Class representing a Cadenza analytics extension.
+    """Class representing a Cadenza analytics extension, the central object to create for and register
+    in the CadenzaAnalyticsExtensionService.
     """
     def __init__(self, *,
                  relative_path: str,
                  analytics_function: Callable[[AnalyticsRequest], ExtensionResponse],
                  print_name: str,
                  extension_type: ExtensionType,
-                 attribute_groups: List[AttributeGroup] = None,
+                 tables: List[Table] = None,
                  parameters: List[Parameter] = None):
 
         self._relative_path = relative_path
         self._analytics_function = analytics_function
 
-        if attribute_groups is None:
-            attribute_groups = []
-
+        attribute_groups = []
+        if tables is None:
+            tables = []
+        if len(tables) > 1:
+            raise ValueError('At most one table is supported')
+        if len(tables) == 1:
+            attribute_groups = tables[0].attribute_groups
+            self._table_name = tables[0].name
+        else:
+            self._table_name = None
         self._analytics_extension = AnalyticsExtension(print_name, extension_type, attribute_groups, parameters)
 
 
@@ -173,7 +181,7 @@ class CadenzaAnalyticsExtension:
         logger.debug('Received data:\n%s', df_data.head())
 
         analytics_request = AnalyticsRequest(parameters)
-        analytics_request.add_request_table("table", metadata, df_data)
+        analytics_request.add_request_table(self._table_name, metadata, df_data)
 
         return analytics_request
 

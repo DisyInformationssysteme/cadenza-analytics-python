@@ -5,11 +5,22 @@ import pandas as pd
 import cadenzaanalytics as ca
 
 
+def minimal_data_analytics_function(request: ca.AnalyticsRequest):
+    return ca.DataResponse(pd.DataFrame(), [])
+
+
+def minimal_data_echo_analytics_function(request: ca.AnalyticsRequest):
+    data = request["table"].data
+    metadata = request["table"].metadata
+    return ca.DataResponse(data, metadata.get_columns())
+
 def data_echo_analytics_function(request: ca.AnalyticsRequest):
     data = request["table"].data
     metadata = request["table"].metadata
     add_nulls = request.parameters["append_nulls"].value
     append_rows_count = request.parameters["append_rows_count"].value
+    user_chosen_attributes = metadata.groups["any_data"]
+    some_attribute = metadata.columns["any_data_1"]
     if append_rows_count < 1:
         append_rows_count = 1
     if add_nulls:
@@ -37,12 +48,28 @@ any_geometry_group = ca.AttributeGroup(
     max_attributes=1
 )
 
+minimal_data_extension = ca.CadenzaAnalyticsExtension(
+    relative_path="minimal-data-extension",
+    analytics_function=minimal_data_analytics_function,
+    print_name="Example Minimal Data Extension",
+    extension_type=ca.ExtensionType.DATA,
+    tables=[],
+    parameters=[]
+)
+minimal_data_echo_extension = ca.CadenzaAnalyticsExtension(
+    relative_path="minimal-data-echo-extension",
+    analytics_function=minimal_data_echo_analytics_function,
+    print_name="Example Minimal Echo Data Extension",
+    extension_type=ca.ExtensionType.DATA,
+    tables=[ca.Table(name="table", attribute_groups=[any_attribute_group])],
+    parameters=[]
+)
 data_echo_extension = ca.CadenzaAnalyticsExtension(
     relative_path="data-echo-extension",
     analytics_function=data_echo_analytics_function,
     print_name="Example Echo Data Extension",
     extension_type=ca.ExtensionType.DATA,
-    attribute_groups=[any_attribute_group, any_geometry_group],
+    tables=[ca.Table(name="table", attribute_groups=[any_attribute_group, any_geometry_group])],
     parameters=[ca.Parameter(name="append_nulls", print_name="Append row with null values", parameter_type=ca.ParameterType.BOOLEAN, default_value=False, required=False),
                 ca.Parameter(name="append_rows_count", print_name="How many rows with null values should be appended?", parameter_type=ca.ParameterType.INT64, default_value=1, required=True),
                 ca.Parameter(name="float_param", print_name="Not used float", parameter_type=ca.ParameterType.FLOAT64, required=False),
@@ -52,6 +79,8 @@ data_echo_extension = ca.CadenzaAnalyticsExtension(
 )
 
 analytics_service = ca.CadenzaAnalyticsExtensionService()
+analytics_service.add_analytics_extension(minimal_data_extension)
+analytics_service.add_analytics_extension(minimal_data_echo_extension)
 analytics_service.add_analytics_extension(data_echo_extension)
 
 if __name__ == '__main__':

@@ -66,6 +66,12 @@ class RequestMetadata:
 
         return grouped_columns
 
+    @property
+    def columns(self) -> Dict[str, ColumnMetadata]:
+        """Returns a column metadata object for by its column name."""
+        columns = self._get_columns() if self.has_columns() else []
+        return {c["name"]: ColumnMetadata._from_dict(c) for c in columns}
+
 
     def get_first_column_of_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
         """Returns the first column metadata object of the given attribute group.
