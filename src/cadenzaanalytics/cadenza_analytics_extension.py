@@ -8,6 +8,7 @@ from typing import Callable, List
 
 import pandas as pd
 from flask import Response, request
+from shapely import wkt as shapely_wkt
 
 from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
 from cadenzaanalytics.data.attribute_group import AttributeGroup
@@ -21,6 +22,17 @@ from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
 logger = logging.getLogger('cadenzaanalytics')
+
+
+def _parse_wkt(value):
+    if pd.isna(value) or value == '':
+        return None
+    try:
+        return shapely_wkt.loads(value)
+    except Exception:
+        logger.warning('Invalid WKT encountered, setting value to None: %s', value, exc_info=True)
+        return None
+
 
 class CadenzaAnalyticsExtension:
     """Class representing a Cadenza analytics extension.
@@ -108,17 +120,19 @@ class CadenzaAnalyticsExtension:
         metadata = RequestMetadata(metadata_dict)
         parameters = RequestParameter(metadata_dict['parameters'])
 
-
         if metadata.has_columns():
             type_mapping = {}
             datetime_columns = []
+            geometry_columns = []
 
             for column in metadata.get_columns():
                 if column.data_type == DataType.ZONEDDATETIME:
                     datetime_columns.append(column.name)
 
-                type_mapping[column.name] = column.data_type.pandas_type()
+                if column.data_type == DataType.GEOMETRY:
+                    geometry_columns.append(column.name)
 
+                type_mapping[column.name] = column.data_type.pandas_type()
 
             csv_data = StringIO(self._get_from_request(multipart_request, 'data'))
             df_data = pd.read_csv(
@@ -128,11 +142,15 @@ class CadenzaAnalyticsExtension:
                 parse_dates=datetime_columns,
                 date_format='ISO8601'
             )
+
+            # Parse WKT geometries into shapely geometry objects
+            if len(geometry_columns) > 0:
+                for gcol in geometry_columns:
+                    df_data[gcol] = df_data[gcol].apply(_parse_wkt)
         else:
             df_data = pd.DataFrame()
 
         logger.debug('Received data:\n%s', df_data.head())
-
 
         analytics_request = AnalyticsRequest(parameters)
         analytics_request.add_request_table("table", metadata, df_data)
