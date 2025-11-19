@@ -24,7 +24,7 @@ def data_echo_analytics_function(request: ca.AnalyticsRequest):
     if append_rows_count < 1:
         append_rows_count = 1
     if add_nulls:
-        # add a column with None values if user requested it
+        # add a row with only None values if user requested it, add as many (min 1) as requested
         added = pd.DataFrame([[None] * len(data.columns)] * append_rows_count, columns=data.columns)
         data = pd.concat([data, added])
     return ca.DataResponse(data, metadata.get_columns())
