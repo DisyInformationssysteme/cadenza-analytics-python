@@ -53,6 +53,13 @@ class RequestMetadata:
         """
         return [c.name for c in self.id_columns]
 
+    def has_groups(self):
+        return self.has_columns()
+
+    def has_group(self, group_name) -> bool:
+        columns = self._get_columns() if self.has_columns() else []
+        return any(c['attributeGroupName'] == group_name for c in columns)
+
     @property
     def groups(self) -> Dict[str, List[ColumnMetadata]]:
         """Returns all column metadata objects grouped by its attribute groups.
@@ -73,8 +80,20 @@ class RequestMetadata:
 
         return grouped_columns
 
-    def has_group(self, group_name) -> bool:
-        return any(c['attributeGroupName'] == group_name for c in self._get_columns())
+    def has_columns(self) -> bool:
+        """Check if the analytics request has columns with corresponding metadata.
+
+        Returns
+        -------
+        bool
+            True if the request has columns with corresponding metadata, False otherwise.
+        """
+        return (self._request_metadata['dataContainers'] != []
+                and len(self._request_metadata['dataContainers'][0]['columns']) > 0)
+
+    def has_column(self, column_name) -> bool:
+        columns = self._get_columns() if self.has_columns() else []
+        return any(c['name'] == column_name for c in columns)
 
     @property
     def columns(self) -> Dict[str, ColumnMetadata]:
@@ -83,21 +102,20 @@ class RequestMetadata:
         return {c["name"]: ColumnMetadata._from_dict(c) for c in columns}
 
 
-    def get_first_column_of_attribute_group(self, attribute_group) -> Optional[ColumnMetadata]:
-        """Returns the first column metadata object of the given attribute group.
+    def get_first_column_of_group(self, group_name) -> Optional[ColumnMetadata]:
+        """Returns the first column metadata object of the given group.
 
         Returns
         -------
         Optional[ColumnMetadata]
-            The column metadata of the first column in the given attribute group. If no column metadata for the
-            attribute group was send None is returned.
+            The column metadata of the first column in the given group. If no column metadata for the
+            group was sent, None is returned.
         """
         if self.has_columns():
             for column in self._get_columns():
-                if column['attributeGroupName'] == attribute_group:
+                if column['attributeGroupName'] == group_name:
                     return ColumnMetadata._from_dict(column)
         return None
-
 
 
     def get_columns(self) -> List[ColumnMetadata]:
@@ -110,17 +128,6 @@ class RequestMetadata:
         """
         columns = self._get_columns() if self.has_columns() else []
         return [ColumnMetadata._from_dict(column) for column in columns]
-
-    def has_columns(self) -> bool:
-        """Check if the analytics request has columns with corresponding metadata.
-
-        Returns
-        -------
-        bool
-            True if the request has columns with corresponding metadata, False otherwise.
-        """
-        return (self._request_metadata['dataContainers'] != []
-                and len(self._request_metadata['dataContainers'][0]['columns']) > 0)
 
     def _get_columns(self):
         return self._request_metadata['dataContainers'][0]['columns']
