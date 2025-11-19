@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.12"
 Flask = "2.3.3"
 Werkzeug = "3.0.4"
 Flask-Cors = "3.0.10"
