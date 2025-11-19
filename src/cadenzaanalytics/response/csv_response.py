@@ -1,4 +1,5 @@
 import csv
+import re
 import sys
 from typing import List
 import logging
@@ -93,7 +94,13 @@ class CsvResponse(ExtensionDataResponse):
 
 
         python_3_12 = (3, 12)
-        if sys.version_info >= python_3_12:
+        if sys.version_info >= python_3_12 and len(self._data.columns) > 1:
+            # The quoting strategies QUOTE_NOTNULL or QUOTE_NULL would fail with the csv writer error "single empty field record must be quoted"
+            # if there is only one column and if there is any null-ish value available.
+            # Also refer to https://github.com/pandas-dev/pandas/issues/59116
+            # Thus we can only use this strategy if there is more than one column, else fallback to
+            # the fallback approach that always quotes and then removes quotes again.
+            # The limitation to python 3.12 comes from the option QUOTE_NOTNULL only becoming available on that version.
             csv_data = self._data.to_csv(
                 sep=';',
                 encoding='utf-8',
@@ -104,6 +111,7 @@ class CsvResponse(ExtensionDataResponse):
                 lineterminator='\r\n',
                 date_format='%Y-%m-%dT%H:%M:%SZ')
         else:
+            # info: this approach cannot distinguish empty strings from NULL
             csv_data = self._data.to_csv(
                 sep=';',
                 encoding='utf-8',
@@ -112,12 +120,11 @@ class CsvResponse(ExtensionDataResponse):
                 quotechar='"',
                 lineterminator='\r\n',
                 date_format='%Y-%m-%dT%H:%M:%SZ')
-            # Needed to make sure we sent NULL/None values and not empty strings.
-            # This replacement might be problematic for escaped quotes within a string.
-            # As the proper solution is to use python 3.12,
-            # we do not support more sophisticated support for missing values here.
-            csv_data = csv_data.replace('""', '')
-
+            # Needed to make sure to send NULL/None values (unquoted empty content) and not empty strings (quoted empty content)
+            # as empty strings would only be valid for DataType.STRING and cause errors for other DataTypes.
+            # regex searches and replaces double quotes that are surrounded by separators (start file, end file, semicolon or newline)
+            # this way double-quotes that represent a single escaped quote character within a string value are retained
+            csv_data = re.sub(r'(^|;|\r\n)""(?=;|\r\n|$)', r'\1', csv_data)
         return self._create_response(csv_data, self._column_meta_data)
 
 
