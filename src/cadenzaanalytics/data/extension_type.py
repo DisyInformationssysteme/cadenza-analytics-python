@@ -4,9 +4,9 @@ from enum import Enum
 class ExtensionType(Enum):
     """A class representing the different types of extensions such as visual, enrichment, data.
     """
-    VISUAL = "visualization"
+    VISUAL = "visual"
     ENRICHMENT = "enrichment"
-    DATA = "calculation"
+    DATA = "data"
 
     def __str__(self):
         return self.value
