@@ -34,6 +34,12 @@ def _parse_wkt(value):
         return None
 
 
+def _parse_datetime(value):
+    if pd.isna(value) or value == '':
+        return None
+    return pd.to_datetime(value, format='ISO8601')
+
+
 class CadenzaAnalyticsExtension:
     """Class representing a Cadenza analytics extension.
     """
@@ -122,12 +128,23 @@ class CadenzaAnalyticsExtension:
 
         if metadata.has_columns():
             type_mapping = {}
+            na_values_mapping = {}
             datetime_columns = []
             geometry_columns = []
 
             for column in metadata.get_columns():
                 if column.data_type == DataType.ZONEDDATETIME:
                     datetime_columns.append(column.name)
+                    # must be empty list, otherwise pd.read_csv interprets empty strings as NA which
+                    # is rejected by the parse_dates mechanism before it reaches the _parse_datetime function
+                    na_values_mapping[column.name] = []
+                elif column.data_type == DataType.STRING:
+                    # only empty strings must be considered as NA
+                    # unfortunately there does not seem to be a way to interpret empty quotes as empty string and unquoted as None
+                    na_values_mapping[column.name] = ['']
+                else:
+                    # pandas default list of NA values, mostly relevant for numeric columns
+                    na_values_mapping[column.name] = ['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A', '#N/A', 'N/A', 'n/a', 'NA', '<NA>', '#NA', 'NULL', 'null', 'NaN', '-NaN', 'nan', '-nan', 'None', '']
 
                 if column.data_type == DataType.GEOMETRY:
                     geometry_columns.append(column.name)
@@ -135,12 +152,15 @@ class CadenzaAnalyticsExtension:
                 type_mapping[column.name] = column.data_type.pandas_type()
 
             csv_data = StringIO(self._get_from_request(multipart_request, 'data'))
+            # read_csv cannot distinguish None from empty strings
             df_data = pd.read_csv(
                 csv_data,
                 sep=';',
                 dtype=type_mapping,
                 parse_dates=datetime_columns,
-                date_format='ISO8601'
+                date_parser=_parse_datetime,
+                na_values=na_values_mapping,
+                keep_default_na=False,
             )
 
             # Parse WKT geometries into shapely geometry objects
