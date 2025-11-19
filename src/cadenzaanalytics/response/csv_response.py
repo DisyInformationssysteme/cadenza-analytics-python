@@ -25,14 +25,20 @@ class CsvResponse(ExtensionDataResponse):
     """
     def __init__(self,
                  data: DataFrame,
-                 column_metadata: List[ColumnMetadata],
+                 column_metadata: List[ColumnMetadata | List[ColumnMetadata]],
                  missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
 
         content_type = 'text/csv'
         super().__init__(content_type)
 
         self._data = data
-        self._column_meta_data = column_metadata
+        # unboxing here allows the caller flexibility and convenience in creation of column metadata list
+        self._column_meta_data = []
+        for entry in column_metadata:
+            if isinstance(entry, list):
+                self._column_meta_data.extend(entry)
+            else:
+                self._column_meta_data.append(entry)
 
         self._is_runtime_validation_active = True
         self._missing_metadata_strategy = missing_metadata_strategy

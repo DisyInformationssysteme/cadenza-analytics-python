@@ -17,7 +17,7 @@ class EnrichmentResponse(CsvResponse):
         The data response type from which EnrichmentResponse inherits.
     """
     def __init__(self,
-                 data: DataFrame, column_metadata: List[ColumnMetadata],
+                 data: DataFrame, column_metadata: List[ColumnMetadata | List[ColumnMetadata]],
                  missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
 
         super().__init__(data, column_metadata, missing_metadata_strategy)

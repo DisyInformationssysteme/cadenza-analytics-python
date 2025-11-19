@@ -33,18 +33,25 @@ class RequestMetadata:
         raise KeyError(f"Key '{key}' not found.")
 
     @property
-    def id(self) -> Optional[ColumnMetadata]:
-        """Returns the id column metadata object.
+    def id_columns(self) -> List[ColumnMetadata]:
+        """Returns all id column metadata objects. Relevant for extensions of type ENRICHMENT
+        to connect request and response data.
 
         Returns
         -------
         ColumnMetadata | None
             Metadata for the column if found, else None.
         """
-        if len(self.groups[AttributeGroup.ID_ATTRIBUTE_GROUP_NAME]) > 0:
-            return self.groups[AttributeGroup.ID_ATTRIBUTE_GROUP_NAME][0]
+        if not self.has_group(AttributeGroup.ID_ATTRIBUTE_GROUP_NAME):
+            return []
+        return self.groups[AttributeGroup.ID_ATTRIBUTE_GROUP_NAME]
 
-        return None
+    @property
+    def id_names(self) -> List[str]:
+        """Returns all id column names. Relevant for extensions of type ENRICHMENT
+        to connect request and response data by copying relevant id columns from the input data frame.
+        """
+        return [c.name for c in self.id_columns]
 
     @property
     def groups(self) -> Dict[str, List[ColumnMetadata]]:
@@ -65,6 +72,9 @@ class RequestMetadata:
             grouped_columns[column['attributeGroupName']].append(ColumnMetadata._from_dict(column))
 
         return grouped_columns
+
+    def has_group(self, group_name) -> bool:
+        return any(c['attributeGroupName'] == group_name for c in self._get_columns())
 
     @property
     def columns(self) -> Dict[str, ColumnMetadata]:

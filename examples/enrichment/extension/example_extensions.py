@@ -7,14 +7,13 @@ import cadenzaanalytics as ca
 
 def enrichment_basic_analytics_function(request: ca.AnalyticsRequest):
     table = request["table"]
-    id_column_metadata = table.metadata.id
 
     df_data = pd.DataFrame()
-    df_data[id_column_metadata.name] = table.data[id_column_metadata.name]
+    df_data[table.metadata.id_names] = table.data[table.metadata.id_names]
     df_data["new_value"] = "value"
 
     result_metadata = [
-        id_column_metadata,
+        table.metadata.id_columns,
         ca.ColumnMetadata(
             name="new_value",
             print_name="New value",
@@ -40,7 +39,7 @@ enrichment_echo_extension = ca.CadenzaAnalyticsExtension(
     analytics_function=enrichment_basic_analytics_function,
     print_name="Example Basic Enrichment Extension",
     extension_type=ca.ExtensionType.ENRICHMENT,
-    attribute_groups=[any_attribute_group]
+    tables=[ca.Table(name="table", attribute_groups=[any_attribute_group])]
 )
 
 analytics_service = ca.CadenzaAnalyticsExtensionService()
