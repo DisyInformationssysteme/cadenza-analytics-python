@@ -101,7 +101,8 @@ class CsvResponse(ExtensionDataResponse):
                 index=False,
                 na_rep=None,  # missing/None/Null values are sent without quotes
                 quotechar='"',
-                lineterminator='\r\n')
+                lineterminator='\r\n',
+                date_format='%Y-%m-%dT%H:%M:%SZ')
         else:
             csv_data = self._data.to_csv(
                 sep=';',
@@ -109,7 +110,8 @@ class CsvResponse(ExtensionDataResponse):
                 quoting=csv.QUOTE_ALL,
                 index=False,
                 quotechar='"',
-                lineterminator='\r\n')
+                lineterminator='\r\n',
+                date_format='%Y-%m-%dT%H:%M:%SZ')
             # Needed to make sure we sent NULL/None values and not empty strings.
             # This replacement might be problematic for escaped quotes within a string.
             # As the proper solution is to use python 3.12,
