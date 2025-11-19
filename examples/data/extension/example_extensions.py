@@ -45,6 +45,7 @@ any_geometry_group = ca.AttributeGroup(
     geometry_types=[ca.GeometryType.POINT, ca.GeometryType.MULTIPOINT,
                     ca.GeometryType.LINESTRING, ca.GeometryType.MULTILINESTRING,
                     ca.GeometryType.POLYGON, ca.GeometryType.MULTIPOLYGON],
+    requested_srs="EPSG:3857",
     max_attributes=1
 )
 
@@ -73,7 +74,7 @@ data_echo_extension = ca.CadenzaAnalyticsExtension(
     parameters=[ca.Parameter(name="append_nulls", print_name="Append row with null values", parameter_type=ca.ParameterType.BOOLEAN, default_value=False, required=False),
                 ca.Parameter(name="append_rows_count", print_name="How many rows with null values should be appended?", parameter_type=ca.ParameterType.INT64, default_value=1, required=True),
                 ca.Parameter(name="float_param", print_name="Not used float", parameter_type=ca.ParameterType.FLOAT64, required=False),
-                ca.Parameter(name="geom_param", print_name="Not used geometry", parameter_type=ca.ParameterType.GEOMETRY, required=False),
+                ca.Parameter(name="geom_param", print_name="Not used geometry", parameter_type=ca.ParameterType.GEOMETRY, geometry_types=[ca.GeometryType.MULTIPOLYGON], requested_srs="EPSG:3857", required=False),
                 ca.Parameter(name="datetime_param", print_name="Not used datetime", parameter_type=ca.ParameterType.ZONEDDATETIME, required=False),
                 ca.Parameter(name="string_param", print_name="Not used string", parameter_type=ca.ParameterType.STRING, required=False)]
 )

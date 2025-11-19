@@ -4,7 +4,8 @@ from cadenzaanalytics.data.attribute_group import AttributeGroup
 
 
 class Table:
-    def __init__(self, name: str, attribute_groups: List[AttributeGroup]):
+    def __init__(self,  *,
+                 name: str, attribute_groups: List[AttributeGroup]):
         self._name = name
         self._attribute_groups = attribute_groups
 
