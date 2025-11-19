@@ -30,7 +30,8 @@ class ColumnMetadata(DataObject):
         "role": "_role",
         "measureAggregation": "_measure_aggregation",
         "format": "_format",
-        "geometryType": "_geometry_type"
+        "geometryType": "_geometry_type",
+        "srs": "_srs"
     }
     _attribute_constructors = {
         "dataType": DataType,
@@ -48,7 +49,8 @@ class ColumnMetadata(DataObject):
                  attribute_group_name: str = "data",
                  measure_aggregation: MeasureAggregation = None,
                  format: str = None,
-                 geometry_type: GeometryType = None):
+                 geometry_type: GeometryType = None,
+                 srs: str = None):
         self._name = name
         self._print_name = print_name
         self._attribute_group_name = attribute_group_name
@@ -57,6 +59,7 @@ class ColumnMetadata(DataObject):
         self._measure_aggregation = measure_aggregation
         self._format = format
         self._geometry_type = geometry_type
+        self._srs = srs
 
     @property
     def name(self) -> str:
@@ -125,7 +128,7 @@ class ColumnMetadata(DataObject):
         return self._measure_aggregation
 
     @property
-    def format(self) -> str:
+    def format(self) -> Optional[str]:
         """Get the format of the column.
 
         Returns
@@ -136,7 +139,7 @@ class ColumnMetadata(DataObject):
         return self._format
 
     @property
-    def geometry_type(self) -> GeometryType:
+    def geometry_type(self) -> Optional[GeometryType]:
         """Get the geometry type of the column.
 
         Returns
@@ -145,3 +148,8 @@ class ColumnMetadata(DataObject):
             The geometry type of the column.
         """
         return self._geometry_type
+
+    @property
+    def srs(self) -> Optional[str]:
+        """Get the srs of the column."""
+        return self._srs
