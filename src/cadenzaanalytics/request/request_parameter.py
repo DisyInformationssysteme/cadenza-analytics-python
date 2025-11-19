@@ -21,9 +21,9 @@ class RequestParameter:
         ViewParameter
             View parameter of the request.
         """
-        width = self._get_parameter(ViewParameter.VIEW_WIDTH_PARAMETER_NAME)
-        height = self._get_parameter(ViewParameter.VIEW_HEIGHT_PARAMETER_NAME)
-        device_pixel_ratio = self._get_parameter(ViewParameter.VIEW_DEVICE_PIXEL_RATIO_PARAMETER_NAME)
+        width = self._get_parameter_value(ViewParameter.VIEW_WIDTH_PARAMETER_NAME)
+        height = self._get_parameter_value(ViewParameter.VIEW_HEIGHT_PARAMETER_NAME)
+        device_pixel_ratio = self._get_parameter_value(ViewParameter.VIEW_DEVICE_PIXEL_RATIO_PARAMETER_NAME)
 
         return ViewParameter(
             width=width,
@@ -31,11 +31,29 @@ class RequestParameter:
             device_pixel_ratio=device_pixel_ratio
         )
 
-    def __getitem__(self, name: str) -> Any:
+    def __getitem__(self, name: str) -> Optional[ParameterValue]:
         return self._get_parameter(name)
 
+    def _get_parameter(self, name: str) -> Optional[ParameterValue]:
+        """Returns a specific parameter object.
 
-    def _get_parameter(self, name: str) -> Any:
+        Parameters
+        ----------
+        name : str
+            The name of the parameter.
+
+        Returns
+        -------
+        str
+            The parameter object if found, else None.
+        """
+
+        if name in self._request_parameters:
+            return self._request_parameters[name]
+        return None
+
+
+    def _get_parameter_value(self, name: str) -> Any:
         """Returns a specific parameter value.
 
         Parameters
@@ -46,7 +64,7 @@ class RequestParameter:
         Returns
         -------
         str
-            The value of the parameter if found, else an empty string.
+            The value of the parameter if found, else None.
         """
 
         if name in self._request_parameters:

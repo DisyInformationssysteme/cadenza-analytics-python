@@ -8,8 +8,8 @@ import cadenzaanalytics as ca
 def data_echo_analytics_function(request: ca.AnalyticsRequest):
     data = request["table"].data
     metadata = request["table"].metadata
-    add_nulls = request.parameters["append_nulls"]
-    append_rows_count = request.parameters["append_rows_count"]
+    add_nulls = request.parameters["append_nulls"].value
+    append_rows_count = request.parameters["append_rows_count"].value
     if append_rows_count < 1:
         append_rows_count = 1
     if add_nulls:
