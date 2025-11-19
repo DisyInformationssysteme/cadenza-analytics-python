@@ -28,6 +28,10 @@ class AnalyticsRequest:
 
         return self._tables[key]
 
+    def has_table(self, table_name: str) -> bool:
+        """Check if the request has a table with the provided name."""
+        return table_name in self._tables
+
 
     @property
     def parameters(self) -> RequestParameter:

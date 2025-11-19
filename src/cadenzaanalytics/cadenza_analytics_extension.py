@@ -129,6 +129,7 @@ class CadenzaAnalyticsExtension:
         parameters = RequestParameter(metadata_dict['parameters'])
 
         if metadata.has_columns():
+            has_data = True
             type_mapping = {}
             na_values_mapping = {}
             datetime_columns = []
@@ -169,13 +170,16 @@ class CadenzaAnalyticsExtension:
             if len(geometry_columns) > 0:
                 for gcol in geometry_columns:
                     df_data[gcol] = df_data[gcol].apply(_parse_wkt)
-        else:
-            df_data = pd.DataFrame()
 
-        logger.debug('Received data:\n%s', df_data.head())
+            logger.debug('Received data:\n%s', df_data.head())
+        else:
+            has_data = False
+            df_data = None
+            logger.debug('Received request without data')
 
         analytics_request = AnalyticsRequest(parameters)
-        analytics_request.add_request_table(self._table_name, metadata, df_data)
+        if has_data:
+            analytics_request.add_request_table(self._table_name, metadata, df_data)
 
         return analytics_request
 
