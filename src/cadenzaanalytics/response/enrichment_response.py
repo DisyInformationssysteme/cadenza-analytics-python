@@ -22,19 +22,6 @@ class EnrichmentResponse(CsvResponse):
 
         super().__init__(data, column_metadata, missing_metadata_strategy)
 
-    def get_response(self):
-        """Get the enrichment response.
-
-        Returns
-        -------
-        Response
-            The enrichment response.
-        """
-        if self._is_runtime_validation_active:
-            self._validate_response()
-
-        return super().get_response()
-
 
     def _validate_response(self):
         has_id_column_defined = False
@@ -45,3 +32,4 @@ class EnrichmentResponse(CsvResponse):
 
         if not has_id_column_defined:
             raise ValueError("Identifier column missing in metadata definition. This is mandatory for an enrichment.")
+        super()._validate_response()
