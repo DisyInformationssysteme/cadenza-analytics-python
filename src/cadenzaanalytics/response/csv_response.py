@@ -39,7 +39,7 @@ class CsvResponse(ExtensionDataResponse):
 
 
     @property
-    def disable_runtime_validation(self) -> bool:
+    def runtime_validation_disabled(self) -> bool:
         """Getter for toggle to disable the runtime validation of the response.
         The runtime validation is enabled by default.
 
@@ -52,8 +52,8 @@ class CsvResponse(ExtensionDataResponse):
         return not self._is_runtime_validation_active
 
 
-    @disable_runtime_validation.setter
-    def disable_runtime_validation(self, value: bool):
+    @runtime_validation_disabled.setter
+    def runtime_validation_disabled(self, value: bool):
         """Setter for toggle to disable the runtime validation of the response.
         Set to True to disable the runtime validation.
         """
