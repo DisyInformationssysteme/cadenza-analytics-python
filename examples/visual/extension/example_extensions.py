@@ -22,7 +22,7 @@ image_extension = ca.CadenzaAnalyticsExtension(
     analytics_function=image_analytics_function,
     print_name="Example Image Extension",
     extension_type=ca.ExtensionType.VISUAL,
-    attribute_groups=[image_attribute_group]
+    tables=[ca.Table(name="table", attribute_groups=[image_attribute_group])]
 )
 
 analytics_service = ca.CadenzaAnalyticsExtensionService()
