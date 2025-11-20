@@ -25,6 +25,7 @@ logger = logging.getLogger('cadenzaanalytics')
 
 
 def _parse_wkt(value):
+    # pylint: disable=broad-exception-caught
     if pd.isna(value) or value == '':
         return None
     try:
@@ -143,11 +144,14 @@ class CadenzaAnalyticsExtension:
                     na_values_mapping[column.name] = []
                 elif column.data_type == DataType.STRING:
                     # only empty strings must be considered as NA
-                    # unfortunately there does not seem to be a way to interpret empty quotes as empty string and unquoted as None
+                    # unfortunately there does not seem to be a way to interpret empty quotes as empty string
+                    # and unquoted as None
                     na_values_mapping[column.name] = ['']
                 else:
                     # pandas default list of NA values, mostly relevant for numeric columns
-                    na_values_mapping[column.name] = ['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A', '#N/A', 'N/A', 'n/a', 'NA', '<NA>', '#NA', 'NULL', 'null', 'NaN', '-NaN', 'nan', '-nan', 'None', '']
+                    na_values_mapping[column.name] = ['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A',
+                                                      '#N/A', 'N/A', 'n/a', 'NA', '<NA>', '#NA', 'NULL', 'null',
+                                                      'NaN', '-NaN', 'nan', '-nan', 'None', '']
 
                 if column.data_type == DataType.GEOMETRY:
                     geometry_columns.append(column.name)

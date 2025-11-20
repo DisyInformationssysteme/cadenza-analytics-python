@@ -12,14 +12,13 @@ def _parse_value(value: Any, data_type: DataType) -> Any:
         return None
     if data_type == DataType.INT64:
         return int(value)
-    elif data_type == DataType.FLOAT64:
+    if data_type == DataType.FLOAT64:
         return float(value)
-    elif data_type == DataType.ZONEDDATETIME:
+    if data_type == DataType.ZONEDDATETIME:
         return datetime.fromisoformat(value)
-    elif data_type == DataType.GEOMETRY:
+    if data_type == DataType.GEOMETRY:
         return shapely_wkt.loads(value)
-    else:
-        return value # retain string and boolean which are already typed correctly
+    return value # retain string and boolean which are already typed correctly
 
 
 class ParameterValue(DataObject):

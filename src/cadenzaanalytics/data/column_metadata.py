@@ -40,7 +40,7 @@ class ColumnMetadata(DataObject):
         "geometryType": GeometryType
     }
 
-    # pylint: disable=redefined-builtin
+    # pylint: disable=redefined-builtin, too-many-arguments
     def __init__(self, *,
                  name: str,
                  print_name: str,

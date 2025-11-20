@@ -5,6 +5,7 @@ from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.parameter_type import ParameterType
 
 
+# pylint: disable=too-many-instance-attributes
 class Parameter(DataObject):
     """A class representing parameters such as name, print_name, parameter_type, options, required
     and default_value used in data objects.

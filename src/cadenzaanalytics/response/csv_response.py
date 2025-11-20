@@ -101,7 +101,8 @@ class CsvResponse(ExtensionDataResponse):
 
         python_3_12 = (3, 12)
         if sys.version_info >= python_3_12 and len(self._data.columns) > 1:
-            # The quoting strategies QUOTE_NOTNULL or QUOTE_NULL would fail with the csv writer error "single empty field record must be quoted"
+            # The quoting strategies QUOTE_NOTNULL or QUOTE_NULL would fail with the csv writer
+            # error "single empty field record must be quoted"
             # if there is only one column and if there is any null-ish value available.
             # Also refer to https://github.com/pandas-dev/pandas/issues/59116
             # Thus we can only use this strategy if there is more than one column, else fallback to
@@ -126,9 +127,11 @@ class CsvResponse(ExtensionDataResponse):
                 quotechar='"',
                 lineterminator='\r\n',
                 date_format='%Y-%m-%dT%H:%M:%SZ')
-            # Needed to make sure to send NULL/None values (unquoted empty content) and not empty strings (quoted empty content)
+            # Needed to make sure to send NULL/None values (unquoted empty content) and not empty strings
+            # (quoted empty content)
             # as empty strings would only be valid for DataType.STRING and cause errors for other DataTypes.
-            # regex searches and replaces double quotes that are surrounded by separators (start file, end file, semicolon or newline)
+            # regex searches and replaces double quotes that are surrounded by separators
+            # (start file, end file, semicolon or newline)
             # this way double-quotes that represent a single escaped quote character within a string value are retained
             csv_data = re.sub(r'(^|;|\r\n)""(?=;|\r\n|$)', r'\1', csv_data)
         return self._create_response(csv_data, self._column_meta_data)
@@ -175,4 +178,3 @@ class CsvResponse(ExtensionDataResponse):
         if len(metadata_column_names) > 0:
             raise ValueError(f"Metadata column definition without column in data found."
                             f"Number of missing columns: {len(metadata_column_names)}")
-
