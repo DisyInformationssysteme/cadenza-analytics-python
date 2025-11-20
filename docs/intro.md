@@ -16,14 +16,16 @@ A user can integrate an analysis extension into disy Cadenza via the Management 
 
 As of disy Cadenza Autumn 2023 (9.3), the following types and capabilities of analysis extensions are officially supported:
 
-- **Visualization**
-  The Analytics Extension type `visualization` provides a new visualization type for displaying a bitmap image (PNG).
+- **Visual**
+  The Analytics Extension type `visual` returns static content to Cadenza, which can then be dispayed in a Cadenza view or via a map operation.
+  Possible content types are bitmap image (PNG), (unformatted) text, or URL (the content behind the URL is displayed in Cadenza).
 
-- **Data enrichment**
+- **Enrichment**
   The Analytcs Extension type `enrichment` returns data that enriches an existing Cadenza object type by adding additional attributes, which virtually add additional columns to the original data set.
 
-- **Data generation**
-  The Analytics Extension type `calculation` provides a result data set that is created as a new Cadenza object type.
+- **Data**
+  The Analytics Extension type `data` provides a result containing a structured data set.
+  From this data, a new Cadenza object type can be created.
 
 ## Communication
 
@@ -158,7 +160,7 @@ my_param2 = ca.Parameter(
             )
 ```
 
-Note: Parameters for Analytics Extensions of the type `visualization` can currently *not* yet be assigned on the disy Cadenza side when displaying the visualization as a Cadenza view.
+Note: Parameters for Analytics Extensions of the type `visual` can currently *not* yet be assigned on the disy Cadenza side when displaying the result as a Cadenza view.
 
 ## Configuring the Extension
 
@@ -168,7 +170,7 @@ To specify the endpoint where the extension expects to receive from disy Cadenza
 my_extension = ca.CadenzaAnalyticsExtension(
                    relative_path='my-extension',
                    print_name='My extension\'s print name in Cadenza',
-                   extension_type=ca.ExtensionType.CALCULATION,
+                   extension_type=ca.ExtensionType.DATA,
                    attribute_groups=[my_attribute_group],
                    parameters=[my_param, my_param2],
                    analytics_function=my_analytics_function
@@ -177,7 +179,7 @@ my_extension = ca.CadenzaAnalyticsExtension(
 
 The `relative_path` defines the endpoint, i.e. the subdirectory of the URL under wich the extension will be available after deployment.
 Further parameters include the `print_name` shown in Cadenza, and the attribute groups and parameters defined above.
-Additionally, the appropriate [`ExtensionType`](cadenzaanalytics/data/extension_type.html) (visualization, enrichment, or calculation) must be specified.
+Additionally, the appropriate [`ExtensionType`](cadenzaanalytics/data/extension_type.html) (visual, enrichment, or data) must be specified.
 
 The `analytics_function` is the name of the Python method that should be invoked (see next section).
 
@@ -193,7 +195,7 @@ def my_analytics_function (metadata: ca.RequestMetadata, data: pd.DataFrame):
     return #something
 ```
 
-The actual content and return type of this function will depend both on the extension type (visualization, enrichment, or calculation) and naturally the actual analytics code that the extension should execute.
+The actual content and return type of this function will depend both on the extension type (visual, enrichment, or data) and naturally the actual analytics code that the extension should execute.
 
 ### Reading Data, Metadata and Parameters
 
@@ -247,9 +249,9 @@ param_flag = metadata.get_parameter('flag')
 
 Depending on the extension type, there are specific objects for returning the response.
 
-### Data Generation
+### Data Extensions
 
-A [`CsvResponse`](cadenzaanalytics/response/csv_response.html) is used for calculations.
+A [`CsvResponse`](cadenzaanalytics/response/csv_response.html) is used for extension of type `data`.
 The response must include the data and the proper metadata.
 
 The following minimal example echos the data received from disy Cadenza as part of an `AttributeGroup` named `'any_data'` back to it without modification.
@@ -283,7 +285,7 @@ response_columns = [
 ]
 ```
 
-### Data Enrichment
+### Enrichment Extensions
 
 A [`CsvResponse`](cadenzaanalytics/response/csv_response.html) is used for enrichments as well.
 The response must be in the format of a text, a CSV file or a DataFrame so that it fits.
@@ -294,9 +296,9 @@ The metadata must be adapted and also returned to disy Cadenza via the response 
 
 TODO
 
-### Visualization
-As result of a visualization extension, an [`ImageResponse`](cadenzaanalytics/response/image_response.html) must be returned.
-Visualization extensions return a bitmap image in PNG format.
+### Visual Extensions
+As result of a visual extension, an [`ImageResponse`](cadenzaanalytics/response/image_response.html) must be returned.
+Visual extensions return a bitmap image in PNG format.
 
 The image can be created in various ways, e.g. by using FigureCanvas from matplotlib to render a plot or image.
 The following snippet shows returning an image loaded from a file.
