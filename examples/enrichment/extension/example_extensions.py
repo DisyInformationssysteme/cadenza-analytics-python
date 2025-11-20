@@ -56,7 +56,7 @@ def enrichment_sum_analytics_function(request: ca.AnalyticsRequest):
         data[sum_column.name] += data["number_3"]
     data = data[table.metadata.id_names + [sum_column.name]]
     return ca.EnrichmentResponse(data,
-                                 column_metadata=[],
+                                 column_metadata=[sum_column],
                                  id_columns=table.metadata.id_columns)
 
 any_attribute_group = ca.AttributeGroup(
