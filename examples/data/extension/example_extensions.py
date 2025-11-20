@@ -6,6 +6,7 @@ import cadenzaanalytics as ca
 
 
 def minimal_data_analytics_function(request: ca.AnalyticsRequest):
+    # pylint: disable=unused-argument
     return ca.DataResponse(pd.DataFrame(), [])
 
 
@@ -15,14 +16,13 @@ def minimal_data_echo_analytics_function(request: ca.AnalyticsRequest):
     return ca.DataResponse(data, metadata.get_columns())
 
 def data_echo_analytics_function(request: ca.AnalyticsRequest):
+    # pylint: disable=unused-variable
     data = request["table"].data
     metadata = request["table"].metadata
     add_nulls = request.parameters["append_nulls"].value
-    append_rows_count = request.parameters["append_rows_count"].value
+    append_rows_count = max(request.parameters["append_rows_count"].value, 1)
     user_chosen_attributes = metadata.groups["any_data"]
     some_attribute = metadata.columns["any_data_1"]
-    if append_rows_count < 1:
-        append_rows_count = 1
     if add_nulls:
         # add a row with only None values if user requested it, add as many (min 1) as requested
         added = pd.DataFrame([[None] * len(data.columns)] * append_rows_count, columns=data.columns)
@@ -71,12 +71,19 @@ data_echo_extension = ca.CadenzaAnalyticsExtension(
     print_name="Example Echo Data Extension",
     extension_type=ca.ExtensionType.DATA,
     tables=[ca.Table(name="table", attribute_groups=[any_attribute_group, any_geometry_group])],
-    parameters=[ca.Parameter(name="append_nulls", print_name="Append row with null values", parameter_type=ca.ParameterType.BOOLEAN, default_value=False, required=False),
-                ca.Parameter(name="append_rows_count", print_name="How many rows with null values should be appended?", parameter_type=ca.ParameterType.INT64, default_value=1, required=True),
-                ca.Parameter(name="float_param", print_name="Not used float", parameter_type=ca.ParameterType.FLOAT64, required=False),
-                ca.Parameter(name="geom_param", print_name="Not used geometry", parameter_type=ca.ParameterType.GEOMETRY, geometry_types=[ca.GeometryType.MULTIPOLYGON], requested_srs="EPSG:3857", required=False),
-                ca.Parameter(name="datetime_param", print_name="Not used datetime", parameter_type=ca.ParameterType.ZONEDDATETIME, required=False),
-                ca.Parameter(name="string_param", print_name="Not used string", parameter_type=ca.ParameterType.STRING, required=False)]
+    parameters=[ca.Parameter(name="append_nulls", print_name="Append row with null values",
+                             parameter_type=ca.ParameterType.BOOLEAN, default_value=False, required=False),
+                ca.Parameter(name="append_rows_count", print_name="How many rows with null values should be appended?",
+                             parameter_type=ca.ParameterType.INT64, default_value=1, required=True),
+                ca.Parameter(name="float_param", print_name="Not used float",
+                             parameter_type=ca.ParameterType.FLOAT64, required=False),
+                ca.Parameter(name="geom_param", print_name="Not used geometry",
+                             parameter_type=ca.ParameterType.GEOMETRY,
+                             geometry_types=[ca.GeometryType.MULTIPOLYGON], requested_srs="EPSG:3857", required=False),
+                ca.Parameter(name="datetime_param", print_name="Not used datetime",
+                             parameter_type=ca.ParameterType.ZONEDDATETIME, required=False),
+                ca.Parameter(name="string_param", print_name="Not used string",
+                             parameter_type=ca.ParameterType.STRING, required=False)]
 )
 
 analytics_service = ca.CadenzaAnalyticsExtensionService()
