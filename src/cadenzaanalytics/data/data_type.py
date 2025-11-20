@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pandas import DataFrame
+import pandas as pd
 
 # pylint: disable=duplicate-code
 class DataType(Enum):
@@ -27,11 +27,12 @@ class DataType(Enum):
             return "Int64"
         if self.value == 'float64':
             return "Float64"
+        # geometry columns and zonedDateTime columns are processed afterward and are first parsed as strings
         return "string"
 
 
     @classmethod
-    def from_pandas_dtype(cls, dtype: DataFrame.dtypes):
+    def from_pandas_dtype(cls, dtype):
         """Return the cadenza analytics data type for given pandas data type.
 
         Returns
@@ -39,8 +40,22 @@ class DataType(Enum):
         DataType
             The cadenza analytics data type corresponding to the given value.
         """
-        if dtype == 'int64':
+
+        if pd.api.types.is_datetime64_any_dtype(dtype):
+            return DataType.ZONEDDATETIME
+
+        if pd.api.types.is_integer_dtype(dtype):
             return DataType.INT64
-        if dtype == 'float64':
+
+        if pd.api.types.is_float_dtype(dtype):
             return DataType.FLOAT64
-        return DataType.STRING
+
+        if pd.api.types.is_string_dtype(dtype) or dtype == object:
+            return "string"
+
+        # boolean, categorical, others default to string
+
+        # Geometry also defaults to string: Critical metadata such as GeometryType or coordinate system is not
+        # available in a pandas data frame. We cannot assume that we have a geoPandas dataframe, and we should
+        # not assume the underlying crs or desired geometry type; thus geometry columns need to be defined by the user.
+        return "string"

@@ -7,13 +7,13 @@ import cadenzaanalytics as ca
 
 def minimal_data_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-argument
-    return ca.DataResponse(pd.DataFrame(), [])
+    return ca.DataResponse(pd.DataFrame(), column_metadata = [])
 
 
 def minimal_data_echo_analytics_function(request: ca.AnalyticsRequest):
     data = request["table"].data
     metadata = request["table"].metadata
-    return ca.DataResponse(data, metadata.get_columns())
+    return ca.DataResponse(data, column_metadata = metadata.get_columns())
 
 def data_echo_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-variable
@@ -27,7 +27,7 @@ def data_echo_analytics_function(request: ca.AnalyticsRequest):
         # add a row with only None values if user requested it, add as many (min 1) as requested
         added = pd.DataFrame([[None] * len(data.columns)] * append_rows_count, columns=data.columns)
         data = pd.concat([data, added])
-    return ca.DataResponse(data, metadata.get_columns())
+    return ca.DataResponse(data, column_metadata = metadata.get_columns())
 
 
 any_attribute_group = ca.AttributeGroup(

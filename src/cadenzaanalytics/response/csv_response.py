@@ -25,21 +25,15 @@ class CsvResponse(ExtensionDataResponse):
     """
     def __init__(self,
                  data: DataFrame,
-                 column_metadata: List[ColumnMetadata | List[ColumnMetadata]],
+                 *,
+                 column_metadata: List[ColumnMetadata],
                  missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
 
         content_type = 'text/csv'
         super().__init__(content_type)
 
         self._data = data
-        # unboxing here allows the caller flexibility and convenience in creation of column metadata list
-        self._column_meta_data = []
-        for entry in column_metadata:
-            if isinstance(entry, list):
-                self._column_meta_data.extend(entry)
-            else:
-                self._column_meta_data.append(entry)
-
+        self._column_meta_data = column_metadata
         self._is_runtime_validation_active = True
         self._missing_metadata_strategy = missing_metadata_strategy
 
@@ -95,9 +89,8 @@ class CsvResponse(ExtensionDataResponse):
         Response
             The CSV response.
         """
-        if self._is_runtime_validation_active:
-            self._validate_response()
-
+        leftover_metadata_column_names = self.apply_missing_metadata_strategy()
+        self._validate_response(leftover_metadata_column_names)
 
         python_3_12 = (3, 12)
         if sys.version_info >= python_3_12 and len(self._data.columns) > 1:
@@ -137,7 +130,18 @@ class CsvResponse(ExtensionDataResponse):
         return self._create_response(csv_data, self._column_meta_data)
 
 
-    def _validate_response(self):
+    def _validate_response(self, leftover_metadata_column_names: List[str]):
+        if not self._is_runtime_validation_active:
+            return
+        # metadata definition without columns in data
+        if len(leftover_metadata_column_names) > 0:
+            raise ValueError(f"Metadata column definition without column in data found."
+                            f"Missing columns: {leftover_metadata_column_names}")
+        # empty data response
+        if len(self._data.columns) == 0:
+            raise ValueError("Response without any data column.")
+
+    def apply_missing_metadata_strategy(self):
         metadata_column_names = {}
 
         # prepare dictionary of metadata column name for fast lookup
@@ -173,8 +177,4 @@ class CsvResponse(ExtensionDataResponse):
                     self._data.drop(df_column_name, axis=1, inplace=True)
                 else:
                     raise ValueError(f"Metadata definition for column \"{df_column_name}\" is missing.")
-
-        # metadata definition without columns in data
-        if len(metadata_column_names) > 0:
-            raise ValueError(f"Metadata column definition without column in data found."
-                            f"Number of missing columns: {len(metadata_column_names)}")
+        return list(metadata_column_names.keys())
