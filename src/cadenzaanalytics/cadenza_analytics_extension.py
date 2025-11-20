@@ -181,7 +181,7 @@ class CadenzaAnalyticsExtension:
             df_data = None
             logger.debug('Received request without data')
 
-        analytics_request = AnalyticsRequest(parameters)
+        analytics_request = AnalyticsRequest(parameters, cadenza_version=request.headers.get("X-Disy-Cadenza-Version"))
         if has_data:
             analytics_request.add_request_table(self._table_name, metadata, df_data)
 

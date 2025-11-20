@@ -8,9 +8,10 @@ from cadenzaanalytics.request.request_metadata import RequestMetadata
 class AnalyticsRequest:
     """A class representing an analytics request.
     """
-    def __init__(self, parameters: RequestParameter):
+    def __init__(self, parameters: RequestParameter, cadenza_version: str):
         self._parameters = parameters
         self._tables = {}
+        self._cadenza_version = cadenza_version
 
     def __getitem__(self, key) -> RequestTable:
         """Returns the request table object by name.
@@ -43,6 +44,10 @@ class AnalyticsRequest:
             The parameters associated with the request.
         """
         return self._parameters
+
+    @property
+    def cadenza_version(self):
+        return self._cadenza_version
 
 
     def add_request_table(self, name: str, metadata: RequestMetadata, data: DataFrame):
