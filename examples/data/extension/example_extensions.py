@@ -8,6 +8,9 @@ import cadenzaanalytics as ca
 def minimal_data_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-argument
     return ca.DataResponse(pd.DataFrame(), column_metadata = [])
+    response = ca.DataResponse(pd.DataFrame(), column_metadata = [])
+    response.runtime_validation_disabled = True
+    return response
 
 
 def minimal_data_echo_analytics_function(request: ca.AnalyticsRequest):
