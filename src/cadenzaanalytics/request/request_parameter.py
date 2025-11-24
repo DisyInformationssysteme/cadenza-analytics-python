@@ -34,6 +34,12 @@ class RequestParameter:
     def __getitem__(self, name: str) -> Optional[ParameterValue]:
         return self._get_parameter(name)
 
+    def get_value(self, name: str, default=None) -> Any:
+        parameter = self._get_parameter(name)
+        if parameter is not None:
+            return parameter.value
+        return default
+
     def _get_parameter(self, name: str) -> Optional[ParameterValue]:
         """Returns a specific parameter object.
 
