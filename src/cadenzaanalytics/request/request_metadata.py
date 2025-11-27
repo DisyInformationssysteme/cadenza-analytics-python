@@ -17,7 +17,7 @@ class RequestMetadata(collections.abc.Mapping):
     @staticmethod
     def _parse_columns(request_metadata: dict):
         _containers = request_metadata['dataContainers']
-        _has_columns = len(_containers) > 0 and len(_containers[0]['columns']) > 0
+        _has_columns = _containers is not None and len(_containers) > 0 and len(_containers[0]['columns']) > 0
         raw_columns = _containers[0]['columns'] if _has_columns else []
         return raw_columns
 
