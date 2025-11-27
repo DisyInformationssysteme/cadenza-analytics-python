@@ -7,7 +7,6 @@ import cadenzaanalytics as ca
 
 def minimal_data_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-argument
-    return ca.DataResponse(pd.DataFrame(), column_metadata = [])
     response = ca.DataResponse(pd.DataFrame(), column_metadata = [])
     response.runtime_validation_disabled = True
     return response
@@ -16,7 +15,7 @@ def minimal_data_analytics_function(request: ca.AnalyticsRequest):
 def minimal_data_echo_analytics_function(request: ca.AnalyticsRequest):
     data = request["table"].data
     metadata = request["table"].metadata
-    return ca.DataResponse(data, column_metadata = metadata.get_columns())
+    return ca.DataResponse(data, column_metadata = metadata.columns)
 
 def data_echo_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-variable
@@ -25,12 +24,11 @@ def data_echo_analytics_function(request: ca.AnalyticsRequest):
     add_nulls = request.parameters["append_nulls"].value
     append_rows_count = max(request.parameters["append_rows_count"].value, 1)
     user_chosen_attributes = metadata.groups["any_data"]
-    some_attribute = metadata.columns["any_data_1"]
     if add_nulls:
         # add a row with only None values if user requested it, add as many (min 1) as requested
         added = pd.DataFrame([[None] * len(data.columns)] * append_rows_count, columns=data.columns)
         data = pd.concat([data, added])
-    return ca.DataResponse(data, column_metadata = metadata.get_columns())
+    return ca.DataResponse(data, column_metadata = metadata.columns)
 
 
 any_attribute_group = ca.AttributeGroup(

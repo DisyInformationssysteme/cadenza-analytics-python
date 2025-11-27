@@ -129,14 +129,14 @@ class CadenzaAnalyticsExtension:
         metadata = RequestMetadata(metadata_dict)
         parameters = RequestParameter(metadata_dict['parameters'])
 
-        if metadata.has_columns():
+        if len(metadata.columns) > 0:
             has_data = True
             type_mapping = {}
             na_values_mapping = {}
             datetime_columns = []
             geometry_columns = []
 
-            for column in metadata.get_columns():
+            for column in metadata.columns:
                 if column.data_type == DataType.ZONEDDATETIME:
                     datetime_columns.append(column.name)
                     # must be empty list, otherwise pd.read_csv interprets empty strings as NA which
