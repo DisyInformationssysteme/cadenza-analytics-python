@@ -1,5 +1,5 @@
 import collections
-from typing import List, Dict, Optional
+from typing import List, Dict
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 from cadenzaanalytics.data.attribute_group import AttributeGroup
