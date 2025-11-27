@@ -17,8 +17,8 @@ class DataResponse(CsvResponse):
     """
     def __init__(self,
                  data: DataFrame,
-                 *,
                  column_metadata: List[ColumnMetadata],
+                 *,
                  missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
 
-        super().__init__(data, column_metadata = column_metadata, missing_metadata_strategy = missing_metadata_strategy)
+        super().__init__(data, column_metadata, missing_metadata_strategy = missing_metadata_strategy)

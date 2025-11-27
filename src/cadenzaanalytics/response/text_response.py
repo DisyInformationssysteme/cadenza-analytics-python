@@ -1,3 +1,4 @@
+from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
 
 
@@ -10,12 +11,12 @@ class TextResponse(ExtensionDataResponse):
         The base extension data response type from which TextResponse inherits.
     """
     def __init__(self, text):
-        content_type = 'text/plain'
+        content_type = 'text/plain;charset=utf-8'
         super().__init__(content_type)
 
         self._text = text
 
-    def get_response(self):
+    def get_response(self, request_table: RequestTable = None):
         """Get the text response.
 
         Returns

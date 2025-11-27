@@ -1,3 +1,4 @@
+from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
 
 
@@ -15,7 +16,7 @@ class UrlResponse(ExtensionDataResponse):
 
         self._url = url
 
-    def get_response(self):
+    def get_response(self, request_table: RequestTable = None):
         """Get the url response.
 
         Returns

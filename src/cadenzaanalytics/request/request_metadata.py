@@ -54,7 +54,7 @@ class RequestMetadata(collections.abc.Mapping):
         return False
 
     @property
-    def id_columns(self) -> List[ColumnMetadata]:
+    def ids(self) -> List[ColumnMetadata]:
         """Returns all id column metadata objects. Relevant for extensions of type ENRICHMENT
         to connect request and response data.
 
@@ -75,7 +75,7 @@ class RequestMetadata(collections.abc.Mapping):
         List[str] | None
             Metadata for the id columns if found, else None.
         """
-        id_columns = self.id_columns
+        id_columns = self.ids
         return [c.name for c in id_columns] if id_columns else None
 
     @property
@@ -93,20 +93,6 @@ class RequestMetadata(collections.abc.Mapping):
             grouped_columns.setdefault(column.attribute_group_name, []).append(column)
 
         return grouped_columns
-
-    def get_first_column_of_group(self, group_name) -> Optional[ColumnMetadata]:
-        """Returns the first column metadata object of the given group.
-
-        Returns
-        -------
-        Optional[ColumnMetadata]
-            The column metadata of the first column in the given group. If no column metadata for the
-            group was sent, None is returned.
-        """
-        for column in self._columns:
-            if column.attribute_group_name == group_name:
-                return column
-        return None
 
     @property
     def columns(self) -> List[ColumnMetadata]:

@@ -2,6 +2,7 @@ import json
 
 from flask import Response
 
+from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
@@ -17,7 +18,7 @@ class ErrorResponse(ExtensionResponse):
         self._message = message
         self._status = status
 
-    def get_response(self):
+    def get_response(self, request_table: RequestTable = None):
         """Get the error response.
 
         Returns

@@ -7,14 +7,11 @@ import cadenzaanalytics as ca
 
 
 def enrichment_basic_analytics_function(request: ca.AnalyticsRequest):
-    table = request["table"]
-
+    # pylint: disable=unused-argument
     df_data = pd.DataFrame()
-    df_data[table.metadata.id_names] = table.data[table.metadata.id_names]
     df_data["new_value"] = "value"
 
     result_metadata = [
-        table.metadata.id_columns,
         ca.ColumnMetadata(
             name="new_value",
             print_name="New value",
@@ -23,7 +20,7 @@ def enrichment_basic_analytics_function(request: ca.AnalyticsRequest):
         )
     ]
 
-    return ca.EnrichmentResponse(df_data, column_metadata=result_metadata, id_columns=table.metadata.id_columns)
+    return ca.EnrichmentResponse(df_data, result_metadata)
 
 def sign(value) -> int:
     if value > 0:
@@ -40,8 +37,7 @@ def enrichment_signum_analytics_function(request: ca.AnalyticsRequest):
                                       role=ca.AttributeRole.DIMENSION)
     data[signum_column.name] = data["number"].apply(sign)
     return ca.EnrichmentResponse(data,
-                                 column_metadata=[signum_column],
-                                 id_columns=table.metadata.id_columns,
+                                 [signum_column],
                                  missing_metadata_strategy=ca.MissingMetadataStrategy.REMOVE_DATA_COLUMNS)
 
 def enrichment_sum_analytics_function(request: ca.AnalyticsRequest):
@@ -54,10 +50,8 @@ def enrichment_sum_analytics_function(request: ca.AnalyticsRequest):
     data[sum_column.name] = data["number_1"] + data["number_2"]
     if "number_3" in data.columns:
         data[sum_column.name] += data["number_3"]
-    data = data[table.metadata.id_names + [sum_column.name]]
-    return ca.EnrichmentResponse(data,
-                                 column_metadata=[sum_column],
-                                 id_columns=table.metadata.id_columns)
+    data = data[[sum_column.name]]
+    return ca.EnrichmentResponse(data, [sum_column])
 
 any_attribute_group = ca.AttributeGroup(
     name="any_data",

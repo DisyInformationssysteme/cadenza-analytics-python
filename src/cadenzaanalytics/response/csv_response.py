@@ -9,6 +9,7 @@ from pandas import DataFrame
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 from cadenzaanalytics.data.attribute_role import AttributeRole
 from cadenzaanalytics.data.data_type import DataType
+from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
 from cadenzaanalytics.response.missing_metadata_strategy import MissingMetadataStrategy
 
@@ -25,15 +26,15 @@ class CsvResponse(ExtensionDataResponse):
     """
     def __init__(self,
                  data: DataFrame,
-                 *,
                  column_metadata: List[ColumnMetadata],
+                 *,
                  missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
 
         content_type = 'text/csv'
         super().__init__(content_type)
-
-        self._data = data
-        self._column_meta_data = column_metadata
+        # copy data to avoid side effects and allow safely extending data with missing id columns
+        self._data = data.copy()
+        self._column_meta_data = list(column_metadata)
         self._is_runtime_validation_active = True
         self._missing_metadata_strategy = missing_metadata_strategy
 
@@ -81,7 +82,7 @@ class CsvResponse(ExtensionDataResponse):
         self._missing_metadata_strategy = value
 
 
-    def get_response(self):
+    def get_response(self, request_table: RequestTable = None):
         """Get the CSV response.
 
         Returns

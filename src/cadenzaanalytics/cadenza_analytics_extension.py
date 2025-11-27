@@ -108,7 +108,8 @@ class CadenzaAnalyticsExtension:
 
         analytics_response = self._analytics_function(analytics_request)
 
-        return analytics_response.get_response()
+        request_table = analytics_request[self._table_name] if analytics_request.has_table(self._table_name) else None
+        return analytics_response.get_response(request_table=request_table)
 
     def get_capabilities(self) -> Response:
         """Get the capabilities of the extension.
