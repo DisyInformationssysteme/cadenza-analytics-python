@@ -18,6 +18,7 @@ from cadenzaanalytics.data.table import Table
 from cadenzaanalytics.request.analytics_request import AnalyticsRequest
 from cadenzaanalytics.request.request_parameter import RequestParameter
 from cadenzaanalytics.request.request_metadata import RequestMetadata
+from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
@@ -108,7 +109,7 @@ class CadenzaAnalyticsExtension:
 
         analytics_response = self._analytics_function(analytics_request)
 
-        request_table = analytics_request[self._table_name] if analytics_request.has_table(self._table_name) else None
+        request_table = analytics_request[self._table_name] if self._table_name in analytics_request else None
         return analytics_response.get_response(request_table=request_table)
 
     def get_capabilities(self) -> Response:
@@ -184,7 +185,7 @@ class CadenzaAnalyticsExtension:
 
         analytics_request = AnalyticsRequest(parameters, cadenza_version=request.headers.get("X-Disy-Cadenza-Version"))
         if has_data:
-            analytics_request.add_request_table(self._table_name, metadata, df_data)
+            analytics_request[self._table_name] = RequestTable(df_data, metadata)
 
         return analytics_request
 

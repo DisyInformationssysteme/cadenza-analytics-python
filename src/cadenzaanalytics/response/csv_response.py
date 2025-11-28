@@ -166,8 +166,7 @@ class CsvResponse(ExtensionDataResponse):
                         ColumnMetadata(
                             name=df_column_name,
                             print_name=df_column_name,
-                            data_type=DataType.from_pandas_dtype(self._data[df_column_name].dtype),
-                            role=AttributeRole.DIMENSION
+                            data_type=DataType.from_pandas_dtype(self._data[df_column_name].dtype)
                         )
                     )
                 elif self._missing_metadata_strategy == MissingMetadataStrategy.REMOVE_DATA_COLUMNS:

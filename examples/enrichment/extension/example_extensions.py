@@ -43,15 +43,13 @@ def enrichment_signum_analytics_function(request: ca.AnalyticsRequest):
 def enrichment_sum_analytics_function(request: ca.AnalyticsRequest):
     table = request['table']
     data = table.data
-    sum_column = ca.ColumnMetadata(name="sum", print_name="Sum",
-                                      data_type=ca.DataType.FLOAT64,
-                                      role=ca.AttributeRole.MEASURE)
     # takes min=2 max=3 numbers with group name 'number' as input
-    data[sum_column.name] = data["number_1"] + data["number_2"]
+    name = "wert"
+    data[name] = data["number_1"] + data["number_2"]
     if "number_3" in data.columns:
-        data[sum_column.name] += data["number_3"]
-    data = data[[sum_column.name]]
-    return ca.EnrichmentResponse(data, [sum_column])
+        data[name] += data["number_3"]
+    data = data[[name]]
+    return ca.EnrichmentResponse(data, [])
 
 any_attribute_group = ca.AttributeGroup(
     name="any_data",

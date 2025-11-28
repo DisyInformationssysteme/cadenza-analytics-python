@@ -45,7 +45,7 @@ class ColumnMetadata(DataObject):
                  name: str,
                  print_name: str,
                  data_type: DataType,
-                 role: AttributeRole,
+                 role: AttributeRole = None,
                  attribute_group_name: str = "data",
                  measure_aggregation: MeasureAggregation = None,
                  format: str = None,
@@ -107,7 +107,7 @@ class ColumnMetadata(DataObject):
 
     @property
     def role(self) -> AttributeRole:
-        """Get the role of the column.
+        """Get the role of the column. ColumnMetadata received from cadenza will always have a role set.
 
         Returns
         -------
