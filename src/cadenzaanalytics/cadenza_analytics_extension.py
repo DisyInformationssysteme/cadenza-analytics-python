@@ -112,6 +112,7 @@ class CadenzaAnalyticsExtension:
         """
         return Response(response=self._analytics_extension.to_json(), status=200, mimetype="application/json")
 
+    # pylint: disable=too-many-locals
     def _get_request_data(self, multipart_request) -> AnalyticsRequest:
         logger.info('Processing POST request...')
 

@@ -7,7 +7,6 @@ import logging
 from pandas import DataFrame
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
-from cadenzaanalytics.data.attribute_role import AttributeRole
 from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
