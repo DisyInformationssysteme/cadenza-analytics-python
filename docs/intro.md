@@ -57,9 +57,10 @@ Furthermore, a corresponding version will be packaged as source code with each r
 
 The `cadenzaanalytics` package has the following dependencies:
 
-* Python 3
+* Python 3.12+
 * [Flask](https://flask.palletsprojects.com/en/3.0.x/)
 * [Pandas](https://pandas.pydata.org/)
+* [Shapely](https://shapely.readthedocs.io/)
 * requests-toolbelt
 * chardet
 
@@ -109,17 +110,16 @@ import cadenzaanalytics as ca
 
 ## Defining Expected Data
 
-We specify what data can be passed from disy Cadenza to the Anylytics Extension by defining an [`AttributeGroup()`](cadenzaanalytics/data/attribute_group.html).
+We specify what data can be passed from disy Cadenza to the Analytics Extension by defining an [`AttributeGroup()`](cadenzaanalytics/data/attribute_group.html).
 
 ```python
 my_attribute_group = ca.AttributeGroup(
-                         name='my_data',
-                         print_name='Any numeric attribute',
-                         data_types=[ca.DataType.INT64,
-                                     ca.DataType.FLOAT64],
-                         min_attributes=1,
-                         max_attributes=1
-                     )
+    name='my_data',
+    print_name='Any numeric attribute',
+    data_types=[ca.DataType.INT64, ca.DataType.FLOAT64],
+    min_attributes=1,
+    max_attributes=1
+)
 ```
 
 This object requires a `name`, a `print_name` and a list defining the possible [`DataType`](cadenzaanalytics/data/data_type.html) that will later be available for selection in disy Cadenza when invoking the extension's execution.
@@ -127,21 +127,25 @@ Optionally, the number of individual attributes (i.e. data columns) that may be 
 
 Generally, one `AttributeGroup` can contain multiple attributes and multiple `AttributeGroup` objects may be defined.
 
+The attribute groups are then wrapped in a [`Table()`](cadenzaanalytics/data/table.html) object:
+
+```python
+my_table = ca.Table(name='table', attribute_groups=[my_attribute_group])
+```
+
 ## Defining Expected Parameters
 
 An extension may or may not require parametrization beyond the actual data that is passed to it.
 
 A parameter can be optionally defined by creating a [`Parameter()`](cadenzaanalytics/data/parameter.html) object.
 
-
-
 ```python
 my_param = ca.Parameter(
-               name='flag',
-               print_name='Some flag that my analysis needs',
-               parameter_type=ca.ParameterType.BOOLEAN,
-               default_value='True'
-           )
+    name='flag',
+    print_name='Some flag that my analysis needs',
+    parameter_type=ca.ParameterType.BOOLEAN,
+    default_value=True
+)
 ```
 This object again requires a `name` and a `print_name`, as well as a [`ParameterType`](cadenzaanalytics/data/parameter_type.html).
 Optionally, we can specify whether a parameter is mandatory and/or a default value for it.
@@ -151,13 +155,13 @@ As an alternative to requesting input of a parameter in one of the standard data
 
 ```python
 my_param2 = ca.Parameter(
-                name='dropdown',
-                print_name='Select option'
-                parameter_type=ca.ParameterType.SELECT,
-                required=True,
-                default_value='Option 1',
-                options=['Option 1', 'Option 2', 'Option 3']
-            )
+    name='dropdown',
+    print_name='Select option',
+    parameter_type=ca.ParameterType.SELECT,
+    required=True,
+    default_value='Option 1',
+    options=['Option 1', 'Option 2', 'Option 3']
+)
 ```
 
 Note: Parameters for Analytics Extensions of the type `visual` can currently *not* yet be assigned on the disy Cadenza side when displaying the result as a Cadenza view.
@@ -168,17 +172,17 @@ To specify the endpoint where the extension expects to receive from disy Cadenza
 
 ```python
 my_extension = ca.CadenzaAnalyticsExtension(
-                   relative_path='my-extension',
-                   print_name='My extension\'s print name in Cadenza',
-                   extension_type=ca.ExtensionType.DATA,
-                   attribute_groups=[my_attribute_group],
-                   parameters=[my_param, my_param2],
-                   analytics_function=my_analytics_function
-               )
+    relative_path='my-extension',
+    print_name='My extension\'s print name in Cadenza',
+    extension_type=ca.ExtensionType.DATA,
+    tables=[my_table],
+    parameters=[my_param, my_param2],
+    analytics_function=my_analytics_function
+)
 ```
 
 The `relative_path` defines the endpoint, i.e. the subdirectory of the URL under wich the extension will be available after deployment.
-Further parameters include the `print_name` shown in Cadenza, and the attribute groups and parameters defined above.
+Further parameters include the `print_name` shown in Cadenza, and the tables and parameters defined above.
 Additionally, the appropriate [`ExtensionType`](cadenzaanalytics/data/extension_type.html) (visual, enrichment, or data) must be specified.
 
 The `analytics_function` is the name of the Python method that should be invoked (see next section).
@@ -187,11 +191,16 @@ The `analytics_function` is the name of the Python method that should be invoked
 
 The analysis function `my_analytics_function` (or whatever you choose to name it) is the method that contains the specific functionality for the extension.
 It implements what the extension should be doing when being invoked from disy Cadenza.
-This method takes two arguments, `metadata` and `data`, which both will be passed to it automatically when the extension is invoked from Cadenza.
+This method takes a single argument `request` of type [`AnalyticsRequest`](cadenzaanalytics/request/analytics_request.html), which provides access to data, metadata, and parameters.
 
 ```python
-def my_analytics_function (metadata: ca.RequestMetadata, data: pd.DataFrame):
-    # do something
+def my_analytics_function(request: ca.AnalyticsRequest):
+    # Access data and metadata via the request object
+    table = request["table"]
+    data = table.data          # pandas DataFrame
+    metadata = table.metadata  # RequestMetadata
+
+    # do something with data
     return #something
 ```
 
@@ -199,50 +208,64 @@ The actual content and return type of this function will depend both on the exte
 
 ### Reading Data, Metadata and Parameters
 
-Accessing the data that is transferred from Cadenza is simple.
-Within the defined analytics function, a [Pandas DataFrame](https://pandas.pydata.org/) `data` is automatically available, which holds all the data passed from Cadenza.
+Accessing the data that is transferred from Cadenza is straightforward.
+The `request` object provides access to tables by name using bracket notation:
 
-Same as the `data` object, a [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) object is also automatically available in the analysis function as `metadata`.
+```python
+table = request["table"]
+data = table.data          # pandas DataFrame with all the data passed from Cadenza
+metadata = table.metadata  # RequestMetadata object
+```
 
 The `metadata` object contains information on the columns in the `data` DataFrame, such as their print name and type in disy Cadenza, their column name in the pandas DataFrame, or additional information like a `geometry_type`, where applicable.
 
-This information can be used to access the `data` DataFrame's columns by the attribute group's name.
+The metadata supports pythonic access patterns:
 
 ```python
-columns_by_attribute_group = metadata.get_columns_by_attribute_group()
+# Get all columns as a list
+all_columns = metadata.columns
 
-if 'my_data' in columns_by_attribute_group:
-    for column in columns_by_attribute_group['my_data']:
+# Access a specific column by name
+column = metadata["column_name"]
+
+# Check if a column exists
+if "my_column" in metadata:
+    column = metadata["my_column"]
+
+# Iterate over column names
+for column_name in metadata:
+    print(column_name)
+
+# Get columns grouped by attribute group
+columns_by_group = metadata.groups
+if 'my_data' in columns_by_group:
+    for column in columns_by_group['my_data']:
         my_data = data[column.name]
 ```
 
-While it is also possible to directly access the columns of `data` by name or by index, this is less robust, since the actual column names of the dataframe depend on their configuration in disy Cadenza and changing them there might lead to the extension not functioning properly anymore.
-However, it is possible to get the metadata to a specific colum of the `data` DataFrame.
-
-```python
-for column_name, column_data in data.items():
-    column_metadata = metadata.get_column(column_name)
-```
-
+While it is also possible to directly access the columns of `data` by name or by index, using attribute groups is more robust, since the actual column names of the dataframe depend on their configuration in disy Cadenza and changing them there might lead to the extension not functioning properly anymore.
 
 Currently, the following Cadenza attribute types can be passed to an Analytics Extension.
-The table shows the mapping to Pyton data types:
+The table shows the mapping to Python data types:
 
-| Cadenza Attribute Type              | Pandas Column Type |  Example Value       | Notes |
-|-------------------------------------|-----------|--------------------------|-------|
-| Text (String)                       | string    | `"Text"`                 | |
-| Number (Integer)                    | pandas.Int64Dtype     | `1`                      | |
-| Number (Long)                       | pandas.Long64Dtype    | `1`                      | |
-| Floating point number (Double)      | pandas.Float64Dtype   | `1.23`                   | |
-| Date                                | string    | `"2022-11-12T12:34:56+13:45[Pacific/Chatham]"` | A date is represented as an [ISO string with time zone offset from UTC](https://en.wikipedia.org/wiki/ISO_8601#Coordinated_Universal_Time_(UTC)) (UTC) and additional time zone identifier in brackets. |
-| Geometry                            | string    | `"POINT(8.41594949941623 49.0048124984033)"` | A geometry is represented as a [WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) string.<br><br>*Note:* By default, coordinates use the WGS84 projection. |
+| Cadenza Attribute Type              | Pandas Column Type    | Python Type          | Notes |
+|-------------------------------------|-----------------------|----------------------|-------|
+| Text (String)                       | string                | `str`                | |
+| Number (Integer)                    | pandas.Int64Dtype     | `int`                | |
+| Number (Long)                       | pandas.Int64Dtype     | `int`                | |
+| Floating point number (Double)      | pandas.Float64Dtype   | `float`              | |
+| Date                                | datetime64[ns, UTC]   | `datetime`           | Parsed as pandas datetime with timezone |
+| Geometry                            | object                | `shapely.Geometry`   | Automatically parsed from WKT to Shapely geometry objects |
 
 
-Parameters are stored in `metadata` as well.
-They are always passed as `string` and can be read through the [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) methods `get_parameter` for a single parameter, respectively `get_parameters` for a dictionary of all parameters.
+Parameters are accessed through the `request.parameters` object:
 
 ```python
-param_flag = metadata.get_parameter('flag')
+# Get a parameter value
+flag_value = request.parameters["flag"].value
+
+# Get parameter with default if not set
+value = request.parameters.get_value("optional_param", default=42)
 ```
 
 ## Returning Data
@@ -251,25 +274,25 @@ Depending on the extension type, there are specific objects for returning the re
 
 ### Data Extensions
 
-A [`CsvResponse`](cadenzaanalytics/response/csv_response.html) is used for extension of type `data`.
+A [`DataResponse`](cadenzaanalytics/response/data_response.html) is used for extensions of type `data`.
 The response must include the data and the proper metadata.
 
-The following minimal example echos the data received from disy Cadenza as part of an `AttributeGroup` named `'any_data'` back to it without modification.
+The following minimal example echoes the data received from disy Cadenza back to it without modification.
 Therefore, it just forwards the original metadata as the metadata of the response.
 
 ```python
-def echo_analytics_function(metadata: ca.RequestMetadata, data: pd.DataFrame):
-    return ca.CsvResponse(data, metadata.get_all_columns_by_attribute_group()['my_data'])
+def echo_analytics_function(request: ca.AnalyticsRequest):
+    table = request["table"]
+    return ca.DataResponse(table.data, table.metadata.columns)
 ```
 
-For a real extension with actually calculated data, the `metadata` is built as a list of [`ColumnMetadata()`](cadenzaanalytics/data/column_metadata.html) objects:
+For a real extension with actually calculated data, the `column_metadata` is built as a list of [`ColumnMetadata()`](cadenzaanalytics/data/column_metadata.html) objects:
 
 ```python
 response_columns = [
     ca.ColumnMetadata(
         name='Geometry',
         print_name='Geometry',
-        attribute_group_name='geo',
         data_type=ca.DataType.GEOMETRY,
         role=ca.AttributeRole.DIMENSION,
         geometry_type=ca.GeometryType.POLYGON
@@ -277,24 +300,51 @@ response_columns = [
     ca.ColumnMetadata(
         name='WeightedValue',
         print_name='Value (IDW)',
-        attribute_group_name='value',
         data_type=ca.DataType.FLOAT64,
         role=ca.AttributeRole.MEASURE,
         measure_aggregation=ca.MeasureAggregation.AVERAGE
     )
 ]
+
+return ca.DataResponse(result_dataframe, response_columns)
 ```
 
 ### Enrichment Extensions
 
-A [`CsvResponse`](cadenzaanalytics/response/csv_response.html) is used for enrichments as well.
-The response must be in the format of a text, a CSV file or a DataFrame so that it fits.
+An [`EnrichmentResponse`](cadenzaanalytics/response/enrichment_response.html) is used for enrichments.
+The response contains the new columns that should be added to the existing Cadenza object type.
 
-TODO
+The library automatically handles ID columns - they are taken from the request metadata and added to the response.
+You only need to specify the metadata for the new columns you're adding:
 
-The metadata must be adapted and also returned to disy Cadenza via the response method.
+```python
+def enrichment_function(request: ca.AnalyticsRequest):
+    table = request["table"]
+    data = table.data
 
-TODO
+    # Calculate new column
+    data["calculated_value"] = data["input_column"] * 2
+
+    # Define metadata for the new column only
+    new_column = ca.ColumnMetadata(
+        name="calculated_value",
+        print_name="Calculated Value",
+        data_type=ca.DataType.FLOAT64,
+        role=ca.AttributeRole.MEASURE
+    )
+
+    return ca.EnrichmentResponse(data, [new_column])
+```
+
+If you only want to return specific columns without auto-generated metadata for other columns, use the `REMOVE_DATA_COLUMNS` strategy:
+
+```python
+return ca.EnrichmentResponse(
+    data,
+    [new_column],
+    missing_metadata_strategy=ca.MissingMetadataStrategy.REMOVE_DATA_COLUMNS
+)
+```
 
 ### Visual Extensions
 As result of a visual extension, an [`ImageResponse`](cadenzaanalytics/response/image_response.html) must be returned.
@@ -316,7 +366,7 @@ In order to abort the execution of the function with an error and pass an accord
 
 ```python
 if my_data is None:
-        return ca.ErrorResponse('Didn\'t find expected attribute "my_data".', 400)
+    return ca.ErrorResponse('Didn\'t find expected attribute "my_data".', 400)
 ```
 
 
@@ -337,7 +387,7 @@ analytics_service.add_analytics_extension(my_extension)
 `cadenzaanalytics` is built on top op Flask, which in turn uses standard Python logging.
 This logger can also be used to log your own messages for your Analytics Extension, or define your own logger according to [standard Python logging](https://docs.python.org/3/howto/logging.html#):
 
-The default log level of the `cadenzaanalytics` module is `INFO`. 
+The default log level of the `cadenzaanalytics` module is `INFO`.
 To change the log level, set the environment variable `CADENZAANALYTICS_LOG_LVL` accordingly, e.g.
 ```console
 export CADENZAANALYTICS_LOG_LVL='DEBUG'
@@ -352,14 +402,13 @@ Below, we present a few options, a more comprehensive overview can be found in t
 For development purposes, using the built-in development server, debugger, and reloader is the most convenient.
 However, it should not be used in production, as it has not been designed for security, stability, or efficiency.
 
-The development server can be invoked from within the Python code. 
+The development server can be invoked from within the Python code.
 If the option `debug` is set to `True`, the Flask development server is started in debug mode, resulting in more verbose logging and automatic reload on code changes.
-See [Flask documentation](https://flask.palletsprojects.com/en/stable/debugging/#the-built-in-debugger) for details. 
+See [Flask documentation](https://flask.palletsprojects.com/en/stable/debugging/#the-built-in-debugger) for details.
 
 ```python
 if __name__ == '__main__':
-    analytics_service.run_development_server(port=5000, debug=True):
-
+    analytics_service.run_development_server(port=5000, debug=True)
 ```
 
 
