@@ -163,12 +163,11 @@ class CadenzaAnalyticsExtension:
             )
 
             # Parse WKT geometries into shapely geometry objects using vectorized from_wkt
-            if len(geometry_columns) > 0:
-                for gcol in geometry_columns:
-                    values = df_data[gcol].to_numpy()
-                    # from_wkt handles None values; replace empty strings with None
-                    values = np.where((values == '') | pd.isna(values), None, values)
-                    df_data[gcol] = from_wkt(values, on_invalid='warn')
+            for gcol in geometry_columns:
+                values = df_data[gcol].to_numpy()
+                # from_wkt handles None values; replace empty strings with None
+                values = np.where((values == '') | pd.isna(values), None, values)
+                df_data[gcol] = from_wkt(values, on_invalid='warn')
 
             logger.debug('Received data:\n%s', df_data.head())
         else:
