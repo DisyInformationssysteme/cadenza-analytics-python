@@ -6,9 +6,10 @@ import logging
 from io import StringIO
 from typing import Callable, List
 
+import numpy as np
 import pandas as pd
 from flask import Response, request
-from shapely import wkt as shapely_wkt
+from shapely import from_wkt
 
 from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
 from cadenzaanalytics.data.extension_type import ExtensionType
@@ -23,17 +24,6 @@ from cadenzaanalytics.response.extension_response import ExtensionResponse
 
 
 logger = logging.getLogger('cadenzaanalytics')
-
-
-def _parse_wkt(value):
-    # pylint: disable=broad-exception-caught
-    if pd.isna(value) or value == '':
-        return None
-    try:
-        return shapely_wkt.loads(value)
-    except Exception:
-        logger.warning('Invalid WKT encountered, setting value to None: %s', value, exc_info=True)
-        return None
 
 
 class CadenzaAnalyticsExtension:
@@ -172,10 +162,13 @@ class CadenzaAnalyticsExtension:
                 keep_default_na=False,
             )
 
-            # Parse WKT geometries into shapely geometry objects
+            # Parse WKT geometries into shapely geometry objects using vectorized from_wkt
             if len(geometry_columns) > 0:
                 for gcol in geometry_columns:
-                    df_data[gcol] = df_data[gcol].apply(_parse_wkt)
+                    values = df_data[gcol].to_numpy()
+                    # from_wkt handles None values; replace empty strings with None
+                    values = np.where((values == '') | pd.isna(values), None, values)
+                    df_data[gcol] = from_wkt(values, on_invalid='warn')
 
             logger.debug('Received data:\n%s', df_data.head())
         else:
