@@ -75,7 +75,8 @@ class CadenzaAnalyticsExtensionService:
         """
         self._app.run(port=port, debug=debug)
 
-    def __call__(self, *args, **kwargs):
+    @property
+    def app(self):
         return self._app
 
     def _list_extensions(self):
