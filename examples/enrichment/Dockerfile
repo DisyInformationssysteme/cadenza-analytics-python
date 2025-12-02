@@ -15,4 +15,4 @@ RUN apt-get update && apt-get upgrade -y \
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["gunicorn", "-w", "4", "-b", ":8080", "--chdir", "extension", "example_extensions:analytics_service()", "--access-logfile", "../logs/access.log"]
+CMD ["gunicorn", "-w", "4", "-b", ":8080", "--chdir", "extension", "example_extensions:app", "--access-logfile", "../logs/access.log"]

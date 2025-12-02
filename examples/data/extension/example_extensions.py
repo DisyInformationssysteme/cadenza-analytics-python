@@ -91,6 +91,7 @@ analytics_service = ca.CadenzaAnalyticsExtensionService()
 analytics_service.add_analytics_extension(minimal_data_extension)
 analytics_service.add_analytics_extension(minimal_data_echo_extension)
 analytics_service.add_analytics_extension(data_echo_extension)
+app = analytics_service.app # expose the Flask app for gunicorn Docker deployment
 
 if __name__ == '__main__':
     analytics_service.run_development_server(5005)
