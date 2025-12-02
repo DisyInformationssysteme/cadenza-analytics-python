@@ -19,6 +19,18 @@ So make sure to add relevant changelog notes for every change you make and follo
 Also, on a release, documentation for all version branches will be generated using `pdoc` and uploaded to this repositories githubpages at https://disyinformationssysteme.github.io/cadenza-analytics-python.
 This documentation workflow can also be triggered manually on the dedicated branch `githubpages`.
 
+### Building Documentation Locally
+In order to build the library documentation locally, e.g. during development, execute
+```commandline
+pdoc --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg \
+     --logo-link https://www.disy.net/en/products/disy-cadenza \
+     --favicon https://www.disy.net/favicon.ico \
+     -o docs/html \
+     --no-show-source \
+     src/cadenzaanalytics
+```
+This will locally write the documentation to `docs/html/`.
+
 ## Pylint
 [Pylint](https://github.com/pylint-dev/pylint) is used for making sure that `cadenzaanalytics` follows some common styles.
 If necessary some rules can be disabled globally in the [.pylintrc](.pylintrc) file or in the corresponding python file.
