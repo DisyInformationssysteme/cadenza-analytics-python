@@ -1,10 +1,11 @@
+import collections
 from typing import Optional, Any
 
 from cadenzaanalytics.data.parameter_value import ParameterValue
 from cadenzaanalytics.request.view_parameter import ViewParameter
 
 
-class RequestParameter:
+class RequestParameter(collections.abc.Mapping):
     """This class holds the parameters of the analytics request send by cadenza.
     """
 
@@ -31,14 +32,23 @@ class RequestParameter:
             device_pixel_ratio=device_pixel_ratio
         )
 
-    def __getitem__(self, name: str) -> Optional[ParameterValue]:
-        return self._get_parameter(name)
-
-    def get_value(self, name: str, default=None) -> Any:
+    def __getitem__(self, name: str) -> Any:
         parameter = self._get_parameter(name)
         if parameter is not None:
             return parameter.value
-        return default
+        raise KeyError(f"Parameter {name} not found.")
+
+    def __iter__(self):
+        return iter(self._request_parameters)
+
+    def __len__(self):
+        return len(self._request_parameters)
+
+    def __contains__(self, name: str) -> bool:
+        return name in self._request_parameters
+
+    def info(self, name: str) -> Optional[ParameterValue]:
+        return self._get_parameter(name)
 
     def _get_parameter(self, name: str) -> Optional[ParameterValue]:
         """Returns a specific parameter object.
