@@ -1,5 +1,5 @@
 """Example module for running a disy Cadenza analytics extension that
- will show a (static) image in disy Cadenza"""
+ allows generating objecttypes in disy Cadenza"""
 import pandas as pd
 
 import cadenzaanalytics as ca
@@ -21,8 +21,9 @@ def data_echo_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-variable
     data = request["table"].data
     metadata = request["table"].metadata
-    add_nulls = request.parameters["append_nulls"].value
-    append_rows_count = max(request.parameters["append_rows_count"].value, 1)
+    add_nulls = request.parameters["append_nulls"]
+    append_rows_count = max(request.parameters["append_rows_count"], 1)
+    has_datetime_param_value = request.parameters.get("datetime_param") is not None
     user_chosen_attributes = metadata.groups["any_data"]
     if add_nulls:
         # add a row with only None values if user requested it, add as many (min 1) as requested
