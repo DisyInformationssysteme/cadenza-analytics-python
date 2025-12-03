@@ -4,8 +4,39 @@
 Development is possible via most common IDEs such as Visual Studio Code or PyCharm.
 Make sure to mark the `src` directory as "Sources Root" to make sure cross imports from the `examples` directory work as expected and that imports within `cadenzaanalytics` can get resolved by the IDE.
 
+## Architecture Guidelines
+
+The `cadenzaanalytics` library is designed with the following principles:
+
+### Target Audience: Data Scientists
+The primary users are data scientists who want to extend Cadenza with custom analytics.
+The API should feel natural to someone familiar with Python data analysis workflows, not require deep knowledge of web frameworks or HTTP protocols.
+
+### Pandas-Centric Abstraction
+Input data from Cadenza is automatically converted to pandas DataFrames, and output data is expected as DataFrames. This abstraction:
+- Hides the underlying CSV/multipart HTTP communication
+- Allows users to focus on data transformation logic
+- Leverages the pandas ecosystem that data scientists already know
+
+### Pythonic Design
+- Use clear, descriptive names over abbreviations
+- Use properties over getters
+- Prefer explicit configuration over implicit behavior
+- Follow Python conventions (snake_case, type hints where helpful)
+- Keep the public API surface minimal and intuitive
+
+### Minimal Boilerplate
+Extension authors should be able to create a working extension with minimal ceremony. The framework handles:
+- HTTP routing and request parsing
+- Data serialization/deserialization
+- Extension discovery and registration
+- Error handling and response formatting
+
+### Flask as Implementation Detail
+While Flask powers the HTTP layer, it should remain an implementation detail. Users interact with `CadenzaAnalyticsExtensionService` and `CadenzaAnalyticsExtension`, not Flask directly.
+
 ## Python version
-We aim to support older python versions and dependencies, but best experience and most features will be available for newer versions, currently this is Python `9.12`.
+We aim to support older python versions and dependencies, but best experience and most features will be available for newer versions, currently this is Python `3.12`.
 
 ## Versioning
 Versioning of `cadenzaanalytics` will happen via [poetry-bumpversion](https://github.com/monim67/poetry-bumpversion).
@@ -31,11 +62,37 @@ pdoc --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/
 ```
 This will locally write the documentation to `docs/html/`.
 
-## Pylint
-[Pylint](https://github.com/pylint-dev/pylint) is used for making sure that `cadenzaanalytics` follows some common styles.
-If necessary some rules can be disabled globally in the [.pylintrc](.pylintrc) file or in the corresponding python file.
-There is a GitHub workflow to validate this.
-For some IDEs like PyCharm there are also plugins for Pylint so that linting can happen within the IDE and errors in the pipeline can be avoided.
+## Contributing
+
+### Code Style
+
+We use [Pylint](https://github.com/pylint-dev/pylint) for code quality. Key style rules:
+
+- **Line length**: 120 characters maximum
+- **Docstrings**: While not required (disabled in pylint), they are welcome and used for API reference doc generation
+- **Type hints**: Encouraged for public APIs, optional for internal code
+
+Globally disabled rules are configured in [.pylintrc](.pylintrc). For local suppressions, use:
+```python
+# pylint: disable=rule-name
+```
+
+Run pylint locally before submitting:
+```commandline
+pip install pylint
+pylint --rcfile=.pylintrc $(git ls-files '*.py')
+```
+
+There is a GitHub workflow to validate this. For IDEs like PyCharm there are also plugins for Pylint so that linting can happen within the IDE and pipeline errors can be avoided.
+
+### Changelog
+Every user-facing change must include an entry in [CHANGELOG.md](CHANGELOG.md). 
+Follow the existing format (based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)) and add entries under the "Unreleased" section.
+
+### Pull Requests
+- Ensure all GitHub workflows pass
+- Update documentation if adding/changing public APIs
+- Add or update examples if introducing new features
 
 ## Releasing:
 Make sure to check the following
@@ -46,16 +103,16 @@ This is helpful to test `cadenzaanalytics` with existing extensions.
 To get the latest version immediately it might be good to disable caches, e.g. via `pip install --upgrade cadenzaanalytics --extra-index-url https://test.pypi.org/simple --no-cache-dir`.
 For a first installation in a new (virtual) environment, you can use `pip install cadenzaanalytics --extra-index-url https://test.pypi.org/simple`
 - In test releases, CI changes to the repository (bumping the version, updating the changelog, etc.) are _not_ pushed.
-- To make a non-test release, choose the `pypi.org` deployment environment in the release dialog.
+- To make a proper non-test release, choose the `pypi.org` deployment environment in the release dialog.
 
 ## Dockerized Example Extension
 To run the example (and your production application) in a docker container you will need to define the wsgi server that will run the flask app.
 The provided Dockerfile in the examples uses gunicorn with some example options, for more details consult the [documentation](https://docs.gunicorn.org/en/latest/settings.html).
-Important is that gunicorn has access to a function creating or providing the flask app object, which for `cadenzanalytics` is the `CadenzaAnalyticsExtensionService`.
+Important is that gunicorn has access to a function creating or providing the flask app object, which for `cadenzaanalytics` is the `CadenzaAnalyticsExtensionService`.
 The requirements file can use test releases when adding `--extra-index-url https://test.pypi.org/simple` in the first line.
 It can (re)define versions of its own or transient dependencies, but most importantly needs the `cadenzaanalytics` dependency.
 ```commandline
-cd /examples/calculation
+cd examples/data
 docker build . -t cadenza-analytics-example
 docker image list
 docker run -p 8080:8080 YOUR_CREATED_IMAGE_ID
