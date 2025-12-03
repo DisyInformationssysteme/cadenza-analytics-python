@@ -8,7 +8,7 @@ An Analytics Extension extends the functional spectrum of [disy Cadenza](https:/
 An Analytics Extension is a web service that exchanges structured data with disy Cadenza via the Cadenza API.
 A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if they have the appropriate rights).
 
-As of disy Cadenza Autumn 2023 (9.3), the following types and capabilities of analysis extensions are officially supported:
+As of disy Cadenza Autumn 2025 (10.4), the following types and capabilities of analysis extensions are officially supported:
 
 - **Data**: Returns a structured data set from which a new Cadenza object type can be created.
 - **Enrichment**: Enriches an existing Cadenza object type by adding additional attributes (columns).
@@ -316,13 +316,20 @@ geometry_group = ca.AttributeGroup(
 
 Geometry columns are automatically parsed from WKT strings into [Shapely](https://shapely.readthedocs.io/) geometry objects. You can use them directly with Shapely operations or convert to a GeoDataFrame:
 
+DataType.GEOMETRY must not be combined with other data types. Since Cadenza users can select attributes that are linked to a geometry attribute, mixing data types would 
+create ambiguity about whether the intended output is the geometry object or the linked non-geometry attribute.  
+Other data types may be mixed freely, but processing them may require inspecting their actual data type.
+
 ```python
 import geopandas as gpd
 
 def my_function(request: ca.AnalyticsRequest):
     table = request["table"]
+     # extension specified an attribute group "geometry" with ca.DataType.GEOMETRY, min_attributes=1, max_attributes=1
+    geometry_column = table.metadata["geometry"]
+    
     # table.data is a pandas DataFrame, geometry columns contain Shapely objects
-    gdf = gpd.GeoDataFrame(table.data, geometry="geometry")
+    gdf = gpd.GeoDataFrame(table.data, geometry=geometry_column.name, crs=geometry_column.srs)
     # Now you can use GeoPandas operations
 ```
 
@@ -347,16 +354,19 @@ In your analytics function, the datetime column will be a pandas datetime64 with
 
 The following table shows how Cadenza attribute types map to Python/pandas types:
 
-| Cadenza Attribute Type         | Pandas Column Type    | Python Type          | Notes |
-|--------------------------------|-----------------------|----------------------|-------|
-| Text (String)                  | string                | `str`                | |
-| Number (Integer)               | pandas.Int64Dtype     | `int`                | Nullable integer |
-| Number (Long)                  | pandas.Int64Dtype     | `int`                | Nullable integer |
-| Floating point number (Double) | pandas.Float64Dtype   | `float`              | Nullable float |
-| Date/Time                      | datetime64[ns, UTC]   | `datetime`           | Parsed with timezone |
-| Geometry                       | object                | `shapely.Geometry`   | Parsed from WKT |
+| Cadenza Attribute Type         | Data Type     | Pandas Column Type    | Python Type          | Notes |
+|--------------------------------|---------------|-----------------------|----------------------|-------|
+| Text (String)                  | STRING        | string                | `str`                | |
+| Number (Integer)               | INT64         | pandas.Int64Dtype     | `int`                | Nullable integer |
+| Number (Long)                  | INT64         | pandas.Int64Dtype     | `int`                | Nullable integer |
+| Floating point number (Double) | FLOAT64       | pandas.Float64Dtype   | `float`              | Nullable float |
+| Date/Time                      | ZONEDDATETIME | datetime64[ns, UTC]   | `datetime`           | Parsed with timezone |
+| Geometry                       | GEOMETRY      | object                | `shapely.Geometry`   | Parsed from WKT |
 
+Values received from Cadenza are automatically converted to the corresponding Pandas column types (and underlying Python types) shown above.
 
+Values sent back to Cadenza are converted to the appropriate Cadenza attribute types based on those same mappings.  
+*Important*: If you explicitly provide column metadata in your response, the declared data type must match the actual Pandas column type.
 ## Defining Parameters
 
 An extension may require user-configurable parameters beyond the data.
@@ -502,7 +512,11 @@ def enrichment_function(request: ca.AnalyticsRequest):
     return ca.EnrichmentResponse(data, [new_column])
 ```
 
-The library automatically handles ID columns - they are taken from the request metadata and added to the response. You only need to specify metadata for the new columns you're adding.
+The library automatically handles Cadenza ID columns which are required to connect input and output data - they are taken from the request metadata and added to the response. You only need to specify metadata for the new columns you're adding, or you can use the default missing_metadata_strategy that handles adding column metadata heuristically.
+
+The library also supports automatically adding data for Cadenza ID columns if they are missing in the provided DataFrame. This requires the input and output DataFrames to have identical indexes. We therefore recommend modifying the input DataFrame directly and adding new columns to it. When you explicitly specify the desired output columns, index alignment is guaranteed, and you have full control over the output columns.
+
+Currently, only one-to-one mappings between input and output rows are supported. The output may omit entries for some ID tuples present in the input. However, each input ID tuple can be mapped to at most one output ID tuple.
 
 To return only specific columns, use `REMOVE_DATA_COLUMNS`:
 
@@ -709,6 +723,6 @@ Since Cadenza sends the payload as `multipart/form` data, this default setting m
 The setting can be adjusted using
 ```python
 from flask.wrappers import Request  # do NOT use the werkzeug.wrappers Request
-    Request.max_form_memory_size = 100 * 1024 * 1024
+Request.max_form_memory_size = 100 * 1024 * 1024
 ```
 
