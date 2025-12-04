@@ -89,7 +89,7 @@ class CsvResponse(ExtensionDataResponse):
         Response
             The CSV response.
         """
-        leftover_metadata_column_names = self.apply_missing_metadata_strategy()
+        leftover_metadata_column_names = self._apply_missing_metadata_strategy()
         self._validate_response(leftover_metadata_column_names)
 
         python_3_12 = (3, 12)
@@ -141,7 +141,7 @@ class CsvResponse(ExtensionDataResponse):
         if len(self._data.columns) == 0:
             raise ValueError("Response without any data column.")
 
-    def apply_missing_metadata_strategy(self) -> List[str]:
+    def _apply_missing_metadata_strategy(self) -> List[str]:
         metadata_column_names = {}
 
         # prepare dictionary of metadata column name for fast lookup
