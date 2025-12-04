@@ -48,7 +48,8 @@ On a proper release (i.e. not a test release), all "Unreleased" changes in the [
 So make sure to add relevant changelog notes for every change you make and follow the style described in the changelog file.
 
 Also, on a release, documentation for all version branches will be generated using `pdoc` and uploaded to this repositories githubpages at https://disyinformationssysteme.github.io/cadenza-analytics-python.
-This documentation workflow can also be triggered manually on the dedicated branch `githubpages`.
+Reference documentation is built from docstrings.
+The documentation workflow can also be triggered manually on the dedicated branch `githubpages`.
 
 ### Building Documentation Locally
 In order to build the library documentation locally, e.g. during development, execute
@@ -69,7 +70,7 @@ This will locally write the documentation to `docs/html/`.
 We use [Pylint](https://github.com/pylint-dev/pylint) for code quality. Key style rules:
 
 - **Line length**: 120 characters maximum
-- **Docstrings**: While not required (disabled in pylint), they are welcome and used for API reference doc generation
+- **Docstrings**: While not required (disabled in pylint), they are welcome and used for API reference doc generation. We use [NumPy docstring format](https://numpydoc.readthedocs.io/en/latest/format.html).
 - **Type hints**: Encouraged for public APIs, optional for internal code
 
 Globally disabled rules are configured in [.pylintrc](.pylintrc). For local suppressions, use:
@@ -91,6 +92,7 @@ Follow the existing format (based on [Keep a Changelog](https://keepachangelog.c
 
 ### Pull Requests
 - Ensure all GitHub workflows pass
+- Add or update type hints and docstrings
 - Update documentation if adding/changing public APIs
 - Add or update examples if introducing new features
 
