@@ -57,6 +57,7 @@ In order to build the library documentation locally, e.g. during development, ex
 pdoc --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg \
      --logo-link https://www.disy.net/en/products/disy-cadenza \
      --favicon https://www.disy.net/favicon.ico \
+     --docformat numpy \
      -o docs/html \
      --no-show-source \
      src/cadenzaanalytics
