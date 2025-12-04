@@ -7,20 +7,6 @@ from cadenzaanalytics.data.geometry_type import GeometryType
 from cadenzaanalytics.data.data_object import DataObject
 
 
-def _parse_value(value: Any, data_type: DataType) -> Any:
-    if value is None:
-        return None
-    if data_type == DataType.INT64:
-        return int(value)
-    if data_type == DataType.FLOAT64:
-        return float(value)
-    if data_type == DataType.ZONEDDATETIME:
-        return datetime.fromisoformat(value)
-    if data_type == DataType.GEOMETRY:
-        return shapely_wkt.loads(value)
-    return value # retain string and boolean which are already typed correctly
-
-
 class ParameterValue(DataObject):
     """A class representing parameter values as received from cadenza such as name, print_name, parameter_type, value.
 
@@ -52,7 +38,7 @@ class ParameterValue(DataObject):
         self._name = name
         self._print_name = print_name
         self._data_type = data_type
-        self._value = _parse_value(value, data_type)
+        self._value = self._parse_value(value, data_type)
         self._geometry_type = geometry_type
         self._srs = srs
 
@@ -116,3 +102,17 @@ class ParameterValue(DataObject):
     def srs(self) -> Optional[str]:
         """Get the srs of the parameter."""
         return self._srs
+
+
+    def _parse_value(self, value: Any, data_type: DataType) -> Any:
+        if value is None:
+            return None
+        if data_type == DataType.INT64:
+            return int(value)
+        if data_type == DataType.FLOAT64:
+            return float(value)
+        if data_type == DataType.ZONEDDATETIME:
+            return datetime.fromisoformat(value)
+        if data_type == DataType.GEOMETRY:
+            return shapely_wkt.loads(value)
+        return value # retain string and boolean which are already typed correctly
