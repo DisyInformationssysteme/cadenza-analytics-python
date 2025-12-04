@@ -9,18 +9,10 @@ from cadenzaanalytics.data.measure_aggregation import MeasureAggregation
 
 # pylint: disable=too-many-instance-attributes
 class ColumnMetadata(DataObject):
-    """A class representing metadata for columns such as the name, print_name, attribute_group_name, data_type, role,
-     measure_aggregation, format and geometry_type.
+    """Metadata describing a column in request or response data.
 
-    Parameters
-    ----------
-    DataObject : type
-        The base data object type from which ColumnMetadata inherits.
-
-    Returns
-    -------
-    type
-        Description of what the method returns.
+    Defines properties such as name, data type, role, and formatting for a data column.
+    Used both for describing incoming request data and specifying response column properties.
     """
     _attribute_mapping = {
         "name": "_name",
@@ -45,12 +37,35 @@ class ColumnMetadata(DataObject):
                  name: str,
                  print_name: str,
                  data_type: DataType,
-                 role: AttributeRole = None,
+                 role: Optional[AttributeRole] = None,
                  attribute_group_name: str = "data",
-                 measure_aggregation: MeasureAggregation = None,
-                 format: str = None,
-                 geometry_type: GeometryType = None,
-                 srs: str = None):
+                 measure_aggregation: Optional[MeasureAggregation] = None,
+                 format: Optional[str] = None,
+                 geometry_type: Optional[GeometryType] = None,
+                 srs: Optional[str] = None) -> None:
+        """Initialize ColumnMetadata.
+
+        Parameters
+        ----------
+        name : str
+            Internal column name, must match the DataFrame column name.
+        print_name : str
+            User-friendly display name for the column.
+        data_type : DataType
+            The data type of the column.
+        role : Optional[AttributeRole], optional
+            The role of the column (e.g., dimension, measure).
+        attribute_group_name : str, optional
+            Name of the attribute group this column belongs to, by default "data".
+        measure_aggregation : Optional[MeasureAggregation], optional
+            Aggregation method for measure columns.
+        format : Optional[str], optional
+            Display format string for the column.
+        geometry_type : Optional[GeometryType], optional
+            Geometry type for geometry columns.
+        srs : Optional[str], optional
+            Spatial reference system for geometry columns.
+        """
         self._name = name
         self._print_name = print_name
         self._attribute_group_name = attribute_group_name
@@ -151,5 +166,11 @@ class ColumnMetadata(DataObject):
 
     @property
     def srs(self) -> Optional[str]:
-        """Get the srs of the column."""
+        """Get the spatial reference system (SRS) of the column.
+
+        Returns
+        -------
+        Optional[str]
+            The SRS of the column, or None if not specified.
+        """
         return self._srs

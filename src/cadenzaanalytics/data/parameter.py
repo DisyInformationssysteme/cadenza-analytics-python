@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Optional
 
 from cadenzaanalytics.data.geometry_type import GeometryType
 from cadenzaanalytics.data.data_object import DataObject
@@ -7,14 +7,12 @@ from cadenzaanalytics.data.parameter_type import ParameterType
 
 # pylint: disable=too-many-instance-attributes
 class Parameter(DataObject):
-    """A class representing parameters such as name, print_name, parameter_type, options, required
-    and default_value used in data objects.
+    """Defines a user-configurable parameter for an analytics extension.
 
-    Parameters
-    ----------
-    DataObject : type
-        The base data object type from which Parameter inherits.
+    Parameters allow users to provide input values when running an extension,
+    such as thresholds, filters, or configuration options.
     """
+
     _attribute_mapping = {
         "name": "_name",
         "printName": "_print_name",
@@ -30,11 +28,32 @@ class Parameter(DataObject):
                  name: str,
                  print_name: str,
                  parameter_type: ParameterType,
-                 geometry_types: List[GeometryType] = None,
-                 options: List[str] = None,
+                 geometry_types: Optional[List[GeometryType]] = None,
+                 options: Optional[List[str]] = None,
                  required: bool = False,
                  default_value: Any = None,
-                 requested_srs: str = None):
+                 requested_srs: Optional[str] = None) -> None:
+        """Initialize a Parameter.
+
+        Parameters
+        ----------
+        name : str
+            Internal parameter name, used to access the value in the request.
+        print_name : str
+            User-friendly display name for the parameter.
+        parameter_type : ParameterType
+            The data type of the parameter.
+        geometry_types : Optional[List[GeometryType]], optional
+            Accepted geometry types for GEOMETRY parameters.
+        options : Optional[List[str]], optional
+            List of allowed values for SELECT parameters.
+        required : bool, optional
+            Whether the parameter is required, by default False.
+        default_value : Any, optional
+            Default value if the user doesn't provide one.
+        requested_srs : Optional[str], optional
+            Requested spatial reference system for GEOMETRY parameters.
+        """
         self._name = name
         self._print_name = print_name
         self._parameter_type = parameter_type

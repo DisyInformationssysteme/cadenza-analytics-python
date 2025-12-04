@@ -2,13 +2,24 @@ from enum import Enum
 
 
 class ParameterType(Enum):
-    """A class representing parameter types.
+    """Enumeration of supported parameter types for analytics extensions.
 
-    Returns
-    -------
-    str
-        A string representing the parameter type.
+    STRING
+        Text input parameter.
+    INT64
+        Integer number parameter.
+    FLOAT64
+        Floating-point number parameter.
+    ZONEDDATETIME
+        Date and time with timezone parameter.
+    GEOMETRY
+        Geometry/location parameter.
+    SELECT
+        Selection from predefined options.
+    BOOLEAN
+        True/false parameter.
     """
+
     STRING = "string"
     INT64 = "int64"
     FLOAT64 = "float64"
@@ -17,5 +28,5 @@ class ParameterType(Enum):
     SELECT = "select"
     BOOLEAN = "boolean"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value

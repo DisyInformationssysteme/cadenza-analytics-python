@@ -8,12 +8,10 @@ from cadenzaanalytics.data.data_object import DataObject
 
 
 class ParameterValue(DataObject):
-    """A class representing parameter values as received from cadenza such as name, print_name, parameter_type, value.
+    """Represents a parameter value received from Cadenza with its metadata.
 
-    Parameters
-    ----------
-    DataObject : type
-        The base data object type from which Parameter inherits.
+    Contains the parameter's value along with type information and optional
+    geometry metadata for GEOMETRY type parameters.
     """
     _attribute_mapping = {
         "name": "_name",
@@ -33,8 +31,25 @@ class ParameterValue(DataObject):
                  print_name: str,
                  data_type: DataType,
                  value: Any = None,
-                 geometry_type: GeometryType = None,
-                 srs: str = None):
+                 geometry_type: Optional[GeometryType] = None,
+                 srs: Optional[str] = None) -> None:
+        """Initialize a ParameterValue.
+
+        Parameters
+        ----------
+        name : str
+            The internal name of the parameter.
+        print_name : str
+            The user-friendly display name of the parameter.
+        data_type : DataType
+            The data type of the parameter value.
+        value : Any, optional
+            The raw parameter value, will be converted according to data_type.
+        geometry_type : Optional[GeometryType], optional
+            The geometry type for GEOMETRY parameters.
+        srs : Optional[str], optional
+            The spatial reference system for GEOMETRY parameters.
+        """
         self._name = name
         self._print_name = print_name
         self._data_type = data_type
@@ -100,19 +115,39 @@ class ParameterValue(DataObject):
 
     @property
     def srs(self) -> Optional[str]:
-        """Get the srs of the parameter."""
+        """Get the spatial reference system (SRS) of the parameter.
+
+        Returns
+        -------
+        Optional[str]
+            The SRS specification, or None if not applicable.
+        """
         return self._srs
 
 
     def _parse_value(self, value: Any, data_type: DataType) -> Any:
-        if value is None:
-            return None
-        if data_type == DataType.INT64:
-            return int(value)
-        if data_type == DataType.FLOAT64:
-            return float(value)
-        if data_type == DataType.ZONEDDATETIME:
-            return datetime.fromisoformat(value)
-        if data_type == DataType.GEOMETRY:
-            return shapely_wkt.loads(value)
-        return value # retain string and boolean which are already typed correctly
+        """Parse and convert a parameter value according to its data type.
+    
+        Parameters
+        ----------
+        value : Any
+            The raw value to parse.
+        data_type : DataType
+            The target data type for conversion.
+    
+        Returns
+        -------
+        Any
+            The parsed value with appropriate type, or None if input is None.
+        """
+            if value is None:
+                return None
+            if data_type == DataType.INT64:
+                return int(value)
+            if data_type == DataType.FLOAT64:
+                return float(value)
+            if data_type == DataType.ZONEDDATETIME:
+                return datetime.fromisoformat(value)
+            if data_type == DataType.GEOMETRY:
+                return shapely_wkt.loads(value)
+            return value # retain string and boolean which are already typed correctly

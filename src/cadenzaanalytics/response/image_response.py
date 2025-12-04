@@ -1,27 +1,38 @@
+from typing import Optional
+
+from flask import Response
+
 from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
 
 
 class ImageResponse(ExtensionDataResponse):
-    """A class representing an image response from an extension.
+    """A response containing a PNG image from an analytics extension."""
 
-    Parameters
-    ----------
-    ExtensionDataResponse : type
-        The base extension data response type from which ImageResponse inherits.
-    """
-    def __init__(self, image):
+    def __init__(self, image: bytes) -> None:
+        """Initialize an ImageResponse.
+
+        Parameters
+        ----------
+        image : bytes
+            PNG image data as bytes.
+        """
         content_type = 'image/png'
         super().__init__(content_type)
 
         self._image = image
 
-    def get_response(self, request_table: RequestTable = None):
+    def get_response(self, request_table: Optional[RequestTable] = None) -> Response:
         """Get the image response.
+
+        Parameters
+        ----------
+        request_table : Optional[RequestTable]
+            Not used for image responses.
 
         Returns
         -------
         Response
-            The image response.
+            Flask Response containing the PNG image.
         """
         return self._create_response(self._image)

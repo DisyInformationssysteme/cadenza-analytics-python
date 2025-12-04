@@ -8,17 +8,28 @@ from cadenzaanalytics.response.missing_metadata_strategy import MissingMetadataS
 
 
 class DataResponse(CsvResponse):
-    """A class representing a data response from an extension.
+    """A response containing new data from an analytics extension.
 
-    Parameters
-    ----------
-    CsvResponse : type
-        The data response type from which DataResponse inherits.
+    Use this response type for DATA extensions that return entirely new data
+    rather than enriching existing data.
     """
+
     def __init__(self,
                  data: DataFrame,
                  column_metadata: List[ColumnMetadata],
                  *,
-                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA
+                 ) -> None:
+        """Initialize a DataResponse.
 
-        super().__init__(data, column_metadata, missing_metadata_strategy = missing_metadata_strategy)
+        Parameters
+        ----------
+        data : DataFrame
+            The response data as a pandas DataFrame.
+        column_metadata : List[ColumnMetadata]
+            Metadata describing the columns in the response.
+        missing_metadata_strategy : MissingMetadataStrategy, optional
+            Strategy for handling columns without metadata,
+            by default ADD_DEFAULT_METADATA.
+        """
+        super().__init__(data, column_metadata, missing_metadata_strategy=missing_metadata_strategy)

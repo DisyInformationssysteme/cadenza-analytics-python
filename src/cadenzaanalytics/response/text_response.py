@@ -1,27 +1,38 @@
+from typing import Optional
+
+from flask import Response
+
 from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
 
 
 class TextResponse(ExtensionDataResponse):
-    """A class representing a text response from an extension.
+    """A response containing plain text from an analytics extension."""
 
-    Parameters
-    ----------
-    ExtensionDataResponse : type
-        The base extension data response type from which TextResponse inherits.
-    """
-    def __init__(self, text):
+    def __init__(self, text: str) -> None:
+        """Initialize a TextResponse.
+
+        Parameters
+        ----------
+        text : str
+            Text content to return.
+        """
         content_type = 'text/plain;charset=utf-8'
         super().__init__(content_type)
 
         self._text = text
 
-    def get_response(self, request_table: RequestTable = None):
+    def get_response(self, request_table: Optional[RequestTable] = None) -> Response:
         """Get the text response.
+
+        Parameters
+        ----------
+        request_table : Optional[RequestTable]
+            Not used for text responses.
 
         Returns
         -------
         Response
-            The text response.
+            Flask Response containing the text content.
         """
         return self._create_response(self._text)

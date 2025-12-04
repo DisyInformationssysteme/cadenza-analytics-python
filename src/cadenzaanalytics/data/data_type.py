@@ -1,27 +1,40 @@
 from enum import Enum
+from typing import Any
 
 import pandas as pd
 
 # pylint: disable=duplicate-code
 class DataType(Enum):
-    """A class representing various data types such as string, integer, float, zonedDateTime, and geometry.
+    """Enumeration of supported data types for columns in analytics extensions.
+
+    STRING
+        Text/string data.
+    INT64
+        64-bit integer numbers.
+    FLOAT64
+        64-bit floating-point numbers.
+    ZONEDDATETIME
+        Date and time with timezone information.
+    GEOMETRY
+        Geometric/spatial data.
     """
+
     STRING = "string"
     INT64 = "int64"
     FLOAT64 = "float64"
     ZONEDDATETIME = "zonedDateTime"
     GEOMETRY = "geometry"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value
 
     def pandas_type(self) -> str:
-        """Return the corresponding pandas data type for the given value.
+        """Return the corresponding pandas data type for this DataType.
 
         Returns
         -------
         str
-            The pandas data type corresponding to the given value.
+            The pandas dtype string (e.g., "Int64", "Float64", "string").
         """
         if self.value == 'int64':
             return "Int64"
@@ -30,15 +43,24 @@ class DataType(Enum):
         # geometry columns and zonedDateTime columns are processed afterward and are first parsed as strings
         return "string"
 
-
     @classmethod
-    def from_pandas_dtype(cls, dtype) -> "DataType":
-        """Return the cadenza analytics data type for given pandas data type.
+    def from_pandas_dtype(cls, dtype: Any) -> "DataType":
+        """Convert a pandas dtype to the corresponding DataType.
+
+        Parameters
+        ----------
+        dtype : Any
+            A pandas dtype object (e.g., from DataFrame.dtypes).
 
         Returns
         -------
         DataType
-            The cadenza analytics data type corresponding to the given value.
+            The corresponding DataType enum member.
+
+        Notes
+        -----
+        Geometry columns cannot be automatically detected from pandas dtypes
+        and will default to STRING. Use explicit ColumnMetadata for geometry columns.
         """
 
         if pd.api.types.is_datetime64_any_dtype(dtype):
