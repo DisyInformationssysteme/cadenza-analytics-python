@@ -32,7 +32,7 @@ class DataType(Enum):
 
 
     @classmethod
-    def from_pandas_dtype(cls, dtype):
+    def from_pandas_dtype(cls, dtype) -> "DataType":
         """Return the cadenza analytics data type for given pandas data type.
 
         Returns
@@ -42,20 +42,20 @@ class DataType(Enum):
         """
 
         if pd.api.types.is_datetime64_any_dtype(dtype):
-            return DataType.ZONEDDATETIME
+            return cls.ZONEDDATETIME
 
         if pd.api.types.is_integer_dtype(dtype):
-            return DataType.INT64
+            return cls.INT64
 
         if pd.api.types.is_float_dtype(dtype):
-            return DataType.FLOAT64
+            return cls.FLOAT64
 
-        if pd.api.types.is_string_dtype(dtype) or dtype == object:
-            return "string"
+        if pd.api.types.is_string_dtype(dtype) or dtype is object:
+            return cls.STRING
 
         # boolean, categorical, others default to string
 
         # Geometry also defaults to string: Critical metadata such as GeometryType or coordinate system is not
         # available in a pandas data frame. We cannot assume that we have a geoPandas dataframe, and we should
         # not assume the underlying crs or desired geometry type; thus geometry columns need to be defined by the user.
-        return "string"
+        return cls.STRING
