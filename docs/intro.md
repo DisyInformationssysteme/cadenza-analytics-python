@@ -685,13 +685,20 @@ FROM python:3.12-slim
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Add non-root user and install dependencies for analytics extension
+RUN adduser --system --no-create-home cadenzaanalytics \
+    && pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+USER cadenzaanalytics
+
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "echo_extension:app"]
+CMD ["gunicorn", \
+    "--bind", "0.0.0.0:8000", \
+    "echo_extension:app"]
 ```
 
 Example `requirements.txt`:
