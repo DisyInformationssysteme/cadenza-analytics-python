@@ -215,7 +215,8 @@ flag_value = request.parameters["flag"]
 # Get parameter with default if not set
 value = request.parameters.get("optional_param", 42)
 
-# get full info about the parameter, e.g., the srs for geometry parameters
+# get full paramter object to retrieve additional info about the parameter
+# e.g. the srs for geometry parameters
 srs = request.parameters.info("geom").srs
 ```
 
