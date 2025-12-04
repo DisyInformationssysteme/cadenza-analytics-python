@@ -1,9 +1,10 @@
 """Provides a service which encapsulates the configuration and execution of individual analytics extensions.
-Runs a http server which executes the individual extensions analytics function and serves an extension
+Runs an HTTP server which executes the individual extension's analytics function and serves an extension
 discovery endpoint."""
 import json
 import errno
 import sys
+from typing import Optional
 
 from flask import Flask, Response
 from flask_cors import CORS
@@ -11,10 +12,21 @@ from flask_cors import CORS
 from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtension
 from cadenzaanalytics.version import __version__
 
+
 class CadenzaAnalyticsExtensionService:
-    """A service that runs and manages Cadenza analytics extensions.
+    """A Flask-based service that runs and manages Cadenza analytics extensions.
+
+    Provides HTTP endpoints for extension discovery and request handling.
+    Register extensions using `add_analytics_extension()` and start the server
+    with `run_development_server()` or access the Flask app via the `app` property.
     """
-    def __init__(self):
+
+    def __init__(self) -> None:
+        """Initialize the CadenzaAnalyticsExtensionService.
+
+        Creates a Flask application with CORS support and sets up the
+        extension discovery endpoint at the root path.
+        """
         self._analytics_extensions = []
 
         self._app = Flask('cadenzaanalytics')
@@ -25,13 +37,19 @@ class CadenzaAnalyticsExtensionService:
 
         self._app.add_url_rule("/", view_func=self._list_extensions)
 
-    def add_analytics_extension(self, analytics_extension: CadenzaAnalyticsExtension):
+    def add_analytics_extension(self, analytics_extension: CadenzaAnalyticsExtension) -> None:
         """Add an analytics extension to the service.
 
-        Parameters:
+        Parameters
         ----------
         analytics_extension : CadenzaAnalyticsExtension
             The analytics extension to be added.
+
+        Raises
+        ------
+        SystemExit
+            If the relative path is already in use or the analytics function
+            has an invalid signature.
         """
 
         self.logger.info('Registering extension "%s" on relative path "%s"...',
@@ -62,24 +80,38 @@ class CadenzaAnalyticsExtensionService:
                                endpoint=analytics_extension.relative_path + "_post",
                                methods=['POST'])
 
-    def run_development_server(self, port:int=5000, debug:bool=None):
+    def run_development_server(self, port: int = 5000, debug: Optional[bool] = None) -> None:
         """Start a development server which runs the service.
 
-        Parameters:
+        Parameters
         ----------
         port : int, optional
-            The port where the service is exposed, default 5000.
-        debug : bool, optional
-            If the debug flag is set the server will automatically reload for code changes
+            The port where the service is exposed, by default 5000.
+        debug : Optional[bool], optional
+            If True, the server will automatically reload for code changes
             and show a debugger in case an exception happened.
         """
         self._app.run(port=port, debug=debug)
 
     @property
-    def app(self):
+    def app(self) -> Flask:
+        """Get the underlying Flask application instance.
+
+        Returns
+        -------
+        Flask
+            The Flask application managing the analytics extensions.
+        """
         return self._app
 
-    def _list_extensions(self):
+    def _list_extensions(self) -> Response:
+        """List all registered analytics extensions.
+
+        Returns
+        -------
+        Response
+            JSON response containing list of extensions with their metadata.
+        """
         result_dict = {'extensions': []}
 
         for extension in self._analytics_extensions:
