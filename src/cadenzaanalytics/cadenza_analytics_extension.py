@@ -1,10 +1,10 @@
-"""Represents a disy Cadenza analytics extension and holds its configuration. In conenction with the
-`cadenza anayltics extension service` the extension handels the processing of analytics requests, when
+"""Represents a disy Cadenza analytics extension and holds its configuration. In connection with the
+`CadenzaAnalyticsExtensionService` the extension handles the processing of analytics requests when
 invoked via HTTP POST on the relative path."""
 import json
 import logging
 from io import StringIO
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -27,16 +27,42 @@ logger = logging.getLogger('cadenzaanalytics')
 
 
 class CadenzaAnalyticsExtension:
-    """Class representing a Cadenza analytics extension, the central object to create for and register
-    in the CadenzaAnalyticsExtensionService.
+    """Represents a Cadenza analytics extension.
+
+    The central object to create and register in the CadenzaAnalyticsExtensionService.
+    Each extension has a relative HTTP path, an analytics function that processes requests,
+    and configuration for expected input tables and parameters.
     """
+
     def __init__(self, *,
                  relative_path: str,
                  analytics_function: Callable[[AnalyticsRequest], ExtensionResponse],
                  print_name: str,
                  extension_type: ExtensionType,
-                 tables: List[Table] = None,
-                 parameters: List[Parameter] = None):
+                 tables: Optional[List[Table]] = None,
+                 parameters: Optional[List[Parameter]] = None) -> None:
+        """Initialize a CadenzaAnalyticsExtension.
+
+        Parameters
+        ----------
+        relative_path : str
+            The relative HTTP path where this extension will be served.
+        analytics_function : Callable[[AnalyticsRequest], ExtensionResponse]
+            The function that processes requests and returns responses.
+        print_name : str
+            A user-friendly display name for the extension.
+        extension_type : ExtensionType
+            The type of extension (DATA, ENRICHMENT, or VISUAL).
+        tables : Optional[List[Table]], optional
+            List of input data tables. At most one table is supported.
+        parameters : Optional[List[Parameter]], optional
+            List of user-configurable parameters.
+
+        Raises
+        ------
+        ValueError
+            If more than one table is provided.
+        """
 
         self._relative_path = relative_path
         self._analytics_function = analytics_function
@@ -78,12 +104,12 @@ class CadenzaAnalyticsExtension:
 
     @property
     def extension_type(self) -> ExtensionType:
-        """Getter for the type of the extension.
+        """Get the type of the extension.
 
         Returns
         -------
-        str
-            The type of the extension.
+        ExtensionType
+            The type of the extension (DATA, ENRICHMENT, or VISUAL).
         """
         return self._analytics_extension.extension_type
 
