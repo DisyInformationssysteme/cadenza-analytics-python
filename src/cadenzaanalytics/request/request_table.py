@@ -27,7 +27,7 @@ class RequestTable:
 
         Returns
         -------
-        object
+        DataFrame
             The data associated with the request.
         """
         return self._data

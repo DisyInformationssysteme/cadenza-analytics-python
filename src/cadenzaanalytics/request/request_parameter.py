@@ -60,7 +60,7 @@ class RequestParameter(collections.abc.Mapping):
 
         Returns
         -------
-        str
+        Optional[ParameterValue]
             The parameter object if found, else None.
         """
 
@@ -79,7 +79,7 @@ class RequestParameter(collections.abc.Mapping):
 
         Returns
         -------
-        str
+        Any
             The value of the parameter if found, else None.
         """
 
