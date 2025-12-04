@@ -2,8 +2,6 @@
 **cadenzaanalytics** is the official package for fast and easy creation of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) analytics extensions with Python.
 It enables the extension of disy Cadenza for advanced analytics purposes with the usage of python code.
 
-Currently, this package is in **beta status**: it can be used for testing, but there may be breaking changes before a full release.
-
 Find the docs at https://disyinformationssysteme.github.io/cadenza-analytics-python
 
 [![CI](https://github.com/DisyInformationssysteme/cadenza-analytics-python/actions/workflows/ci.yml/badge.svg)](https://github.com/DisyInformationssysteme/cadenza-analytics-python/actions/workflows/ci.yml)
