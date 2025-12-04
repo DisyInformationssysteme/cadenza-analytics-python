@@ -53,5 +53,5 @@ class AnalyticsRequest(collections.abc.Mapping):
         return self._parameters
 
     @property
-    def cadenza_version(self):
+    def cadenza_version(self) -> str:
         return self._cadenza_version
