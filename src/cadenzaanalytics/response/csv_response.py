@@ -141,7 +141,7 @@ class CsvResponse(ExtensionDataResponse):
         if len(self._data.columns) == 0:
             raise ValueError("Response without any data column.")
 
-    def apply_missing_metadata_strategy(self):
+    def apply_missing_metadata_strategy(self) -> List[str]:
         metadata_column_names = {}
 
         # prepare dictionary of metadata column name for fast lookup
