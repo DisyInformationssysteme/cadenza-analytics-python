@@ -38,6 +38,12 @@ The `cadenzaanalytics` module provides the functionality to abstract the require
 
 ## Requirements and Dependencies
 
+For each disy Cadenza version, the correct corresponding library version needs to be used.
+The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.
+
+For Cadenza 10.2 and earlier versions, `cadenzaanalytics` used a semantic versioning scheme.
+The first version of disy Cadenza that supported Analytics Extensions is disy Cadenza Autumn 2023 (9.3).
+
 The `cadenzaanalytics` package has the following dependencies:
 
 * Python 3.12+
@@ -47,11 +53,6 @@ The `cadenzaanalytics` package has the following dependencies:
 * requests-toolbelt
 * chardet
 
-For each disy Cadenza version, the correct corresponding library version needs to be used.
-The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.
-
-For Cadenza 10.2 and earlier versions, `cadenzaanalytics` used a semantic versioning scheme.
-The first version of disy Cadenza that supported Analytics Extensions is disy Cadenza Autumn 2023 (9.3).
 
 ## Installation via PyPI
 
