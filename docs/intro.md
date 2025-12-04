@@ -5,12 +5,12 @@ This is the documentation for `cadenzaanalytics` version {{version}}.
 # disy Cadenza Analytics Extensions
 
 An Analytics Extension extends the functional spectrum of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) with an analysis function or a visualisation type.
-An Analytics Extension is a web service that exchanges structured data with disy Cadenza via the Cadenza API.
-A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if they have the appropriate rights).
+On a technical level an Analytics Extension is a web service that exchanges structured data with disy Cadenza via the Cadenza API.
+A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if sufficient rights are granted)
 
 As of disy Cadenza Autumn 2025 (10.4), the following types and capabilities of analysis extensions are officially supported:
 
-- **Data**: Returns a structured data set from which a new Cadenza object type can be created.
+- **Data**: Returns a structured data set from which a new Cadenza object type is created.
 - **Enrichment**: Enriches an existing Cadenza object type by adding additional attributes (columns).
 - **Visual**: Returns static content (PNG image, text, or URL) to be displayed in a Cadenza view or through a map operation.
 
@@ -38,6 +38,12 @@ The `cadenzaanalytics` module provides the functionality to abstract the require
 
 ## Requirements and Dependencies
 
+For each disy Cadenza version, the correct corresponding library version needs to be used.
+The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.
+
+For Cadenza 10.2 and earlier versions, `cadenzaanalytics` used a semantic versioning scheme.
+The first version of disy Cadenza that supported Analytics Extensions is disy Cadenza Autumn 2023 (9.3).
+
 The `cadenzaanalytics` package has the following dependencies:
 
 * Python 3.12+
@@ -47,11 +53,6 @@ The `cadenzaanalytics` package has the following dependencies:
 * requests-toolbelt
 * chardet
 
-For each disy Cadenza version, the correct corresponding library version needs to be used.
-The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.
-
-For Cadenza 10.2 and earlier versions, `cadenzaanalytics` used a semantic versioning scheme.
-The first version of disy Cadenza that supported Analytics Extensions is disy Cadenza Autumn 2023 (9.3).
 
 ## Installation via PyPI
 
@@ -214,7 +215,8 @@ flag_value = request.parameters["flag"]
 # Get parameter with default if not set
 value = request.parameters.get("optional_param", 42)
 
-# get full info about the parameter, e.g., the srs for geometry parameters
+# get full paramter object to retrieve additional info about the parameter
+# e.g. the srs for geometry parameters
 srs = request.parameters.info("geom").srs
 ```
 
@@ -454,7 +456,7 @@ Parameters:
 - `relative_path`: URL path where the extension will be available
 - `print_name`: Display name in Cadenza
 - `extension_type`: One of `ExtensionType.DATA`, `ExtensionType.ENRICHMENT`, or `ExtensionType.VISUAL`
-- `tables`: List of Table objects (currently at most one table is supported)
+- `tables`: List of Table objects (currently at most one table is supported) (optional)
 - `parameters`: List of Parameter objects (optional)
 - `analytics_function`: The function to invoke when the extension is called
 
@@ -683,13 +685,20 @@ FROM python:3.12-slim
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Add non-root user and install dependencies for analytics extension
+RUN adduser --system --no-create-home cadenzaanalytics \
+    && pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+USER cadenzaanalytics
+
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "echo_extension:app"]
+CMD ["gunicorn", \
+    "--bind", "0.0.0.0:8000", \
+    "echo_extension:app"]
 ```
 
 Example `requirements.txt`:
