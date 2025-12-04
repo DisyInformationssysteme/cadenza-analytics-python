@@ -5,12 +5,12 @@ This is the documentation for `cadenzaanalytics` version {{version}}.
 # disy Cadenza Analytics Extensions
 
 An Analytics Extension extends the functional spectrum of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) with an analysis function or a visualisation type.
-An Analytics Extension is a web service that exchanges structured data with disy Cadenza via the Cadenza API.
-A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if they have the appropriate rights).
+On a technical level an Analytics Extension is a web service that exchanges structured data with disy Cadenza via the Cadenza API.
+A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if sufficient rights are granted)
 
 As of disy Cadenza Autumn 2025 (10.4), the following types and capabilities of analysis extensions are officially supported:
 
-- **Data**: Returns a structured data set from which a new Cadenza object type can be created.
+- **Data**: Returns a structured data set from which a new Cadenza object type is created.
 - **Enrichment**: Enriches an existing Cadenza object type by adding additional attributes (columns).
 - **Visual**: Returns static content (PNG image, text, or URL) to be displayed in a Cadenza view or through a map operation.
 
