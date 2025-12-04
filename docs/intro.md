@@ -456,7 +456,7 @@ Parameters:
 - `relative_path`: URL path where the extension will be available
 - `print_name`: Display name in Cadenza
 - `extension_type`: One of `ExtensionType.DATA`, `ExtensionType.ENRICHMENT`, or `ExtensionType.VISUAL`
-- `tables`: List of Table objects (currently at most one table is supported)
+- `tables`: List of Table objects (currently at most one table is supported) (optional)
 - `parameters`: List of Parameter objects (optional)
 - `analytics_function`: The function to invoke when the extension is called
 
