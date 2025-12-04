@@ -1,17 +1,26 @@
 import collections
-from typing import Optional, Any
+from typing import Iterator, List, Optional, Any
 
 from cadenzaanalytics.data.parameter_value import ParameterValue
 from cadenzaanalytics.request.view_parameter import ViewParameter
 
 
 class RequestParameter(collections.abc.Mapping):
-    """This class holds the parameters of the analytics request send by cadenza.
+    """Provides access to parameters from an analytics request.
+
+    Supports dict-like access to parameter values via `params["name"]` syntax.
+    Use `params.info("name")` to access the full ParameterValue object with metadata.
     """
 
-    def __init__(self, request_parameters: dict):
-        self._request_parameters = {param["name"]: ParameterValue._from_dict(param) for param in request_parameters}
+    def __init__(self, request_parameters: List[dict]) -> None:
+        """Initialize RequestParameter from a list of parameter dictionaries.
 
+        Parameters
+        ----------
+        request_parameters : List[dict]
+            List of parameter dictionaries from the Cadenza request.
+        """
+        self._request_parameters = {param["name"]: ParameterValue._from_dict(param) for param in request_parameters}
 
     @property
     def view(self) -> ViewParameter:
@@ -38,16 +47,28 @@ class RequestParameter(collections.abc.Mapping):
             return parameter.value
         raise KeyError(f"Parameter {name} not found.")
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(self._request_parameters)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._request_parameters)
 
     def __contains__(self, name: str) -> bool:
         return name in self._request_parameters
 
     def info(self, name: str) -> Optional[ParameterValue]:
+        """Get the full parameter object including metadata.
+
+        Parameters
+        ----------
+        name : str
+            The name of the parameter.
+
+        Returns
+        -------
+        Optional[ParameterValue]
+            The parameter object with value and metadata, or None if not found.
+        """
         return self._get_parameter(name)
 
     def _get_parameter(self, name: str) -> Optional[ParameterValue]:

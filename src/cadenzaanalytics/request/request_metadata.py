@@ -1,5 +1,5 @@
 import collections
-from typing import List, Dict
+from typing import Iterator, List, Dict, Optional
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
 from cadenzaanalytics.data.attribute_group import AttributeGroup
@@ -7,21 +7,31 @@ from cadenzaanalytics.data.attribute_group import AttributeGroup
 
 # pylint: disable=protected-access
 class RequestMetadata(collections.abc.Mapping):
-    """A class representing the metadata for an analytics request.
+    """Metadata describing the columns in a request table.
+
+    Provides access to column metadata by name and groupings by attribute group.
     """
-    def __init__(self, request_metadata: dict):
+
+    def __init__(self, request_metadata: dict) -> None:
+        """Initialize RequestMetadata from a metadata dictionary.
+
+        Parameters
+        ----------
+        request_metadata : dict
+            Metadata dictionary from Cadenza containing data container and column information.
+        """
         self._columns = [ColumnMetadata._from_dict(column)
                          for column
                          in RequestMetadata._parse_columns(request_metadata)]
 
     @staticmethod
-    def _parse_columns(request_metadata: dict):
+    def _parse_columns(request_metadata: dict) -> List[dict]:
         _containers = request_metadata['dataContainers']
         _has_columns = _containers is not None and len(_containers) > 0 and len(_containers[0]['columns']) > 0
         raw_columns = _containers[0]['columns'] if _has_columns else []
         return raw_columns
 
-    def __getitem__(self, key) -> ColumnMetadata:
+    def __getitem__(self, key: str) -> ColumnMetadata:
         """Returns the column metadata object for a specific column accessed by its name.
 
         Parameters
@@ -41,39 +51,37 @@ class RequestMetadata(collections.abc.Mapping):
 
         raise KeyError(f"Column '{key}' not found.")
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(c.name for c in self._columns)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._columns)
 
-    def __contains__(self, key):
+    def __contains__(self, key: str) -> bool:
         for column in self._columns:
             if column.name == key:
                 return True
         return False
 
     @property
-    def ids(self) -> List[ColumnMetadata]:
-        """Returns all id column metadata objects. Relevant for extensions of type ENRICHMENT
-        to connect request and response data.
+    def ids(self) -> Optional[List[ColumnMetadata]]:
+        """Get metadata for ID columns used in enrichment responses.
 
         Returns
         -------
-        List[ColumnMetadata] | None
-            Metadata for the id columns if found, else None.
+        Optional[List[ColumnMetadata]]
+            Metadata for the ID columns, or None if no ID columns exist.
         """
         return self.groups.get(AttributeGroup.ID_ATTRIBUTE_GROUP_NAME)
 
     @property
-    def id_names(self) -> List[str]:
-        """Returns all id column names. Relevant for extensions of type ENRICHMENT
-        to connect request and response data by copying relevant id columns from the input data frame.
+    def id_names(self) -> Optional[List[str]]:
+        """Get the names of ID columns used in enrichment responses.
 
         Returns
         -------
-        List[str] | None
-            Metadata for the id columns if found, else None.
+        Optional[List[str]]
+            Names of the ID columns, or None if no ID columns exist.
         """
         id_columns = self.ids
         return [c.name for c in id_columns] if id_columns else None

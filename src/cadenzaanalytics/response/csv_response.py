@@ -1,9 +1,10 @@
 import csv
 import re
 import sys
-from typing import List
+from typing import List, Optional
 import logging
 
+from flask import Response
 from pandas import DataFrame
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
@@ -16,19 +17,28 @@ logger = logging.getLogger('cadenzaanalytics')
 
 
 class CsvResponse(ExtensionDataResponse):
-    """A class representing a CSV response from an extension.
+    """Base class for CSV-based responses from an analytics extension.
 
-    Parameters
-    ----------
-    ExtensionDataResponse : type
-        The base extension data response type from which CsvResponse inherits.
+    Handles DataFrame to CSV conversion with metadata generation.
     """
+
     def __init__(self,
                  data: DataFrame,
                  column_metadata: List[ColumnMetadata],
                  *,
-                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
+                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA
+                 ) -> None:
+        """Initialize a CsvResponse.
 
+        Parameters
+        ----------
+        data : DataFrame
+            The response data as a pandas DataFrame.
+        column_metadata : List[ColumnMetadata]
+            Metadata describing the columns in the response.
+        missing_metadata_strategy : MissingMetadataStrategy, optional
+            Strategy for handling columns without metadata, by default ADD_DEFAULT_METADATA.
+        """
         content_type = 'text/csv'
         super().__init__(content_type)
         # copy data to avoid side effects and allow safely extending data with missing id columns
@@ -53,7 +63,7 @@ class CsvResponse(ExtensionDataResponse):
 
 
     @runtime_validation_disabled.setter
-    def runtime_validation_disabled(self, value: bool):
+    def runtime_validation_disabled(self, value: bool) -> None:
         """Setter for toggle to disable the runtime validation of the response.
         Set to True to disable the runtime validation.
         """
@@ -75,19 +85,24 @@ class CsvResponse(ExtensionDataResponse):
 
 
     @missing_metadata_strategy.setter
-    def missing_metadata_strategy(self, value: MissingMetadataStrategy):
+    def missing_metadata_strategy(self, value: MissingMetadataStrategy) -> None:
         """Setter for the strategy of handling missing metadata."""
 
         self._missing_metadata_strategy = value
 
 
-    def get_response(self, request_table: RequestTable = None):
+    def get_response(self, request_table: Optional[RequestTable] = None) -> Response:
         """Get the CSV response.
+
+        Parameters
+        ----------
+        request_table : Optional[RequestTable]
+            The request table, used by enrichment responses for ID mapping.
 
         Returns
         -------
         Response
-            The CSV response.
+            Flask Response containing the CSV data.
         """
         leftover_metadata_column_names = self._apply_missing_metadata_strategy()
         self._validate_response(leftover_metadata_column_names)
@@ -130,7 +145,19 @@ class CsvResponse(ExtensionDataResponse):
         return self._create_response(csv_data, self._column_meta_data)
 
 
-    def _validate_response(self, leftover_metadata_column_names: List[str]):
+    def _validate_response(self, leftover_metadata_column_names: List[str]) -> None:
+        """Validate the response data and metadata.
+
+        Parameters
+        ----------
+        leftover_metadata_column_names : List[str]
+            Column names that have metadata but no corresponding data column.
+
+        Raises
+        ------
+        ValueError
+            If there are metadata definitions without data columns or no data columns exist.
+        """
         if not self._is_runtime_validation_active:
             return
         # metadata definition without columns in data
@@ -142,6 +169,24 @@ class CsvResponse(ExtensionDataResponse):
             raise ValueError("Response without any data column.")
 
     def _apply_missing_metadata_strategy(self) -> List[str]:
+        """Apply the configured strategy for handling columns with missing metadata.
+
+        Depending on the missing_metadata_strategy setting, this method will either:
+        - ADD_DEFAULT_METADATA: Generate default metadata for columns without explicit metadata
+        - REMOVE_DATA_COLUMNS: Remove data columns that have no metadata definition
+        - RAISE_ERROR: Raise a ValueError for columns without metadata
+
+        Returns
+        -------
+        List[str]
+            Names of metadata columns that have no corresponding data column.
+
+        Raises
+        ------
+        ValueError
+            If duplicate metadata definitions exist or if RAISE_ERROR strategy is used
+            and columns without metadata are found.
+        """
         metadata_column_names = {}
 
         # prepare dictionary of metadata column name for fast lookup

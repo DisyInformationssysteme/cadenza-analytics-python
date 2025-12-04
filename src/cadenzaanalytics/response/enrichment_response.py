@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Optional
 
+from flask import Response
 from pandas import DataFrame
 
 from cadenzaanalytics.data.column_metadata import ColumnMetadata
@@ -10,43 +11,73 @@ from cadenzaanalytics.response.missing_metadata_strategy import MissingMetadataS
 
 
 class EnrichmentResponse(CsvResponse):
-    """A class representing an enrichment response from an extension.
+    """A response that enriches existing data with new columns.
 
-    Parameters
-    ----------
-    CsvResponse : type
-        The data response type from which EnrichmentResponse inherits.
+    Use this response type for ENRICHMENT extensions that add new columns to
+    existing data. The response must include ID columns to map back to the
+    original data.
     """
+
     def __init__(self,
                  data: DataFrame,
                  column_metadata: List[ColumnMetadata],
                  *,
-                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA):
-        """Initialize an EnrichmentResponse instance.
+                 missing_metadata_strategy: MissingMetadataStrategy = MissingMetadataStrategy.ADD_DEFAULT_METADATA
+                 ) -> None:
+        """Initialize an EnrichmentResponse.
 
         Parameters
         ----------
         data : DataFrame
-            The data to be enriched. Must contain the id columns.
+            The enrichment data. Must contain or will receive ID columns for mapping.
         column_metadata : List[ColumnMetadata]
-            List of column metadata to be added.
+            Metadata describing the columns in the response.
         missing_metadata_strategy : MissingMetadataStrategy, optional
-            Strategy to handle missing metadata, by default MissingMetadataStrategy.ADD_DEFAULT_METADATA.
-            The REMOVE_DATA_COLUMNS strategy will remove non-id columns from the data frame unless they are
-            specified in column_metadata. The ADD_DEFAULT_METADATA will add default metadata to
-            all non-id columns that are missing in the column_metadata list.
+            Strategy to handle missing metadata, by default ADD_DEFAULT_METADATA.
+            REMOVE_DATA_COLUMNS removes non-id columns without metadata.
+            ADD_DEFAULT_METADATA generates default metadata for columns without explicit metadata.
         """
         super().__init__(data,
                          column_metadata=column_metadata,
                          missing_metadata_strategy=missing_metadata_strategy)
 
-    def get_response(self, request_table: RequestTable = None):
+    def get_response(self, request_table: Optional[RequestTable] = None) -> Response:
+        """Get the enrichment response.
+
+        Parameters
+        ----------
+        request_table : Optional[RequestTable]
+            The request table, required for ID validation and mapping.
+
+        Returns
+        -------
+        Response
+            Flask Response containing the enrichment CSV data.
+
+        Raises
+        ------
+        ValueError
+            If request_table is None or ID columns are invalid.
+        """
         if request_table is None:
             raise ValueError("Enrichment responses need the request table for validating ids and handling missing ids.")
         self._validate_ids(request_table)
         return super().get_response(request_table)
 
-    def _validate_ids(self, request_table: RequestTable):
+    def _validate_ids(self, request_table: RequestTable) -> None:
+        """Validate and populate ID columns from the request table.
+
+        Parameters
+        ----------
+        request_table : RequestTable
+            The request table containing expected ID columns.
+
+        Raises
+        ------
+        ValueError
+            If ID columns in the response don't match expected ID columns,
+            or if specified ID columns are missing from the data.
+        """
         available_id_names = []
         for column in self._column_meta_data:
             if column.attribute_group_name == AttributeGroup.ID_ATTRIBUTE_GROUP_NAME:
