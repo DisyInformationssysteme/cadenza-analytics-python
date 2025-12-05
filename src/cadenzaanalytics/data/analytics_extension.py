@@ -7,13 +7,10 @@ from cadenzaanalytics.data.parameter import Parameter
 
 
 class AnalyticsExtension(DataObject):
-    """A class representing an analytics extension containing print_name, extension_type, attribute_groups
-     and parameters.
+    """Internal data model representing an analytics extension configuration.
 
-    Parameters
-    ----------
-    DataObject : type
-        The base data object type from which AnalyticsExtension inherits.
+    Contains the extension's display name, type, attribute groups, and parameters
+    for serialization to JSON when responding to capability requests.
     """
     _attribute_mapping = {
         "printName": "_print_name",

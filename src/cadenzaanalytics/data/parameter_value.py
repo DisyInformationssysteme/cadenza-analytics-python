@@ -108,8 +108,8 @@ class ParameterValue(DataObject):
 
         Returns
         -------
-        GeometryType
-            The geometry type of the parameter.
+        Optional[GeometryType]
+            The geometry type of the parameter, or None for non-geometry parameters.
         """
         return self._geometry_type
 
