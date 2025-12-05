@@ -5,12 +5,10 @@ from cadenzaanalytics.data.data_object import DataObject
 
 
 class DataContainerMetadata(DataObject):
-    """A class representing metadata for data containers such as type, name and columns.
+    """Internal data model representing metadata for response data containers.
 
-    Parameters
-    ----------
-    DataObject : type
-        The base data object type from which DataContainerMetadata inherits.
+    Contains content type, container name, and column metadata for serialization
+    in multipart response messages.
     """
     _attribute_mapping = {
         "type": "_content_type",

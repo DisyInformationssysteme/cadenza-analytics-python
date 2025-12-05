@@ -121,13 +121,16 @@ class ColumnMetadata(DataObject):
         return self._data_type
 
     @property
-    def role(self) -> AttributeRole:
-        """Get the role of the column. ColumnMetadata received from cadenza will always have a role set.
+    def role(self) -> Optional[AttributeRole]:
+        """Get the role of the column.
+
+        ColumnMetadata received from Cadenza will always have a role set.
+        For user-created metadata, the role may be None if not specified.
 
         Returns
         -------
-        AttributeRole
-            The role of the column.
+        Optional[AttributeRole]
+            The role of the column, or None if not specified.
         """
         return self._role
 
@@ -137,8 +140,8 @@ class ColumnMetadata(DataObject):
 
         Returns
         -------
-        MeasureAggregation
-            The measure aggregation of the column.
+        Optional[MeasureAggregation]
+            The measure aggregation of the column, or None if not specified.
         """
         return self._measure_aggregation
 
@@ -148,8 +151,8 @@ class ColumnMetadata(DataObject):
 
         Returns
         -------
-        str
-            The format of the column.
+        Optional[str]
+            The display format string for the column, or None if not specified.
         """
         return self._format
 
@@ -159,8 +162,8 @@ class ColumnMetadata(DataObject):
 
         Returns
         -------
-        GeometryType
-            The geometry type of the column.
+        Optional[GeometryType]
+            The geometry type of the column, or None for non-geometry columns.
         """
         return self._geometry_type
 

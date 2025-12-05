@@ -3,12 +3,10 @@ import json
 
 # pylint: disable=protected-access
 class DataObject:
-    """A class representing a data object that can be serialized to JSON.
+    """Base class for data objects that can be serialized to and from JSON.
 
-    Returns
-    -------
-    dict
-        Serialize the data object to a JSON string.
+    Provides JSON serialization via `to_json()` and deserialization via `_from_dict()`.
+    Subclasses should define `_attribute_mapping` to map JSON keys to instance attributes.
     """
     _attribute_mapping = {}
     _attribute_constructors = {}  # required for enums that are deserialized

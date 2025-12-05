@@ -174,7 +174,7 @@ class CsvResponse(ExtensionDataResponse):
         Depending on the missing_metadata_strategy setting, this method will either:
         - ADD_DEFAULT_METADATA: Generate default metadata for columns without explicit metadata
         - REMOVE_DATA_COLUMNS: Remove data columns that have no metadata definition
-        - RAISE_ERROR: Raise a ValueError for columns without metadata
+        - RAISE_EXCEPTION: Raise a ValueError for columns without metadata
 
         Returns
         -------
