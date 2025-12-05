@@ -30,6 +30,7 @@ for BRANCH in $BRANCHES; do
   mkdir -p "$BRANCH_DIR"
 
   # Store release version of latest non-prerelease tag matching Cadenza version of current branch
+  # TODO will be wrong version if docs are built before first proper release on a version branch has been released (!)
   echo "Determining last release tag..."
   #LAST_RELEASE_VERSION=$(git tag --sort=-v:refname -l | grep -m1 -P "${BRANCH:1:-1}[0-9]+$")  # does not work for v10.2.x
   LAST_RELEASE_VERSION=$(git tag --merged "${BRANCH}" --sort=-v:refname | grep -m1 -P "[0-9]+\.[0-9]+\.[0-9]+$")
