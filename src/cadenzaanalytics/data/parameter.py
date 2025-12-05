@@ -49,6 +49,8 @@ class Parameter(DataObject):
             List of allowed values for SELECT parameters.
         required : bool, optional
             Whether the parameter is required, by default False.
+            For parameter type boolean, required=True makes submitting the value 
+            True mandatory.
         default_value : Any, optional
             Default value if the user doesn't provide one.
         requested_srs : Optional[str], optional
