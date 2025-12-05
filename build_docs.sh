@@ -3,6 +3,9 @@
 # Fail on simple errors, so that pipeline / job fails
 set -e
 
+# Fetch all tags to ensure we have the latest release tags
+git fetch --tags
+
 # Define base directory where docs will be generated
 OUTPUT_DIR="docs_output"
 
