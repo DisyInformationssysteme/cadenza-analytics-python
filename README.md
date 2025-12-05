@@ -11,6 +11,7 @@ Find the docs at https://disyinformationssysteme.github.io/cadenza-analytics-pyt
 * Python 3
 * Flask
 * Pandas
+* Shapely
 * requests-toolbelt
 * chardet
 
