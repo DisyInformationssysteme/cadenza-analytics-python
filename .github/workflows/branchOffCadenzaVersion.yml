@@ -55,7 +55,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
 
     - name: Determine branch name
-      run: echo "BRANCH_NAME=v$(poetry version patch --dry-run -s | cut -d. -f1,2).x" >> $GITHUB_ENV
+      run: echo "BRANCH_NAME=v$(poetry version patch --dry-run -s | head -n 1 | cut -d. -f1,2).x" >> $GITHUB_ENV
 
     - name: Create branch for current version
       run: git branch ${{ env.BRANCH_NAME }} main
