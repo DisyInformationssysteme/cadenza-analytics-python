@@ -715,7 +715,7 @@ docker run -p 8000:8000 my-extension
 
 ## Advanced Configuration
 
-### Running behing Reverse Proxy
+### Running behind Reverse Proxy
 
 When running behind a reverse proxy (like nginx), you may need to configure Flask to trust proxy headers. Use Werkzeug's `ProxyFix` middleware:
 
