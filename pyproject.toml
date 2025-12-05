@@ -8,7 +8,7 @@ name = "cadenzaanalytics"
 authors = [
     "Disy Informationssysteme GmbH <cadenza-analytics@disy.net>",
 ]
-version="10.4.0a0.dev2"
+version="10.4.0a0"
 description = "Official Python Package for creation of disy Cadenza analytics extensions"
 readme = "README.md"
 license = "Apache-2.0"
