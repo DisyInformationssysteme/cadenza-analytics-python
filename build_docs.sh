@@ -44,7 +44,7 @@ for BRANCH in $BRANCHES; do
        --logo https://www.disy.net/typo3conf/ext/contentelements/Resources/Public/dist/img/logo-disy.svg \
        --logo-link "$LOGO_LINK" \
        --output-dir "$BRANCH_DIR" \
-       --doc-format numpy \
+       --docformat numpy \
        --no-show-source src/cadenzaanalytics 
 
   # Copy image assets to target folder
