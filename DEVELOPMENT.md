@@ -47,9 +47,10 @@ For test releases, a prerelease (alpha) version is used (e.g. `10.3.0a0`).
 On a proper release (i.e. not a test release), all "Unreleased" changes in the [Changelog](CHANGELOG.md) will be automatically tagged with the released version.
 So make sure to add relevant changelog notes for every change you make and follow the style described in the changelog file.
 
-Also, on a release, documentation for all version branches will be generated using `pdoc` and uploaded to this repositories githubpages at https://disyinformationssysteme.github.io/cadenza-analytics-python.
+Also, when a GitHub Release is published, documentation for all version branches will be generated using `pdoc` and uploaded to this repository's GitHub Pages at https://disyinformationssysteme.github.io/cadenza-analytics-python.
 Reference documentation is built from docstrings.
-The documentation workflow can also be triggered manually on the dedicated branch `githubpages`.
+The documentation workflow can also be triggered manually via the Actions UI.
+If documentation changes need to be published without creating a release, developers should manually trigger the `githubpages.yml` workflow on the `githubpages` branch.
 
 ### Building Documentation Locally
 In order to build the library documentation locally, e.g. during development, execute
