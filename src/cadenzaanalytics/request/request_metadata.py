@@ -23,6 +23,8 @@ class RequestMetadata(collections.abc.Mapping):
         self._columns = [ColumnMetadata._from_dict(column)
                          for column
                          in RequestMetadata._parse_columns(request_metadata)]
+        # Build index for O(1) lookups by column name
+        self._columns_by_name: Dict[str, ColumnMetadata] = {col.name: col for col in self._columns}
 
     @staticmethod
     def _parse_columns(request_metadata: dict) -> List[dict]:
@@ -42,14 +44,17 @@ class RequestMetadata(collections.abc.Mapping):
         Returns
         -------
         ColumnMetadata
-            Metadata for the column
+            Metadata for the column.
+
+        Raises
+        ------
+        KeyError
+            If no column with the given name exists.
         """
-
-        for column in self._columns:
-            if column.name == key:
-                return column
-
-        raise KeyError(f"Column '{key}' not found.")
+        try:
+            return self._columns_by_name[key]
+        except KeyError:
+            raise KeyError(f"Column '{key}' not found.") from None
 
     def __iter__(self) -> Iterator[str]:
         return iter(c.name for c in self._columns)
@@ -57,11 +62,8 @@ class RequestMetadata(collections.abc.Mapping):
     def __len__(self) -> int:
         return len(self._columns)
 
-    def __contains__(self, key: str) -> bool:
-        for column in self._columns:
-            if column.name == key:
-                return True
-        return False
+    def __contains__(self, key: object) -> bool:
+        return key in self._columns_by_name
 
     @property
     def ids(self) -> Optional[List[ColumnMetadata]]:
