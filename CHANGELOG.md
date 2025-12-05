@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
+
+## 10.4.0 - 2025-12-05
 ### Added
-- New visual response of type text (TextResponse) 
+- New visual response of type text (TextResponse)
 - New visual response of type url (UrlResponse)
 - New response for type data (DataResponse)
 - New response for type enrichment (EnrichmentResponse)
@@ -25,7 +27,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Removed
 - Response of type RowWiseMappingCsvResponse was removed. Pleas use EnrichmentResponse instead
-
 
 ## 10.3.0 - 2025-11-06
 ### Added
