@@ -127,27 +127,27 @@ class ParameterValue(DataObject):
 
     def _parse_value(self, value: Any, data_type: DataType) -> Any:
         """Parse and convert a parameter value according to its data type.
-    
+
         Parameters
         ----------
         value : Any
             The raw value to parse.
         data_type : DataType
             The target data type for conversion.
-    
+
         Returns
         -------
         Any
             The parsed value with appropriate type, or None if input is None.
         """
-            if value is None:
-                return None
-            if data_type == DataType.INT64:
-                return int(value)
-            if data_type == DataType.FLOAT64:
-                return float(value)
-            if data_type == DataType.ZONEDDATETIME:
-                return datetime.fromisoformat(value)
-            if data_type == DataType.GEOMETRY:
-                return shapely_wkt.loads(value)
-            return value # retain string and boolean which are already typed correctly
+        if value is None:
+            return None
+        if data_type == DataType.INT64:
+            return int(value)
+        if data_type == DataType.FLOAT64:
+            return float(value)
+        if data_type == DataType.ZONEDDATETIME:
+            return datetime.fromisoformat(value)
+        if data_type == DataType.GEOMETRY:
+            return shapely_wkt.loads(value)
+        return value  # retain string and boolean which are already typed correctly
