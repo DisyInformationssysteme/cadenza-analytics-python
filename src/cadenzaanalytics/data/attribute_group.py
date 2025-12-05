@@ -8,8 +8,8 @@ from cadenzaanalytics.data.geometry_type import GeometryType
 class AttributeGroup(DataObject):
     """Defines a group of attributes with common characteristics for input data.
 
-    Attribute groups specify accepted (non-geometry) data types, cardinality 
-    constraints, and optionally geometry types and spatial reference system for 
+    Attribute groups specify accepted (non-geometry) data types, cardinality
+    constraints, and optionally geometry types and spatial reference system for
     data columns.
     """
 

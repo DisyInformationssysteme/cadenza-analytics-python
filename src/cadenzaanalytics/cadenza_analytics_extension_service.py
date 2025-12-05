@@ -1,9 +1,8 @@
 """Provides a service which encapsulates the configuration and execution of individual analytics extensions.
 Runs an HTTP server which executes the individual extension's analytics function and serves an extension
 discovery endpoint."""
+import inspect
 import json
-import errno
-import sys
 from typing import Optional
 
 from flask import Flask, Response
@@ -44,8 +43,12 @@ class CadenzaAnalyticsExtensionService:
         ----------
         analytics_extension : CadenzaAnalyticsExtension
             The analytics extension to be added.
-        """
 
+        Raises
+        ------
+        ValueError
+            If the relative path is already in use or the analytics function has an invalid signature.
+        """
         self.logger.info('Registering extension "%s" on relative path "%s"...',
                 analytics_extension.print_name,
                 analytics_extension.relative_path
@@ -53,15 +56,11 @@ class CadenzaAnalyticsExtensionService:
 
         # perform some validation checks
         if analytics_extension.relative_path in [x.relative_path for x in self._analytics_extensions]:
-            self.logger.critical('Relative path "%s" is already in use by another extension. Exiting...',
-                    analytics_extension.relative_path)
-            sys.exit(errno.EINTR)
-        if analytics_extension._analytics_function.__code__.co_argcount != 1: # pylint: disable=W0212
-            self.logger.critical('The analytics function "%s()" takes 1 positional arguments, but %s given. Exiting...',
-                    analytics_extension._analytics_function.__name__,            # pylint: disable=W0212
-                    analytics_extension._analytics_function.__code__.co_argcount # pylint: disable=W0212
-                )
-            sys.exit(errno.EINTR)
+            msg = f'Relative path "{analytics_extension.relative_path}" is already in use by another extension.'
+            self.logger.critical(msg)
+            raise ValueError(msg)
+
+        self._validate_analytics_function(analytics_extension._analytics_function)  # pylint: disable=W0212
 
         self._analytics_extensions.append(analytics_extension)
 
@@ -97,6 +96,30 @@ class CadenzaAnalyticsExtensionService:
             The Flask application managing the analytics extensions.
         """
         return self._app
+
+    def _validate_analytics_function(self, func) -> None:
+        """Validate that analytics function has correct signature.
+
+        Parameters
+        ----------
+        func : Callable
+            The analytics function to validate.
+
+        Raises
+        ------
+        ValueError
+            If the function does not accept exactly 1 positional argument.
+        """
+        try:
+            sig = inspect.signature(func)
+            params = [p for p in sig.parameters.values()
+                      if p.kind in (inspect.Parameter.POSITIONAL_ONLY,
+                                    inspect.Parameter.POSITIONAL_OR_KEYWORD)]
+            if len(params) != 1:
+                raise ValueError(f"Function must accept exactly 1 positional argument, got {len(params)}")
+        except (ValueError, TypeError) as err:
+            self.logger.critical("Invalid analytics function: %s", err)
+            raise ValueError(str(err)) from err
 
     def _list_extensions(self) -> Response:
         """List all registered analytics extensions.
