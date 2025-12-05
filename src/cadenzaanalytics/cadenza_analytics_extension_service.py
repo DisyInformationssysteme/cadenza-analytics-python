@@ -44,12 +44,6 @@ class CadenzaAnalyticsExtensionService:
         ----------
         analytics_extension : CadenzaAnalyticsExtension
             The analytics extension to be added.
-
-        Raises
-        ------
-        SystemExit
-            If the relative path is already in use or the analytics function
-            has an invalid signature.
         """
 
         self.logger.info('Registering extension "%s" on relative path "%s"...',
