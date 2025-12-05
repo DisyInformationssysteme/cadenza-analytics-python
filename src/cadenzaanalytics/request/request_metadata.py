@@ -25,6 +25,10 @@ class RequestMetadata(collections.abc.Mapping):
                          in RequestMetadata._parse_columns(request_metadata)]
         # Build index for O(1) lookups by column name
         self._columns_by_name: Dict[str, ColumnMetadata] = {col.name: col for col in self._columns}
+        # Build groups index once at initialization
+        self._groups: Dict[str, List[ColumnMetadata]] = {}
+        for column in self._columns:
+            self._groups.setdefault(column.attribute_group_name, []).append(column)
 
     @staticmethod
     def _parse_columns(request_metadata: dict) -> List[dict]:
@@ -98,11 +102,7 @@ class RequestMetadata(collections.abc.Mapping):
             A dictionary where the keys are the attribute group names and values are lists of corresponding
              column metadata objects.
         """
-        grouped_columns = {}
-        for column in self._columns:
-            grouped_columns.setdefault(column.attribute_group_name, []).append(column)
-
-        return grouped_columns
+        return self._groups
 
     @property
     def columns(self) -> List[ColumnMetadata]:
