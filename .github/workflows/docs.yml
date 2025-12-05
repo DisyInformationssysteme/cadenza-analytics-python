@@ -4,12 +4,12 @@ name: Trigger GitHub pages documentation build
 on:
   release: 
       types: [published]
-  push:
+  #push:
     #branches:
     #  - '*'
     ## Alternative: only build for tags.
-    tags:
-      - '**'
+    #tags:
+    #  - '**'
   workflow_dispatch: 
 
 # security: restrict permissions for CI jobs.
