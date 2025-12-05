@@ -6,7 +6,7 @@ This is the documentation for `cadenzaanalytics` version {{version}}.
 
 An Analytics Extension extends the functional spectrum of [disy Cadenza](https://www.disy.net/en/products/disy-cadenza/) with an analysis function or a visualisation type.
 On a technical level an Analytics Extension is a web service that exchanges structured data with disy Cadenza via the Cadenza API.
-A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if sufficient rights are granted)
+A user can integrate an analysis extension into disy Cadenza via the Management Center and manage it there (if sufficient rights have been granted).
 
 As of disy Cadenza Autumn 2025 (10.4), the following types and capabilities of analysis extensions are officially supported:
 
