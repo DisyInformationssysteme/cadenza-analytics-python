@@ -129,7 +129,8 @@ jobs:
         tag_name: ${{ env.RELEASE_VERSION }}
         body: ${{ steps.get-changelog.outputs.changelog }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Use app token to ensure the release event triggers other workflows (e.g., docs.yml)
+        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
     - name: Bump package version to new prerelease dev version (e.g. 1.2.3 => 1.2.4a0.dev0, 1.2.3a0 => 1.2.3a1.dev0)
       run: |
