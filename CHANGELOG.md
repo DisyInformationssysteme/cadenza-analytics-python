@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
+
+### Added
+- Support for measure aggregation types MEDIAN and STANDARD_DEVIATION_SAMPLE
+
+## 10.4.0 - 2025-12-05
 ### Added
 - New visual response of type text (TextResponse) 
 - New visual response of type url (UrlResponse)
