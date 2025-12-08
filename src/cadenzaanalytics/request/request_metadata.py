@@ -6,7 +6,7 @@ from cadenzaanalytics.data.attribute_group import AttributeGroup
 
 
 # pylint: disable=protected-access
-class RequestMetadata(collections.abc.Mapping):
+class RequestMetadata(collections.abc.Mapping[str, ColumnMetadata]):
     """Metadata describing the columns in a request table.
 
     Provides access to column metadata by name and groupings by attribute group.

@@ -5,7 +5,7 @@ from cadenzaanalytics.request.request_parameter import RequestParameter
 from cadenzaanalytics.request.request_table import RequestTable
 
 
-class AnalyticsRequest(collections.abc.Mapping):
+class AnalyticsRequest(collections.abc.Mapping[str, RequestTable]):
     """Represents an incoming analytics request from Cadenza.
 
     Provides access to request parameters and data tables. Supports dict-like
