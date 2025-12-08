@@ -1,11 +1,12 @@
 import collections
-from typing import Iterator, List, Optional, Any
+from typing import Iterator, List, Optional
 
 from cadenzaanalytics.data.parameter_value import ParameterValue
 from cadenzaanalytics.request.view_parameter import ViewParameter
+from cadenzaanalytics.data.parameter_value_type import ParameterValueType
 
 
-class RequestParameter(collections.abc.Mapping):
+class RequestParameter(collections.abc.Mapping[str, ParameterValueType]):
     """Provides access to parameters from an analytics request.
 
     Supports dict-like access to parameter values via `params["name"]` syntax.
@@ -41,7 +42,7 @@ class RequestParameter(collections.abc.Mapping):
             device_pixel_ratio=device_pixel_ratio
         )
 
-    def __getitem__(self, name: str) -> Any:
+    def __getitem__(self, name: str) -> Optional[ParameterValueType]:
         parameter = self._get_parameter(name)
         if parameter is not None:
             return parameter.value
@@ -90,7 +91,7 @@ class RequestParameter(collections.abc.Mapping):
         return None
 
 
-    def _get_parameter_value(self, name: str) -> Any:
+    def _get_parameter_value(self, name: str) -> Optional[ParameterValueType]:
         """Returns a specific parameter value.
 
         Parameters
@@ -100,7 +101,7 @@ class RequestParameter(collections.abc.Mapping):
 
         Returns
         -------
-        Any
+        Optional[ParameterValueType]
             The value of the parameter if found, else None.
         """
 
