@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Development status of library was set to `5 - Production/Stable`
 
 ### Removed
-- Response of type RowWiseMappingCsvResponse was removed. Pleas use EnrichmentResponse instead
+- Response of type RowWiseMappingCsvResponse was removed. Please use EnrichmentResponse instead
 
 ## 10.3.0 - 2025-11-06
 ### Added
