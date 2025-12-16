@@ -98,7 +98,7 @@ Follow the existing format (based on [Keep a Changelog](https://keepachangelog.c
 - Update documentation if adding/changing public APIs
 - Add or update examples if introducing new features
 
-## Releasing:
+## Releasing
 Make sure to check the following
 - Does the [Changelog](CHANGELOG.md) contain all relevant information?
 - Are all relevant workflows green?
