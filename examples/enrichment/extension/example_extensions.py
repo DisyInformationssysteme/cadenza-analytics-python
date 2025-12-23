@@ -1,14 +1,12 @@
 """Example module for running a disy Cadenza analytics extension that
  will execute a basic enrichment."""
 
-import pandas as pd
-
 import cadenzaanalytics as ca
 
 
 def enrichment_basic_analytics_function(request: ca.AnalyticsRequest):
     # pylint: disable=unused-argument
-    df_data = pd.DataFrame()
+    df_data = request["table"].data
     df_data["new_value"] = "value"
 
     result_metadata = [
