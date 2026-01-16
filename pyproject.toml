@@ -30,6 +30,7 @@ requests-toolbelt = "1.0.0"
 pandas = " ^2.0.2"
 chardet = "5.2.0"
 Shapely = "2.1.2"
+pytest = "9.0.2"
 
 [project]
 name = "cadenzaanalytics"
