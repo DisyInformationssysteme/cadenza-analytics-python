@@ -11,6 +11,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 - Improved type annotations for mappings and parameter values
+- Uses custom csv handling instead of pandas csv handling to fix various edge cases
+- Minimum required python version reduced to 3.11
+
+### Fixed
+- the `basic-extension` example enrichment now actually enriches the data
 
 ## 10.4.0 - 2025-12-05
 ### Added
