@@ -74,6 +74,14 @@ class TestCadenzaCsvParser:
         result = from_cadenza_csv(csv)
         assert result.iloc[0, 0] == "line1\r\nline2"
 
+    def test_newline_with_real_cadenza_output(self):
+        """Handles None and a newline within a quoted value correctly."""
+        csv = '"a";"b";"c"\r\n;"e\r\nxd";"f"\r\n'
+        result = from_cadenza_csv(csv)
+        assert result.iloc[0, 0] is None
+        assert result.iloc[0, 1] == "e\r\nxd"
+        assert result.iloc[0, 2] == "f"
+
     def test_trailing_empty_line(self):
         """Trailing CRLF is just row terminator, not an additional row."""
         csv = '"col"\r\n"val"\r\n'
@@ -161,14 +169,14 @@ class TestCadenzaCsvParser:
 
     def test_leading_unquoted_value(self):
         """Line starting with unquoted value."""
-        csv = '"col1";"col2"\r\nabc;"def"'
+        csv = '"col1";"col2"\r\n;"def"'
         result = from_cadenza_csv(csv)
         assert result.iloc[0, 0] is None
         assert result.iloc[0, 1] == "def"
 
     def test_trailing_unquoted_value(self):
         """Line ending with unquoted value."""
-        csv = '"col1";"col2"\r\n"abc";xyz'
+        csv = '"col1";"col2"\r\n"abc";'
         result = from_cadenza_csv(csv)
         assert result.iloc[0, 0] == "abc"
         assert result.iloc[0, 1] is None
