@@ -51,8 +51,10 @@ def from_cadenza_csv(
     headers = all_rows[0]
     parsed_rows = all_rows[1:]
 
-    # Create DataFrame
-    df = pd.DataFrame(parsed_rows, columns=headers)
+    # Create DataFrame, use dtype=object to preserve None values (behavior changes with
+    # pandas 3.0.0 where None values without a specified dtype result in <NA> values
+    # and a specific dtype is chosen depending on other values in the column)
+    df = pd.DataFrame(parsed_rows, columns=headers, dtype=object)
 
     # Apply type mappings if provided
     if type_mapping:
