@@ -1,3 +1,6 @@
+import csv
+import sys
+from io import StringIO
 from typing import Dict, List, Optional
 
 import numpy as np
@@ -42,8 +45,24 @@ def from_cadenza_csv(
     if not csv_data or not csv_data.strip():
         return pd.DataFrame()
 
-    # Parse all rows (header + data) respecting quoted fields with embedded newlines
-    all_rows = _parse_csv(csv_data)
+    all_rows = []
+    if sys.version_info >= (3, 13):
+        # QUOTE_NOTNULL was only fixed for Python 3.13+ in the csv reader
+        # see https://github.com/python/cpython/issues/113732
+        class CadenzaDialect(csv.excel):
+            delimiter = ';'
+            quotechar = '"'
+            doublequote = True
+            lineterminator = '\r\n'
+            quoting = csv.QUOTE_NOTNULL
+            skipinitialspace = False
+
+        reader = csv.reader(StringIO(csv_data), dialect=CadenzaDialect)
+
+        for row in reader:
+            all_rows.append(row)
+    else:
+        all_rows = _parse_csv(csv_data)
     if not all_rows:
         return pd.DataFrame()
 
