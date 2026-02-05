@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 - Support for measure aggregation types MEDIAN and STANDARD_DEVIATION_SAMPLE
-
+- Added `cadenzaAnalyticsVersion` to capabilities responses to help identify issues when adding or using an extension in Cadenza
 
 ### Changed
 - Improved type annotations for mappings and parameter values
