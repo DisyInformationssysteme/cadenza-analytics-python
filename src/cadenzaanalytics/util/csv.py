@@ -45,24 +45,10 @@ def from_cadenza_csv(
     if not csv_data or not csv_data.strip():
         return pd.DataFrame()
 
-    all_rows = []
-    if sys.version_info >= (3, 13):
-        # QUOTE_NOTNULL was only fixed for Python 3.13+ in the csv reader
-        # see https://github.com/python/cpython/issues/113732
-        class CadenzaDialect(csv.excel):
-            delimiter = ';'
-            quotechar = '"'
-            doublequote = True
-            lineterminator = '\r\n'
-            quoting = csv.QUOTE_NOTNULL
-            skipinitialspace = False
+    all_rows =  _parse_csv_with_default_reader(csv_data) \
+        if sys.version_info >= (3, 13) \
+        else _parse_csv(csv_data)
 
-        reader = csv.reader(StringIO(csv_data), dialect=CadenzaDialect)
-
-        for row in reader:
-            all_rows.append(row)
-    else:
-        all_rows = _parse_csv(csv_data)
     if not all_rows:
         return pd.DataFrame()
 
@@ -98,6 +84,24 @@ def from_cadenza_csv(
 
     return df
 
+
+def _parse_csv_with_default_reader(csv_data: str) -> List[str]:
+    # QUOTE_NOTNULL was only fixed for Python 3.13+ in the csv reader
+    # see https://github.com/python/cpython/issues/113732
+    all_rows = []
+    class CadenzaDialect(csv.excel):
+        delimiter = ';'
+        quotechar = '"'
+        doublequote = True
+        lineterminator = '\r\n'
+        quoting = csv.QUOTE_NOTNULL
+        skipinitialspace = False
+
+    reader = csv.reader(StringIO(csv_data), dialect=CadenzaDialect)
+
+    for row in reader:
+        all_rows.append(row)
+    return all_rows
 
 # pylint: disable=too-many-branches,too-many-nested-blocks,too-many-locals
 def _parse_csv(csv_data: str):
