@@ -27,7 +27,6 @@ jobs:
       matrix:
         python-version: ${{ fromJSON(vars.CI_PYTHON_VERSIONS) }}
         # build for (last 5) major supported versions to ensure compatibility to some degree, but really recommended, linted and deployed is only the latest
-        # due to csv-writing issues with versions below 3.12, versions before 3.12 are not supported
 
 
     steps:
