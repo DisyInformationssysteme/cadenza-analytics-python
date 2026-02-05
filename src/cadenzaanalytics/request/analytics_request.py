@@ -12,7 +12,11 @@ class AnalyticsRequest(collections.abc.Mapping[str, RequestTable]):
     access to tables via `request["table_name"]` syntax.
     """
 
-    def __init__(self, parameters: RequestParameter, cadenza_version: str) -> None:
+    def __init__(self,
+                 parameters: RequestParameter,
+                 cadenza_version: str,
+                 cadenza_timezone_region: str,
+                 cadenza_timezone_current_offset: str) -> None:
         """Initialize an AnalyticsRequest.
 
         Parameters
@@ -21,10 +25,16 @@ class AnalyticsRequest(collections.abc.Mapping[str, RequestTable]):
             The request parameters provided by Cadenza.
         cadenza_version : str
             Version string of the Cadenza instance sending the request.
+        cadenza_timezone_region : str
+            The timezone region (e.g. "Europe/Berlin") of the Cadenza instance sending the request.
+        cadenza_timezone_current_offset : str
+            The current timezone offset (e.g. "+01:00") of the Cadenza instance sending the request.
         """
         self._parameters = parameters
         self._tables = {}
         self._cadenza_version = cadenza_version
+        self._cadenza_timezone_region = cadenza_timezone_region
+        self._cadenza_timezone_current_offset = cadenza_timezone_current_offset
 
     def __getitem__(self, key: str) -> RequestTable:
         """Returns the request table object by name.
@@ -76,3 +86,24 @@ class AnalyticsRequest(collections.abc.Mapping[str, RequestTable]):
             The Cadenza version string, or None if not provided.
         """
         return self._cadenza_version
+
+    @property
+    def cadenza_timezone_region(self):
+        """Get the timezone region of the Cadenza instance that sent the request. If (an older version of)
+        Cadenza did not send a timezone region, this will be the region of this server.
+
+        :return: Region identifier, such as "Europe/Berlin".
+        """
+        return self._cadenza_timezone_region
+
+    @property
+    def cadenza_timezone_current_offset(self):
+        """Get the current timezone offset of the Cadenza instance that sent the request. If (an older version of)
+        Cadenza did not send a timezone offset, this will be the offset of this server.
+        This information is purely informational and volatile as it will change with the daylight savings time.
+        It should not be used to convert datetime objects
+        to zone-aware datetimes, for that use the cadenza_timezone_region property.
+
+        :return: Offset string, such as "+01:00" or "Z".
+        """
+        return self._cadenza_timezone_current_offset

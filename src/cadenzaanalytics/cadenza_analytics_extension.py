@@ -3,7 +3,9 @@
 invoked via HTTP POST on the relative path."""
 import json
 import logging
+from datetime import datetime
 from typing import Callable, List, Optional
+from tzlocal import get_localzone_name
 
 from flask import Response, request
 
@@ -174,7 +176,24 @@ class CadenzaAnalyticsExtension:
             df_data = None
             logger.debug('Received request without data')
 
-        analytics_request = AnalyticsRequest(parameters, cadenza_version=request.headers.get("X-Disy-Cadenza-Version"))
+        # use the analytics extension server timezone as a default, assuming they usually
+        # run in the same timezone as the Cadenza server. Cadenza versions after 10.4 will provide
+        # these timezone headers
+        analytics_extension_region = get_localzone_name()
+        analytics_extension_current_offset = datetime.now().astimezone().strftime('%z')
+        analytics_extension_current_offset_formatted = analytics_extension_current_offset[:3] + ':'
+        analytics_extension_current_offset_formatted += analytics_extension_current_offset[3:5]
+        if len(analytics_extension_current_offset) > 5:
+            # optional seconds and milliseconds (a dot already separates milliseconds)
+            analytics_extension_current_offset_formatted += ":" + analytics_extension_current_offset[5:]
+
+        analytics_request = AnalyticsRequest(
+            parameters,
+            cadenza_version=request.headers.get("X-Disy-Cadenza-Version"),
+            cadenza_timezone_region=request.headers.get("X-Disy-Cadenza-Timezone-Region",
+                                                        default=analytics_extension_region),
+            cadenza_timezone_current_offset=request.headers.get("X-Disy-Cadenza-Timezone-Current-Offset",
+                                                                default=analytics_extension_current_offset_formatted))
         if has_data:
             analytics_request[self._table_name] = RequestTable(df_data, metadata)
 
