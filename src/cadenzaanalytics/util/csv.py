@@ -72,8 +72,7 @@ def from_cadenza_csv(
         for col in datetime_columns:
             if col in df.columns:
                 # Parse without format specification to handle various ISO8601 timezone formats
-                # This preserves the original timezone information
-                df[col] = pd.to_datetime(df[col], errors='coerce')
+                df[col] = pd.to_datetime(df[col], errors='coerce', utc=True)
 
     # Parse WKT geometries into shapely geometry objects
     if geometry_columns:

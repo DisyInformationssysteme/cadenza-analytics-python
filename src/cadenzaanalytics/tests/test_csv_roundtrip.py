@@ -135,13 +135,31 @@ class TestCadenzaCsvRoundtrip:
         csv1 = to_cadenza_csv(df1, datetime_columns=["timestamp"])
         df2 = from_cadenza_csv(csv1, datetime_columns=["timestamp"])
         csv2 = to_cadenza_csv(df2, datetime_columns=["timestamp"])
-        assert csv1 == csv2
+        df3 = from_cadenza_csv(csv2, datetime_columns=["timestamp"])
+        csv3 = to_cadenza_csv(df3, datetime_columns=["timestamp"])
+        assert '2024-06-15T10:00:00+01:00' in csv1  # still contains timezone offset when sending to cadenza
+        assert csv2 == csv3 # stabilizing on second roundtrip, as cadenzanalytics converts timezone offsets to utc
         assert pd.isna(df2.iloc[1, 0])
+        assert pd.isna(df3.iloc[1, 0])
 
     def test_datetime_with_none_and_same_timezoneoffset_roundtrip(self):
         """Datetime with None values (and/or SAME time zone offsets) should roundtrip correctly."""
         df1 = pd.DataFrame({
             "timestamp": [pd.Timestamp("2023-01-03T15:29:13+01:00"), None, pd.Timestamp("2024-06-15T10:00:00+01:00")]
+        })
+        csv1 = to_cadenza_csv(df1, datetime_columns=["timestamp"])
+        df2 = from_cadenza_csv(csv1, datetime_columns=["timestamp"])
+        csv2 = to_cadenza_csv(df2, datetime_columns=["timestamp"])
+        df3 = from_cadenza_csv(csv2, datetime_columns=["timestamp"])
+        csv3 = to_cadenza_csv(df3, datetime_columns=["timestamp"])
+        assert csv2 == csv3 # stabilizing on second roundtrip, as cadenzanalytics converts timezone offsets to utc
+        assert pd.isna(df2.iloc[1, 0])
+        assert pd.isna(df3.iloc[1, 0])
+
+    def test_datetime_with_none_and_utc_roundtrip(self):
+        """Datetime with None values (and/or SAME time zone offsets) should roundtrip correctly."""
+        df1 = pd.DataFrame({
+            "timestamp": [pd.Timestamp("2023-01-03T15:29:13Z"), None, pd.Timestamp("2024-06-15T10:00:00Z")]
         })
         csv1 = to_cadenza_csv(df1, datetime_columns=["timestamp"])
         df2 = from_cadenza_csv(csv1, datetime_columns=["timestamp"])
@@ -365,7 +383,7 @@ class TestCadenzaCsvRoundtrip:
 
         # Check that output normalizes +00:00 to Z but preserves other offsets
         assert '"2023-01-03T15:30:13Z"' in csv1  # First two become Z
-        assert '"2023-01-03T10:29:13-05:00"' in csv1  # -05:00 preserved
+        assert '"2023-01-03T15:29:13Z"' in csv1  # -05:00 converted to utc
 
         # Second roundtrip should be stable
         df2 = from_cadenza_csv(csv1, datetime_columns=["timestamp"])
@@ -375,7 +393,7 @@ class TestCadenzaCsvRoundtrip:
         assert len(df2) == 4
         # Mixed timezones result in object dtype with Timestamp values (not pandas datetime dtype)
         # This is expected behavior when not all values have the same timezone
-        assert df2["timestamp"].dtype == object
+        assert pd.api.types.is_datetime64_any_dtype(df2["timestamp"])
         assert df2.iloc[1, 0] - df2.iloc[0, 0] == timedelta(minutes=1)
         assert df2.iloc[0, 0] == df2.iloc[2, 0]
         assert pd.isna(df2.iloc[3, 0])

@@ -404,14 +404,12 @@ class TestCadenzaCsvParser:
             '"2023-01-03T10:29:13-05:00"'
         )
         result = from_cadenza_csv(csv, datetime_columns=["timestamp"])
-        assert not pd.api.types.is_datetime64_any_dtype(result["timestamp"])
-        assert result["timestamp"].dtype == "object"
+        assert pd.api.types.is_datetime64_any_dtype(result["timestamp"])
         assert len(result) == 3
         assert pd.notna(result.iloc[0, 0])
         assert pd.notna(result.iloc[1, 0])
         assert pd.notna(result.iloc[2, 0])
         # All three timestamps represent the same UTC moment (when compared)
-        # but may have different timezone info preserved
         assert result.iloc[0, 0] == result.iloc[1, 0]
         assert result.iloc[0, 0] == result.iloc[2, 0]
 
