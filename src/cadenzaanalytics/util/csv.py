@@ -230,9 +230,9 @@ def to_cadenza_csv(
     lines.append(_format_row(columns_list, columns_list, None, None, None, None))
 
     # Write data rows
-    for _, row in df.iterrows():
+    for row in df.itertuples(index=False):
         lines.append(_format_row(
-            row.tolist(),
+            row,
             columns_list,
             float_columns,
             int_columns,
