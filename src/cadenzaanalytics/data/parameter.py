@@ -1,8 +1,9 @@
-from typing import List, Any, Optional
+from typing import List, Optional
 
 from cadenzaanalytics.data.geometry_type import GeometryType
 from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.parameter_type import ParameterType
+from cadenzaanalytics.data.parameter_value_type import ParameterValueType
 
 
 # pylint: disable=too-many-instance-attributes
@@ -31,7 +32,7 @@ class Parameter(DataObject):
                  geometry_types: Optional[List[GeometryType]] = None,
                  options: Optional[List[str]] = None,
                  required: bool = False,
-                 default_value: Any = None,
+                 default_value: Optional[ParameterValueType] = None,
                  requested_srs: Optional[str] = None) -> None:
         """Initialize a Parameter.
 
@@ -51,7 +52,7 @@ class Parameter(DataObject):
             Whether the parameter is required, by default False.
             For parameter type boolean, required=True makes submitting the value
             True mandatory.
-        default_value : Any, optional
+        default_value : Optional[ParameterValueType], optional
             Default value if the user doesn't provide one.
         requested_srs : Optional[str], optional
             Requested spatial reference system for GEOMETRY parameters.

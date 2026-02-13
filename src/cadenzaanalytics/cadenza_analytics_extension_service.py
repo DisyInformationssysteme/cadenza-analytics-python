@@ -135,5 +135,5 @@ class CadenzaAnalyticsExtensionService:
             result_dict['extensions'].append({'relativePath': extension.relative_path,
                                               'extensionPrintName': extension.print_name,
                                               'extensionType': extension.extension_type})
-
+        result_dict['cadenzaAnalyticsVersion'] = __version__
         return Response(response=json.dumps(result_dict, default=str), status=200, mimetype="application/json")

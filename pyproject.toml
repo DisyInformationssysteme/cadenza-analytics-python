@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 Flask = "3.1.2"
 Werkzeug = "3.1.4"
 Flask-Cors = "6.0.1"
@@ -30,6 +30,8 @@ requests-toolbelt = "1.0.0"
 pandas = " ^2.0.2"
 chardet = "5.2.0"
 Shapely = "2.1.2"
+pytest = "9.0.2"
+tzlocal = "5.3.1"
 
 [project]
 name = "cadenzaanalytics"

@@ -4,6 +4,7 @@ from cadenzaanalytics.data.attribute_group import AttributeGroup
 from cadenzaanalytics.data.data_object import DataObject
 from cadenzaanalytics.data.extension_type import ExtensionType
 from cadenzaanalytics.data.parameter import Parameter
+from cadenzaanalytics.version import __version__
 
 
 class AnalyticsExtension(DataObject):
@@ -16,7 +17,8 @@ class AnalyticsExtension(DataObject):
         "printName": "_print_name",
         "extensionType": "_extension_type",
         "attributeGroups": "_attribute_groups",
-        "parameters": "_parameters"
+        "parameters": "_parameters",
+        "cadenzaAnalyticsVersion": "_cadenza_analytics_version"
     }
 
     def __init__(self,
@@ -28,6 +30,7 @@ class AnalyticsExtension(DataObject):
         self._extension_type = extension_type
         self._attribute_groups = attribute_groups
         self._parameters = parameters
+        self._cadenza_analytics_version = __version__
 
     @property
     def print_name(self) -> str:
