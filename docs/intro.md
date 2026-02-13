@@ -716,7 +716,6 @@ docker run -p 8000:8000 my-extension
 ## Advanced Configuration
 
 ### Running behind Reverse Proxy
-
 When running behind a reverse proxy (like nginx), you may need to configure Flask to trust proxy headers. Use Werkzeug's `ProxyFix` middleware:
 
 ```python
@@ -730,11 +729,17 @@ analytics_service.app.wsgi_app = ProxyFix(
 
 ### Adjusting Maximum Request Size
 As of Werkzeug 3.1, the setting for `max_form_memory_size` is 500,000 bytes. 
-Since Cadenza sends the payload as `multipart/form` data, this default setting may prove to be too low to accomodate the data sent from Cadenza.
+Since Cadenza sends the payload as `multipart/form` data, this default setting may prove to be too low to accomodate the data sent from Cadenza, resulting in an _HTTP 413 Payload Too Large_ error.
 
-The setting can be adjusted using
+The setting can be adjusted via the Flask app properties:
 ```python
-from flask.wrappers import Request  # do NOT use the werkzeug.wrappers Request
-Request.max_form_memory_size = 100 * 1024 * 1024
+# Example setting the max form data to 100 MB
+analytics_service.app.config['MAX_FORM_MEMORY_SIZE'] = 100 * 1024 * 1024
 ```
 
+### Adjusting gunicorn worker timeouts
+In case of long running analyses that may cause a gunicorn worker to be silent for more than the standard of 30 seconds, increase the timeout by adding an appropriate parameter when starting gunicorn.
+```console
+gunicorn --bind 0.0.0.0:8000 --workers 4 --timeout 120 echo_extension:app
+```
+Also see [Gunicorn documentation](https://gunicorn.org/reference/settings/#timeout).
