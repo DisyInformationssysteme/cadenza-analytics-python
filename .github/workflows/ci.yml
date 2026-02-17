@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "v10.4.x" ]
     paths-ignore:
       - '.github/workflows/pylint.yml'
       - '.github/workflows/release.yml'
@@ -11,7 +11,7 @@ on:
       - 'README.md'
       - 'DEVELOPMENT.md'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "v10.4.x" ]
     paths-ignore:
       - '.github/workflows/pylint.yml'
       - '.github/workflows/release.yml'
