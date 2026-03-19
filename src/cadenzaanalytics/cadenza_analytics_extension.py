@@ -3,13 +3,9 @@
 invoked via HTTP POST on the relative path."""
 import json
 import logging
-from io import StringIO
 from typing import Callable, List, Optional
 
-import numpy as np
-import pandas as pd
 from flask import Response, request
-from shapely import from_wkt
 
 from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
 from cadenzaanalytics.data.extension_type import ExtensionType
@@ -21,6 +17,7 @@ from cadenzaanalytics.request.request_parameter import RequestParameter
 from cadenzaanalytics.request.request_metadata import RequestMetadata
 from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_response import ExtensionResponse
+from cadenzaanalytics.util.csv import from_cadenza_csv
 
 
 logger = logging.getLogger('cadenzaanalytics')
@@ -151,50 +148,25 @@ class CadenzaAnalyticsExtension:
         if len(metadata.columns) > 0:
             has_data = True
             type_mapping = {}
-            na_values_mapping = {}
             datetime_columns = []
             geometry_columns = []
 
             for column in metadata.columns:
                 if column.data_type == DataType.ZONEDDATETIME:
                     datetime_columns.append(column.name)
-                    # must be empty list, otherwise pd.read_csv interprets empty strings as NA which
-                    # is rejected by the parse_dates mechanism before it reaches the _parse_datetime function
-                    na_values_mapping[column.name] = []
-                elif column.data_type == DataType.STRING:
-                    # only empty strings must be considered as NA
-                    # unfortunately there does not seem to be a way to interpret empty quotes as empty string
-                    # and unquoted as None
-                    na_values_mapping[column.name] = ['']
-                else:
-                    # pandas default list of NA values, mostly relevant for numeric columns
-                    na_values_mapping[column.name] = ['-1.#IND', '1.#QNAN', '1.#IND', '-1.#QNAN', '#N/A N/A',
-                                                      '#N/A', 'N/A', 'n/a', 'NA', '<NA>', '#NA', 'NULL', 'null',
-                                                      'NaN', '-NaN', 'nan', '-nan', 'None', '']
-
-                if column.data_type == DataType.GEOMETRY:
+                elif column.data_type == DataType.GEOMETRY:
                     geometry_columns.append(column.name)
 
                 type_mapping[column.name] = column.data_type.pandas_type()
 
-            csv_data = StringIO(self._get_from_request(multipart_request, 'data'))
-            # read_csv cannot distinguish None from empty strings
-            df_data = pd.read_csv(
+            csv_data = self._get_from_request(multipart_request, 'data')
+            # Use custom parser that properly handles quoted vs unquoted values
+            df_data = from_cadenza_csv(
                 csv_data,
-                sep=';',
-                dtype=type_mapping,
-                parse_dates=datetime_columns,
-                date_format='ISO8601',
-                na_values=na_values_mapping,
-                keep_default_na=False,
+                type_mapping=type_mapping,
+                datetime_columns=datetime_columns,
+                geometry_columns=geometry_columns
             )
-
-            # Parse WKT geometries into shapely geometry objects using vectorized from_wkt
-            for gcol in geometry_columns:
-                values = df_data[gcol].to_numpy()
-                # from_wkt handles None values; replace empty strings with None
-                values = np.where((values == '') | pd.isna(values), None, values)
-                df_data[gcol] = from_wkt(values, on_invalid='warn')
 
             logger.debug('Received data:\n%s', df_data.head())
         else:

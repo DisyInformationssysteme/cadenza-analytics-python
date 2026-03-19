@@ -5,6 +5,7 @@ from shapely import wkt as shapely_wkt
 from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.data.geometry_type import GeometryType
 from cadenzaanalytics.data.data_object import DataObject
+from cadenzaanalytics.data.parameter_value_type import ParameterValueType
 
 
 class ParameterValue(DataObject):
@@ -92,12 +93,12 @@ class ParameterValue(DataObject):
         return self._data_type
 
     @property
-    def value(self) -> Any:
+    def value(self) -> Optional[ParameterValueType]:
         """Get the typed value of the parameter.
 
         Returns
         -------
-        Any
+        Optional[ParameterValueType]
             The value of the parameter, typed according to the data type.
         """
         return self._value
@@ -125,7 +126,7 @@ class ParameterValue(DataObject):
         return self._srs
 
 
-    def _parse_value(self, value: Any, data_type: DataType) -> Any:
+    def _parse_value(self, value: Any, data_type: DataType) -> Optional[ParameterValueType]:
         """Parse and convert a parameter value according to its data type.
 
         Parameters
@@ -137,7 +138,7 @@ class ParameterValue(DataObject):
 
         Returns
         -------
-        Any
+        Optional[ParameterValueType]
             The parsed value with appropriate type, or None if input is None.
         """
         if value is None:

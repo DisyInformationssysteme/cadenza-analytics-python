@@ -1,6 +1,3 @@
-import csv
-import re
-import sys
 from typing import List, Optional
 import logging
 
@@ -12,6 +9,7 @@ from cadenzaanalytics.data.data_type import DataType
 from cadenzaanalytics.request.request_table import RequestTable
 from cadenzaanalytics.response.extension_data_response import ExtensionDataResponse
 from cadenzaanalytics.response.missing_metadata_strategy import MissingMetadataStrategy
+from cadenzaanalytics.util import to_cadenza_csv
 
 logger = logging.getLogger('cadenzaanalytics')
 
@@ -107,41 +105,15 @@ class CsvResponse(ExtensionDataResponse):
         leftover_metadata_column_names = self._apply_missing_metadata_strategy()
         self._validate_response(leftover_metadata_column_names)
 
-        python_3_12 = (3, 12)
-        if sys.version_info >= python_3_12 and len(self._data.columns) > 1:
-            # The quoting strategies QUOTE_NOTNULL or QUOTE_NULL would fail with the csv writer
-            # error "single empty field record must be quoted"
-            # if there is only one column and if there is any null-ish value available.
-            # Also refer to https://github.com/pandas-dev/pandas/issues/59116
-            # Thus we can only use this strategy if there is more than one column, else fallback to
-            # the fallback approach that always quotes and then removes quotes again.
-            # The limitation to python 3.12 comes from the option QUOTE_NOTNULL only becoming available on that version.
-            csv_data = self._data.to_csv(
-                sep=';',
-                encoding='utf-8',
-                quoting=csv.QUOTE_NOTNULL,
-                index=False,
-                na_rep=None,  # missing/None/Null values are sent without quotes
-                quotechar='"',
-                lineterminator='\r\n',
-                date_format='%Y-%m-%dT%H:%M:%SZ')
-        else:
-            # info: this approach cannot distinguish empty strings from NULL
-            csv_data = self._data.to_csv(
-                sep=';',
-                encoding='utf-8',
-                quoting=csv.QUOTE_ALL,
-                index=False,
-                quotechar='"',
-                lineterminator='\r\n',
-                date_format='%Y-%m-%dT%H:%M:%SZ')
-            # Needed to make sure to send NULL/None values (unquoted empty content) and not empty strings
-            # (quoted empty content)
-            # as empty strings would only be valid for DataType.STRING and cause errors for other DataTypes.
-            # regex searches and replaces double quotes that are surrounded by separators
-            # (start file, end file, semicolon or newline)
-            # this way double-quotes that represent a single escaped quote character within a string value are retained
-            csv_data = re.sub(r'(^|;|\r\n)""(?=;|\r\n|$)', r'\1', csv_data)
+        datetime_columns = [c.name for c in self._column_meta_data if c.data_type == DataType.ZONEDDATETIME]
+        geometry_columns = [c.name for c in self._column_meta_data if c.data_type == DataType.GEOMETRY]
+        float_columns = [c.name for c in self._column_meta_data if c.data_type == DataType.FLOAT64]
+        int_columns = [c.name for c in self._column_meta_data if c.data_type == DataType.INT64]
+        csv_data = to_cadenza_csv(self._data,
+                                  datetime_columns=datetime_columns,
+                                  geometry_columns=geometry_columns,
+                                  float_columns=float_columns,
+                                  int_columns=int_columns)
         return self._create_response(csv_data, self._column_meta_data)
 
 

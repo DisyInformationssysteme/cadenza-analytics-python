@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Changed
+- Improved type annotations for mappings and parameter values
+- Uses custom csv handling instead of pandas csv handling to fix various edge cases
+- Minimum required python version reduced to 3.11
+- values of data type `ZONED_DATE_TIME` are now received as pandas Timestamps and normalized to UTC
+
+### Fixed
+- the `basic-extension` example enrichment now actually enriches the data
+
 ## 10.4.0 - 2025-12-05
 ### Added
 - New visual response of type text (TextResponse)
