@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+## 10.5.0 - 2026-03-19
 ### Added
 - Support for measure aggregation types MEDIAN and STANDARD_DEVIATION_SAMPLE
 - Added `cadenzaAnalyticsVersion` to capabilities responses to help identify issues when adding or using an extension in Cadenza
@@ -20,7 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 10.4.0 - 2025-12-05
 ### Added
-- New visual response of type text (TextResponse) 
+- New visual response of type text (TextResponse)
 - New visual response of type url (UrlResponse)
 - New response for type data (DataResponse)
 - New response for type enrichment (EnrichmentResponse)
@@ -40,7 +41,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Removed
 - Response of type RowWiseMappingCsvResponse was removed. Please use EnrichmentResponse instead
-
 
 ## 10.3.0 - 2025-11-06
 ### Added
