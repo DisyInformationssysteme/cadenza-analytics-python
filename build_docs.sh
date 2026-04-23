@@ -61,9 +61,9 @@ for BRANCH in $BRANCHES; do
   # logo links
   sed -i 's@<a href="'$LOGO_LINK'">@<a href="'$LOGO_LINK'" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
   # github content is not allowed to be embedded into iframes
-  sed -i 's@<a href="https://github.com/DisyInformationssysteme/cadenza-analytics-python">@<a href="https://github.com/DisyInformationssysteme/cadenza-analytics-python" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
+  sed -i 's@<a href="https://github.com/DisyInformationssysteme/@<a target="_top" href="https://github.com/DisyInformationssysteme/@' ./${BRANCH_DIR}/cadenzaanalytics.html
   # pypi content is not allowed to be embedded into iframes
-  sed -i 's@<a href="https://pypi.org/project/cadenzaanalytics/">@<a href="https://pypi.org/project/cadenzaanalytics/" target="_top">@' ./${BRANCH_DIR}/cadenzaanalytics.html
+  sed -i 's@<a href="https://pypi.org/@<a target="_top" href="https://pypi.org/@' ./${BRANCH_DIR}/cadenzaanalytics.html
 
   # Add branch to version picker of outer page (will result in reverse order)
   sed -i "/<!-- Branch options will be populated here -->/a <option value="${BRANCH}">${BRANCH}</option>" ./${OUTPUT_DIR}/index.html
