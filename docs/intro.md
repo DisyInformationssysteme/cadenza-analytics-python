@@ -10,14 +10,14 @@ A user can integrate an analysis extension into disy Cadenza via the Management 
 
 As of disy Cadenza Autumn 2025 (10.4), the following types and capabilities of analysis extensions are officially supported:
 
-- **Data**: Returns a structured data set from which a new Cadenza object type is created.
-- **Enrichment**: Enriches an existing Cadenza object type by adding additional attributes (columns).
-- **Visual**: Returns static content (PNG image, text, or URL) to be displayed in a Cadenza view or through a map operation.
+- **Data**: Returns a structured data set from which a new disy Cadenza object type is created.
+- **Enrichment**: Enriches an existing disy Cadenza object type by adding additional attributes (columns).
+- **Visual**: Returns static content (PNG image, text, or URL) to be displayed in a disy Cadenza view or through a map operation.
 
 
 ## Communication
 
-An Analytics Extension defines one endpoint that, depending on the HTTP method of the request, is used to supply the Extension's configuration to disy Cadenza, or exchange data and results with Cadenza respectively.
+An Analytics Extension defines one endpoint that, depending on the HTTP method of the request, is used to supply the Extension's configuration to disy Cadenza, or exchange data and results with disy Cadenza respectively.
 
 <!--- Beware: when building documentation locally, path to image must not be relative to this document, but relative to the one that includes this md file!
              (in this case: src/cadenzaanalytics/__init__.py  ->  <img src="../../docs/communication.png"... )
@@ -29,7 +29,7 @@ When receiving an `HTTP(S) GET` request, the endpoint returns a JSON representat
 This step is executed once when registering the Analytics Extension from the disy Cadenza Management Center GUI and does not need to be repeated unless the extension's configuration changes.
 
 By sending an `HTTP(S) POST` request to the same endpoint and including the data, metadata and parameters as specified in the extension's configuration as payload, the extension is executed.
-This step is executed each time that the Analytics Extension is invoked from the disy Cadenza GUI and Cadenza takes care of properly formatting the payload.
+This step is executed each time that the Analytics Extension is invoked from the disy Cadenza GUI and disy Cadenza takes care of properly formatting the payload.
 
 The `cadenzaanalytics` module provides the functionality to abstract the required communication and easily configure the Analytics Extension's responses to the above requests.
 
@@ -39,9 +39,9 @@ The `cadenzaanalytics` module provides the functionality to abstract the require
 ## Requirements and Dependencies
 
 For each disy Cadenza version, the correct corresponding library version needs to be used.
-The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.
+The disy Cadenza main version is reflected in the corresponding major and minor version of `cadenzaanalytics` (e.g. 10.4.0 for disy Cadenza 10.4), while the last version segment is increased for both bugfixes and functional changes.
 
-For Cadenza 10.2 and earlier versions, `cadenzaanalytics` used a semantic versioning scheme.
+For disy Cadenza 10.2 and earlier versions, `cadenzaanalytics` used a semantic versioning scheme.
 The first version of disy Cadenza that supported Analytics Extensions is disy Cadenza Autumn 2023 (9.3).
 
 The `cadenzaanalytics` package has the following dependencies:
@@ -81,7 +81,7 @@ pip install .
 
 # Quick Start
 
-Here is a complete, minimal example of a Data Extension that echoes the input data back to Cadenza:
+Here is a complete, minimal example of a Data Extension that echoes the input data back to disy Cadenza:
 
 ```python
 import cadenzaanalytics as ca
@@ -103,9 +103,9 @@ my_table = ca.Table(name="table", attribute_groups=[my_attribute_group])
 
 # 4. Configure the extension
 my_extension = ca.CadenzaAnalyticsExtension(
-    relative_path="echo-extension",
     print_name="Echo Extension",
     extension_type=ca.ExtensionType.DATA,
+    relative_path="echo-extension",
     tables=[my_table],
     analytics_function=echo_function
 )
@@ -122,7 +122,7 @@ The key components are:
 
 1. **Analytics function**: Receives an `AnalyticsRequest` and returns a response. Access the table via `request["table"]`, then use `.data` to get the pandas DataFrame.
 
-2. **AttributeGroup**: Defines what columns the user can select in Cadenza. The `name` becomes the column name (or prefix for multi-column groups).
+2. **AttributeGroup**: Defines what columns the user can select in disy Cadenza. The `name` becomes the column name (or prefix for multi-column groups).
 
 3. **Table**: Wraps one or more attribute groups. The table's `name` (here `"table"`) is how you access it in your function via `request["table"]`.
 
@@ -130,7 +130,8 @@ The key components are:
 
 5. **CadenzaAnalyticsExtensionService**: Registers extensions and runs the web server.
 
-Save this as `my_extension.py` and run it with `python my_extension.py`. The extension will be available at `http://localhost:5000/echo-extension`.
+Save this as `my_extension.py` and run it with `python my_extension.py`.
+The extension will be available at `http://localhost:5000/echo-extension`.
 
 More complete examples can be found in the [`examples` folder of the module's GitHub repository](https://github.com/DisyInformationssysteme/cadenza-analytics-python/tree/main/examples).
 
@@ -141,7 +142,8 @@ The following sections explain each component in detail, following the same orde
 
 ## The Analytics Function
 
-The analytics function is the core of your extension. It receives an [`AnalyticsRequest`](cadenzaanalytics/request/analytics_request.html) and returns a response object.
+The analytics function is the core of your extension.
+It receives an [`AnalyticsRequest`](cadenzaanalytics/request/analytics_request.html) and returns a response object.
 
 ```python
 def my_analytics_function(request: ca.AnalyticsRequest):
@@ -165,6 +167,15 @@ The return type depends on the extension type:
 - **Visual extensions**: Return [`ImageResponse`](cadenzaanalytics/response/image_response.html), [`TextResponse`](cadenzaanalytics/response/text_response.html), or [`UrlResponse`](cadenzaanalytics/response/url_response.html)
 
 
+## Data, Metadata and Parameters
+
+Access to request data is split into three objects: **data** (the pandas DataFrame), **metadata** (a [`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) mapping of column descriptions), and **parameters** (user-configured inputs).
+
+The reason metadata is separate from the DataFrame is that a pandas DataFrame only tracks column names and dtypes, but disy Cadenza carries more: 
+each column has a user-visible display name (`print_name`) that is not necessarily unique and thus independent of its internal name in the DataFrame.
+Other information includes a role (dimension or measure), a declared data type, or for geometry columns a spatial reference system.
+Column names in the DataFrame may also differ from what users see in disy Cadenza — when multiple columns belong to the same attribute group they receive a numeric suffix (`_1`, `_2`, …).
+Because [`ColumnMetadata`](cadenzaanalytics/data/column_metadata.html) describes a column regardless of direction, the same objects can be passed directly into a `DataResponse` — which is exactly what the echo extension in the Quick Start section above does.
 
 ### Reading Data
 
@@ -172,30 +183,36 @@ The `request` object provides access to tables by name:
 
 ```python
 table = request["table"]
-data = table.data          # pandas DataFrame with all the data passed from Cadenza
+data = table.data          # pandas DataFrame with all the data passed from disy Cadenza
 metadata = table.metadata  # RequestMetadata object
 ```
 
 ### Reading Metadata
 
-The `metadata` object contains information on the columns in the `data` DataFrame, such as their print name and type in disy Cadenza, their column name in the pandas DataFrame, or additional information like a `geometry_type`, where applicable.
-
-The metadata supports pythonic access patterns:
+[`RequestMetadata`](cadenzaanalytics/request/request_metadata.html) supports pythonic access patterns — iteration, membership testing, and key-based lookup all work as expected.
+Each lookup returns a [`ColumnMetadata`](cadenzaanalytics/data/column_metadata.html) object with properties for everything disy Cadenza knows about the column:
 
 ```python
-# Get all columns as a list
-all_columns = metadata.columns
-
-# Access a specific column by name
+# Access a column's metadata by its DataFrame column name
 column = metadata["column_name"]
+print(column.print_name)   # user-visible display name in disy Cadenza
+print(column.data_type)    # e.g. DataType.FLOAT64
+print(column.role)         # e.g. AttributeRole.MEASURE
 
 # Check if a column exists
 if "my_column" in metadata:
     column = metadata["my_column"]
 
+# Get all columns as a list
+all_columns = metadata.columns
+
 # Iterate over column names
 for column_name in metadata:
     print(column_name)
+
+# Iterate over ColumnMetadata objects
+for column in metadata.columns:
+    print(column.print_name)
 
 # Get columns grouped by attribute group
 columns_by_group = metadata.groups
@@ -215,14 +232,14 @@ flag_value = request.parameters["flag"]
 # Get parameter with default if not set
 value = request.parameters.get("optional_param", 42)
 
-# get full paramter object to retrieve additional info about the parameter
+# get full parameter object to retrieve additional info about the parameter
 # e.g. the srs for geometry parameters
 srs = request.parameters.info("geom").srs
 ```
 
 ### View Parameters (Visual Extensions)
 
-For visual extensions used as Cadenza workbook views, you can access the view dimensions:
+For visual extensions used as disy Cadenza workbook views, you can access the view dimensions:
 
 ```python
 view = request.parameters.view
@@ -249,11 +266,12 @@ my_table = ca.Table(
 )
 ```
 
-The `name` parameter (here `"table"`) is the key you use to access the table in your analytics function via `request["table"]`. Currently, at most one table per extension is supported.
+The `name` parameter (here `"table"`) is the key you use to access the table in your analytics function via `request["table"]`.
+Currently, at most one table per extension is supported.
 
 ### Attribute Groups
 
-An [`AttributeGroup`](cadenzaanalytics/data/attribute_group.html) defines a set of columns that the user can select in Cadenza:
+An [`AttributeGroup`](cadenzaanalytics/data/attribute_group.html) defines a set of columns that the user can select in disy Cadenza:
 
 ```python
 my_attribute_group = ca.AttributeGroup(
@@ -267,7 +285,7 @@ my_attribute_group = ca.AttributeGroup(
 
 Parameters:
 - `name`: Internal identifier for the group (used to access columns in your code)
-- `print_name`: Display name shown in Cadenza
+- `print_name`: Display name shown in disy Cadenza
 - `data_types`: List of allowed [`DataType`](cadenzaanalytics/data/data_type.html) values
 - `min_attributes`: Minimum number of columns the user must select (default: 0)
 - `max_attributes`: Maximum number of columns the user can select (default: unlimited)
@@ -319,10 +337,11 @@ geometry_group = ca.AttributeGroup(
 )
 ```
 
-Geometry columns are automatically parsed from WKT strings into [Shapely](https://shapely.readthedocs.io/) geometry objects. You can use them directly with Shapely operations or convert to a GeoDataFrame:
+Geometry columns are automatically parsed from WKT strings into [Shapely](https://shapely.readthedocs.io/) geometry objects.
+You can use them directly with Shapely operations or convert to a GeoDataFrame:
 
-DataType.GEOMETRY must not be combined with other data types. Since Cadenza users can select attributes that are linked to a geometry attribute, mixing data types would 
-create ambiguity about whether the intended output is the geometry object or the linked non-geometry attribute.  
+DataType.GEOMETRY must not be combined with other data types.
+Since disy Cadenza users can select attributes that are linked to a geometry attribute, mixing data types would create ambiguity about whether the intended output is the geometry object or the linked non-geometry attribute.
 Other data types may be mixed freely, but processing them may require inspecting their actual data type.
 
 ```python
@@ -357,9 +376,9 @@ In your analytics function, the datetime column will be a pandas datetime64 with
 
 ## Data Type Mapping
 
-The following table shows how Cadenza attribute types map to Python/pandas types:
+The following table shows how disy Cadenza attribute types map to Python/pandas types:
 
-| Cadenza Attribute Type         | Data Type     | Pandas Column Type    | Python Type          | Notes |
+| disy Cadenza Attribute Type         | Data Type     | Pandas Column Type    | Python Type          | Notes |
 |--------------------------------|---------------|-----------------------|----------------------|-------|
 | Text (String)                  | STRING        | string                | `str`                | |
 | Number (Integer)               | INT64         | pandas.Int64Dtype     | `int`                | Nullable integer |
@@ -368,9 +387,9 @@ The following table shows how Cadenza attribute types map to Python/pandas types
 | Date/Time                      | ZONEDDATETIME | datetime64[ns, UTC]   | `datetime`           | Parsed with timezone |
 | Geometry                       | GEOMETRY      | object                | `shapely.Geometry`   | Parsed from WKT |
 
-Values received from Cadenza are automatically converted to the corresponding Pandas column types (and underlying Python types) shown above.
+Values received from disy Cadenza are automatically converted to the corresponding Pandas column types (and underlying Python types) shown above.
 
-Values sent back to Cadenza are converted to the appropriate Cadenza attribute types based on those same mappings.  
+Values sent back to disy Cadenza are converted to the appropriate disy Cadenza attribute types based on those same mappings.  
 *Important*: If you explicitly provide column metadata in your response, the declared data type must match the actual Pandas column type.
 ## Defining Parameters
 
@@ -390,7 +409,7 @@ my_param = ca.Parameter(
 
 Parameters:
 - `name`: Internal identifier
-- `print_name`: Display name in Cadenza
+- `print_name`: Display name in disy Cadenza
 - `parameter_type`: One of [`ParameterType`](cadenzaanalytics/data/parameter_type.html) values
 - `default_value`: Default value (optional)
 - `required`: Whether the parameter is mandatory (default: False)
@@ -434,7 +453,7 @@ area_param = ca.Parameter(
 
 The geometry parameter value will be a Shapely geometry object.
 
-**Note:** Parameters for Analytics Extensions of the type `visual` can currently *not* yet be assigned on the disy Cadenza side when displaying the result as a Cadenza view.
+**Note:** Parameters for Analytics Extensions of the type `visual` can currently *not* yet be assigned on the disy Cadenza side when displaying the result as a disy Cadenza view.
 
 
 ## Configuring the Extension
@@ -443,9 +462,9 @@ The [`CadenzaAnalyticsExtension`](cadenzaanalytics/cadenza_analytics_extension.h
 
 ```python
 my_extension = ca.CadenzaAnalyticsExtension(
-    relative_path="my-extension",
     print_name="My Extension",
     extension_type=ca.ExtensionType.DATA,
+    relative_path="my-extension",
     tables=[my_table],
     parameters=[my_param],
     analytics_function=my_analytics_function
@@ -453,9 +472,9 @@ my_extension = ca.CadenzaAnalyticsExtension(
 ```
 
 Parameters:
-- `relative_path`: URL path where the extension will be available
-- `print_name`: Display name in Cadenza
+- `print_name`: Display name in disy Cadenza
 - `extension_type`: One of `ExtensionType.DATA`, `ExtensionType.ENRICHMENT`, or `ExtensionType.VISUAL`
+- `relative_path`: URL path where the extension will be available
 - `tables`: List of Table objects (currently at most one table is supported) (optional)
 - `parameters`: List of Parameter objects (optional)
 - `analytics_function`: The function to invoke when the extension is called
@@ -465,7 +484,7 @@ Parameters:
 
 ### Data Extensions
 
-A [`DataResponse`](cadenzaanalytics/response/data_response.html) returns a new dataset to Cadenza:
+A [`DataResponse`](cadenzaanalytics/response/data_response.html) returns a new dataset to disy Cadenza:
 
 ```python
 def data_function(request: ca.AnalyticsRequest):
@@ -488,7 +507,9 @@ def data_function(request: ca.AnalyticsRequest):
     return ca.DataResponse(result, columns)
 ```
 
-The `column_metadata` parameter specifies how Cadenza should interpret each column. If metadata for a column is missing, it will be auto-generated by default. You can change this behavior with `missing_metadata_strategy`:
+The `column_metadata` parameter specifies how disy Cadenza should interpret each column.
+If metadata for a column is missing, it will be auto-generated by default.
+You can change this behavior with `missing_metadata_strategy`:
 
 - `MissingMetadataStrategy.ADD_DEFAULT_METADATA` (default): Auto-generate metadata for missing columns
 - `MissingMetadataStrategy.REMOVE_DATA_COLUMNS`: Remove columns without metadata from the response
@@ -496,7 +517,7 @@ The `column_metadata` parameter specifies how Cadenza should interpret each colu
 
 ### Enrichment Extensions
 
-An [`EnrichmentResponse`](cadenzaanalytics/response/enrichment_response.html) adds new columns to an existing Cadenza object type:
+An [`EnrichmentResponse`](cadenzaanalytics/response/enrichment_response.html) adds new columns to an existing disy Cadenza object type:
 
 ```python
 def enrichment_function(request: ca.AnalyticsRequest):
@@ -517,11 +538,17 @@ def enrichment_function(request: ca.AnalyticsRequest):
     return ca.EnrichmentResponse(data, [new_column])
 ```
 
-The library automatically handles Cadenza ID columns which are required to connect input and output data - they are taken from the request metadata and added to the response. You only need to specify metadata for the new columns you're adding, or you can use the default missing_metadata_strategy that handles adding column metadata heuristically.
+The library automatically handles disy Cadenza ID columns which are required to connect input and output data - they are taken from the request metadata and added to the response.
+You only need to specify metadata for the new columns you're adding, or you can use the default missing_metadata_strategy that handles adding column metadata heuristically.
 
-The library also supports automatically adding data for Cadenza ID columns if they are missing in the provided DataFrame. This requires the input and output DataFrames to have identical indexes. We therefore recommend modifying the input DataFrame directly and adding new columns to it. When you explicitly specify the desired output columns, index alignment is guaranteed, and you have full control over the output columns.
+The library also supports automatically adding data for disy Cadenza ID columns if they are missing in the provided DataFrame.
+This requires the input and output DataFrames to have identical indexes.
+We therefore recommend modifying the input DataFrame directly and adding new columns to it.
+When you explicitly specify the desired output columns, index alignment is guaranteed, and you have full control over the output columns.
 
-Currently, only one-to-one mappings between input and output rows are supported. The output may omit entries for some ID tuples present in the input. However, each input ID tuple can be mapped to at most one output ID tuple.
+Currently, only one-to-one mappings between input and output rows are supported.
+The output may omit entries for some ID tuples present in the input.
+However, each input ID tuple can be mapped to at most one output ID tuple.
 
 To return only specific columns, use `REMOVE_DATA_COLUMNS`:
 
@@ -587,7 +614,7 @@ def url_function(request: ca.AnalyticsRequest):
 
 ### Error Response
 
-To abort execution and return an error message to Cadenza:
+To abort execution and return an error message to disy Cadenza:
 
 ```python
 def my_function(request: ca.AnalyticsRequest):
@@ -628,7 +655,7 @@ export CADENZAANALYTICS_LOG_LVL='DEBUG'
 
 # Deployment
 
-Since `cadenzaanalytics` is built on the [Flask framework](https://flask.palletsprojects.com/en/stable), the deployment options for a Cadenza Analytics Extension are basically the same as for any Flask application.
+Since `cadenzaanalytics` is built on the [Flask framework](https://flask.palletsprojects.com/en/stable), the deployment options for a disy Cadenza Analytics Extension are basically the same as for any Flask application.
 Below, we present a few options, a more comprehensive overview can be found in the [Deploying to Production](https://flask.palletsprojects.com/en/stable/deploying/index.html) section of the official Flask documentation.
 
 ## Local Execution (Development Only)
@@ -677,7 +704,7 @@ gunicorn --bind 0.0.0.0:8000 --workers 4 echo_extension:app
 
 ## Docker
 
-A minimal Dockerfile for a Cadenza Analytics Extension:
+A minimal Dockerfile for a disy Cadenza Analytics Extension:
 
 ```dockerfile
 FROM python:3.12-slim
@@ -716,7 +743,8 @@ docker run -p 8000:8000 my-extension
 ## Advanced Configuration
 
 ### Running behind Reverse Proxy
-When running behind a reverse proxy (like nginx), you may need to configure Flask to trust proxy headers. Use Werkzeug's `ProxyFix` middleware:
+When running behind a reverse proxy (like nginx), you may need to configure Flask to trust proxy headers.
+Use Werkzeug's `ProxyFix` middleware:
 
 ```python
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -729,7 +757,7 @@ analytics_service.app.wsgi_app = ProxyFix(
 
 ### Adjusting Maximum Request Size
 As of Werkzeug 3.1, the setting for `max_form_memory_size` is 500,000 bytes. 
-Since Cadenza sends the payload as `multipart/form` data, this default setting may prove to be too low to accomodate the data sent from Cadenza, resulting in an _HTTP 413 Payload Too Large_ error.
+Since disy Cadenza sends the payload as `multipart/form` data, this default setting may prove to be too low to accomodate the data sent from disy Cadenza, resulting in an _HTTP 413 Payload Too Large_ error.
 
 The setting can be adjusted via the Flask app properties:
 ```python
