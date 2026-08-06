@@ -14,6 +14,7 @@ Find the docs at https://disyinformationssysteme.github.io/cadenza-analytics-pyt
 * Shapely
 * requests-toolbelt
 * chardet
+* ecs-logging
 
 ## Installation:
 The simplest way to install `cadenzaanalytics` is from the [Python Package Index (PyPI)](https://pypi.org/project/cadenzaanalytics/) using the package installer [pip](https://pypi.org/project/pip/).
