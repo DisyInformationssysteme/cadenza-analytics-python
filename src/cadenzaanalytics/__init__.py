@@ -7,11 +7,9 @@ The purpose of this module is to encapsulate the communication via the Cadenza A
 
 .. include:: ../../docs/intro.md
 """
-import os
-from logging.config import dictConfig
-
 from cadenzaanalytics.cadenza_analytics_extension import CadenzaAnalyticsExtension
 from cadenzaanalytics.cadenza_analytics_extension_service import CadenzaAnalyticsExtensionService
+from cadenzaanalytics.logging_config import configure_logging
 
 from cadenzaanalytics.data.analytics_extension import AnalyticsExtension
 from cadenzaanalytics.data.attribute_group import AttributeGroup
@@ -40,21 +38,4 @@ from cadenzaanalytics.response.error_response import ErrorResponse
 from cadenzaanalytics.version import __version__
 
 
-# Logging configuration, format similar to gunicorn
-dictConfig({
-    'disable_existing_loggers': False,
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] [%(process)d] [%(levelname)s] [%(module)s] %(message)s',
-        'datefmt': '%Y-%m-%d %H:%M:%S %z'
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': os.environ.get('CADENZAANALYTICS_LOG_LVL', 'INFO'),
-        'handlers': ['wsgi']
-    }
-})
+configure_logging()
