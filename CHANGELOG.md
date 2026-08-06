@@ -5,7 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 ### Security
-- Upgraded `werkzeug`, `flask`, and `pytest` to address potential CVE vulnerabilities.
+- Upgraded `werkzeug`, `flask`, and `pytest` to address potential CVE vulnerabilities
+
+### Added
+- Added Elastic Common Schema (ECS) conformant JSON logging
 
 ## 10.5.0 - 2026-03-19
 ### Breaking
