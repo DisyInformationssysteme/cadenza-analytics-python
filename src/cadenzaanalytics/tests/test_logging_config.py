@@ -48,6 +48,14 @@ class TestLoggingConfig:
         with pytest.raises(json.JSONDecodeError):
             json.loads(line)
 
+    def test_log_level_is_case_insensitive(self, monkeypatch):
+        """CADENZAANALYTICS_LOG_LVL should be accepted regardless of case, since logging.setLevel()
+        only recognizes uppercase level names and would otherwise raise a ValueError."""
+        monkeypatch.setenv('CADENZAANALYTICS_LOG_LVL', 'debug')
+        configure_logging()
+
+        assert logging.getLogger().getEffectiveLevel() == logging.DEBUG
+
     def test_gunicorn_loggers_are_repointed_at_our_handler(self, monkeypatch, capsys):
         """gunicorn attaches its own handlers to 'gunicorn.error'/'gunicorn.access' with propagate=False
         before the app is imported; configure_logging() must re-point them at our own handler so gunicorn's

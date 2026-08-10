@@ -54,7 +54,7 @@ def configure_logging() -> None:
             f'Invalid CADENZAANALYTICS_LOG_FORMAT "{log_format}". Supported values are "plain" and "ecs".'
         )
 
-    log_level = os.environ.get('CADENZAANALYTICS_LOG_LVL', 'INFO')
+    log_level = os.environ.get('CADENZAANALYTICS_LOG_LVL', 'INFO').upper()
 
     dictConfig({
         'disable_existing_loggers': False,
