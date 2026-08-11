@@ -670,12 +670,25 @@ The service provides a root endpoint (`/`) that lists all registered extensions.
 
 `cadenzaanalytics` is built on top of Flask, which in turn uses standard Python logging.
 This logger can also be used to log your own messages for your Analytics Extension, or define your own logger according to [standard Python logging](https://docs.python.org/3/howto/logging.html#).
+`cadenzaanalytics` configures the root logger, so this also applies to log output from dependent packages (e.g. Flask, Werkzeug) and from any logger used in your Analytics Extension, as long as it propagates to root, which is the default in standard Python logging.
 
 The default log level of the `cadenzaanalytics` module is `INFO`.
 To change the log level, set the environment variable `CADENZAANALYTICS_LOG_LVL` accordingly, e.g.
 ```console
 export CADENZAANALYTICS_LOG_LVL='DEBUG'
 ```
+
+The default log format is a human-readable, gunicorn-like line format.
+To switch to [Elastic Common Schema](https://www.elastic.co/guide/en/ecs/current/index.html) (ECS) conformant JSON logging, which is well suited for log aggregation in container deployments, set the environment variable `CADENZAANALYTICS_LOG_FORMAT` to `ecs`, e.g.
+```console
+export CADENZAANALYTICS_LOG_FORMAT='ecs'
+```
+Every log line then additionally carries a `service.name` of `cadenzaanalytics` and a `service.version` matching the installed package version.
+
+If deployed behind [gunicorn](https://gunicorn.org/), this configuration also covers gunicorn's own worker-level log lines (e.g. access log lines, worker exit messages), automatically and without any gunicorn-side configuration.
+The one exception is gunicorn's master process, which logs its own startup, shutdown, and signal-handling messages before an analytics extension is loaded, and therefore always in gunicorn's own default format.
+This gap is specific to gunicorn's master/worker process architecture. 
+WSGI servers without that split, such as [Waitress](https://docs.pylonsproject.org/projects/waitress/en/stable/), log every message in the configured format with no exception.
 
 
 # Deployment

@@ -5,7 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 ### Security
-- Upgraded `werkzeug`, `flask`, and `pytest` to address potential CVE vulnerabilities.
+- Upgraded `werkzeug`, `flask`, and `pytest` to address potential CVE vulnerabilities
+
+### Added
+- Added Elastic Common Schema (ECS) conformant JSON logging
 
 ## 10.5.0 - 2026-03-19
 ### Added
@@ -13,8 +16,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added `cadenzaAnalyticsVersion` to capabilities responses to help identify issues when adding or using an extension in Cadenza
 
 ### Changed
+- **Breaking:** Geometry columns in responses are now serialized to WKT by the library and must contain shapely geometry objects; returning raw WKT strings (accepted previously) now raises a `TypeError`
 - Improved type annotations for mappings and parameter values
-- Uses custom csv handling instead of pandas csv handling to fix various edge cases
+- Uses custom csv handling instead of pandas csv handling to fix various edge cases (see the breaking change above regarding geometry serialization)
 - Minimum required python version reduced to 3.11
 - values of data type `ZONED_DATE_TIME` are now received as pandas Timestamps and normalized to UTC
 
