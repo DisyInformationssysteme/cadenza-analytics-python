@@ -12,14 +12,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Upgraded `werkzeug`, `flask`, and `pytest` to address potential CVE vulnerabilities.
 
 ## 10.5.0 - 2026-03-19
-### Breaking
-- Geometry columns in responses are now serialized to WKT by the library and must contain shapely geometry objects; returning raw WKT strings (accepted previously) now raises a `TypeError`
-
 ### Added
 - Support for measure aggregation types MEDIAN and STANDARD_DEVIATION_SAMPLE
 - Added `cadenzaAnalyticsVersion` to capabilities responses to help identify issues when adding or using an extension in Cadenza
 
 ### Changed
+- **Breaking:** Geometry columns in responses are now serialized to WKT by the library and must contain shapely geometry objects; returning raw WKT strings (accepted previously) now raises a `TypeError`
 - Improved type annotations for mappings and parameter values
 - Uses custom csv handling instead of pandas csv handling to fix various edge cases (see the breaking change above regarding geometry serialization)
 - Minimum required python version reduced to 3.11
