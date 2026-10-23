@@ -4,11 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
-### Security
-- Upgraded `werkzeug`, `flask`, and `pytest` to address potential CVE vulnerabilities
 
+## 11.0.0 - 2026-10-23
 ### Added
 - Added Elastic Common Schema (ECS) conformant JSON logging
+
+### Security
+- Upgraded `werkzeug`, `flask`, and `pytest` to address potential CVE vulnerabilities
 
 ## 10.5.0 - 2026-03-19
 ### Added
