@@ -107,7 +107,7 @@ When a new main version is due (e.g. moving from 10.5 to 10.6), do the following
 1. Run the `Release` workflow on `main` with deployment environment `pypi.org`.
 This creates release `X.Y.0` and moves the "Unreleased" changelog entries into a section for this version on `main`.
 2. Run the `Branch off Cadenza Version` workflow on `main`, with the next Cadenza main version (e.g. `10.6` or `11.0`) as input.
-This creates the branch `vX.Y.x` from `main` and bumps `main` to the next version (e.g. `10.6.0a0.dev0` or `11.0.0a0.dev`).
+This creates the branch `vX.Y.x` from `main` and bumps `main` to the next version (e.g. `10.6.0a0.dev0` or `11.0.0a0.dev0`).
 
 Do not merge anything into `main` between the two steps.
 This order ensures that the changelog on `main` contains all main version releases.
