@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+## 11.1.0 - 2026-10-23
+
 ## 11.0.0 - 2026-10-23
 ### Added
 - Added Elastic Common Schema (ECS) conformant JSON logging
