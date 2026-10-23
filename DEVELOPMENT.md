@@ -98,6 +98,21 @@ Follow the existing format (based on [Keep a Changelog](https://keepachangelog.c
 - Update documentation if adding/changing public APIs
 - Add or update examples if introducing new features
 
+## Branching
+`main` is the development branch for the next Cadenza main version (e.g. `10.6.0a0.dev0`).
+The first two version digits correspond to the Cadenza main version, the third digit counts releases within it.
+Each released main version is maintained on its own branch `vX.Y.x` (e.g. `v10.5.x`), which receives bugfixes and downmerges for patch releases (`10.5.1`, `10.5.2`, ...).
+
+When a new main version is due (e.g. moving from 10.5 to 10.6), do the following in this order:
+1. Run the `Release` workflow on `main` with deployment environment `pypi.org`.
+This creates release `X.Y.0` and moves the "Unreleased" changelog entries into a section for this version on `main`.
+2. Run the `Branch off Cadenza Version` workflow on `main`, with the next Cadenza main version (e.g. `10.6` or `11.0`) as input.
+This creates the branch `vX.Y.x` from `main` and bumps `main` to the next version (e.g. `10.6.0a0.dev0` or `11.0.0a0.dev`).
+
+Do not merge anything into `main` between the two steps.
+This order ensures that the changelog on `main` contains all main version releases.
+Patch releases are made on the respective `vX.Y.x` branch, so their changelog sections only appear there.
+
 ## Releasing
 Make sure to check the following
 - Does the [Changelog](CHANGELOG.md) contain all relevant information?
