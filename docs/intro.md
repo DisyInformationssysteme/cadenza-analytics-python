@@ -456,6 +456,31 @@ The geometry parameter value will be a Shapely geometry object.
 **Note:** Parameters for Analytics Extensions of the type `visual` can currently *not* yet be assigned on the Cadenza side when displaying the result as a Cadenza view.
 
 
+### Parameter values received from Cadenza
+
+Depending on the `ParameterType` the extension request will get parametrized by Cadenza from the user's input.
+
+The following table shows how parameter values are mapped to Python types:
+
+| ParameterType  | DataType      | Python Type        | Notes                                              |
+|----------------|---------------|--------------------|----------------------------------------------------|
+| STRING         | STRING        | `str`              |                                                    |
+| INT64          | INT64         | `int`              | Nullable integer                                   |
+| FLOAT64        | FLOAT64       | `float`            | Nullable float                                     |
+| BOOLEAN        | STRING        | `bool`             | _known limitation: DataType BOOLEAN not available_ |
+| ZONEDDATETIME  | ZONEDDATETIME | `datetime`         | Parsed with timezone                               |
+| GEOMETRY       | GEOMETRY      | `shapely.Geometry` | Parsed from WKT                                    |
+| SELECT         | STRING        | `str`              |                                                    |
+
+In many scenarios accessing additional parameter metadata, such as DataType, is not needed. However, the information is available as an object via `request.parameters.info('the_param_name')`.
+This object exposes the following properties:
+ - `name`: technical name to identify the parameter within this extension
+ - `print_name`: Parameter print name as defined in the extension and shown to the user
+ - `data_type`: DataType of the value, see table above
+ - `value`: the assigned value, usually directly accessed via `request.parameters['the_param_name']`
+ - `geometry_type`: available for `GEOMETRY` parameters, describes the geometry type of the value
+ - `srs`: available for `GEOMETRY` parameters, describes the spatial reference system of the value
+
 ## Configuring the Extension
 
 The [`CadenzaAnalyticsExtension`](cadenzaanalytics/cadenza_analytics_extension.html) ties everything together:
