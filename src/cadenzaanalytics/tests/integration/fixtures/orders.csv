@@ -1,0 +1,4 @@
+"order_id";"product";"quantity";"unit_price";"purchased_at";"location"
+"101";"Kaffee aus München";"2";"3.50";"2026-01-15T10:30:00+01:00";"POINT (8.4 49)"
+"102";"Tea; Earl Grey";"1";"4.25";"2026-07-15T10:30:00+02:00";"POINT (13.4 52.5)"
+"103";"";;;;"POINT (0 0)"

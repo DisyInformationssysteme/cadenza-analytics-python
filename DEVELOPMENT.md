@@ -67,6 +67,18 @@ This will locally write the documentation to `docs/html/`.
 
 ## Contributing
 
+### Tests
+
+Install the project in your Python environment with `python -m pip install -e .`,
+then run `python -m pytest` from the repository root. No Cadenza instance or
+running service is required.
+
+The [standalone integration scenarios](src/cadenzaanalytics/tests/integration/README.md)
+cover discovery, incoming typed data and parameters, enrichment IDs, and outgoing
+data, visual, and error responses through the service's HTTP interface. That guide
+also explains how to run a single scenario, measure coverage, and add tests that
+remain useful during refactoring.
+
 ### Code Style
 
 We use [Pylint](https://github.com/pylint-dev/pylint) for code quality. Key style rules:
