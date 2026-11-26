@@ -67,9 +67,17 @@ class ColumnMetadata(DataObject):
             Spatial reference system for geometry columns.
         """
         self._name = name
+        if name is None:
+            raise ValueError("ColumnMetadata 'name' cannot be None")
         self._print_name = print_name
+        if print_name is None:
+            raise ValueError("ColumnMetadata 'print_name' cannot be None")
         self._attribute_group_name = attribute_group_name
+        if attribute_group_name is None:
+            raise ValueError("ColumnMetadata 'attribute_group_name' cannot be None")
         self._data_type = data_type
+        if data_type is None:
+            raise ValueError("ColumnMetadata 'data_type' cannot be None")
         self._role = role
         self._measure_aggregation = measure_aggregation
         self._format = format

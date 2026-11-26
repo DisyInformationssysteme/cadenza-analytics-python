@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
+### Added
+- Standalone integration scenarios for extension discovery, request parsing, parameters, enrichment, and responses.
+
+### Fixed
+- Accept explicit null values for optional enum metadata while rejecting null values for required metadata fields.
+- Do not fail on missing geometry values.
 
 ## 11.1.0 - 2026-10-23
 

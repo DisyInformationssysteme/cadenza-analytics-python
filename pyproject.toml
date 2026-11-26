@@ -41,3 +41,16 @@ name = "cadenzaanalytics"
 Repository = "https://github.com/DisyInformationssysteme/cadenza-analytics-python"
 
 [tool.poetry_bumpversion]
+
+[tool.pytest.ini_options]
+testpaths = ["src/cadenzaanalytics/tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+
+[tool.coverage.run]
+branch = true
+source = ["cadenzaanalytics"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+show_missing = true

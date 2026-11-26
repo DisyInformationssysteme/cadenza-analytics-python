@@ -78,7 +78,8 @@ def from_cadenza_csv(
     if geometry_columns:
         for col in geometry_columns:
             if col in df.columns:
-                values = df[col].to_numpy()
+                # Shapely accepts None for missing geometries, but not pandas missing markers in an array.
+                values = df[col].to_numpy(dtype=object, na_value=None)
                 df[col] = from_wkt(values, on_invalid='warn')
 
     return df

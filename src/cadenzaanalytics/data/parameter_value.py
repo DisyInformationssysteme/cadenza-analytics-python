@@ -52,8 +52,14 @@ class ParameterValue(DataObject):
             The spatial reference system for GEOMETRY parameters.
         """
         self._name = name
+        if name is None:
+            raise ValueError("ParameterValue 'name' cannot be None")
         self._print_name = print_name
+        if print_name is None:
+            raise ValueError("ParameterValue 'print_name' cannot be None")
         self._data_type = data_type
+        if data_type is None:
+            raise ValueError("ParameterValue 'data_type' cannot be None")
         self._value = self._parse_value(value, data_type)
         self._geometry_type = geometry_type
         self._srs = srs

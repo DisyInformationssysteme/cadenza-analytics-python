@@ -66,7 +66,7 @@ class DataObject:
                 # get the constructor parameter key be removing underscore from attribute mapping
                 parameter_key = cls._attribute_mapping[key][1:]
 
-                if key in cls._attribute_constructors:
+                if key in cls._attribute_constructors and value is not None:
                     value = cls._attribute_constructors[key](value)
                 constructor_parameters[parameter_key] = value
 

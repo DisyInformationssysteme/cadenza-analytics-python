@@ -1,0 +1,33 @@
+{
+  "dataContainers": [{
+    "name": "data",
+    "type": "text/csv",
+    "columns": [
+      {
+        "name": "order_id", "printName": "Order ID", "dataType": "int64",
+        "attributeGroupName": "net.disy.cadenza.keyAttributeGroup", "role": "dimension"
+      },
+      {
+        "name": "product", "printName": "Product", "dataType": "string",
+        "attributeGroupName": "values", "role": "dimension"
+      },
+      {
+        "name": "quantity", "printName": "Quantity", "dataType": "int64",
+        "attributeGroupName": "values", "role": "measure", "measureAggregation": "sum"
+      },
+      {
+        "name": "unit_price", "printName": "Unit price", "dataType": "float64",
+        "attributeGroupName": "values", "role": "measure", "measureAggregation": "average", "format": "0.00"
+      },
+      {
+        "name": "purchased_at", "printName": "Purchased at", "dataType": "zonedDateTime",
+        "attributeGroupName": "values", "role": "dimension"
+      },
+      {
+        "name": "location", "printName": "Location", "dataType": "geometry",
+        "attributeGroupName": "location", "role": "dimension", "geometryType": "point", "srs": "EPSG:4326"
+      }
+    ]
+  }],
+  "parameters": []
+}
