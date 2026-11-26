@@ -58,8 +58,14 @@ class Parameter(DataObject):
             Requested spatial reference system for GEOMETRY parameters.
         """
         self._name = name
+        if name is None:
+            raise ValueError("Parameter 'name' cannot be None")
         self._print_name = print_name
+        if print_name is None:
+            raise ValueError("Parameter 'print_name' cannot be None")
         self._parameter_type = parameter_type
+        if parameter_type is None:
+            raise ValueError("Parameter 'parameter_type' cannot be None")
         self._geometry_types = geometry_types
         self._options = options
         self._required = required

@@ -53,9 +53,17 @@ class AttributeGroup(DataObject):
             Maximum number of attributes allowed, None means unlimited.
         """
         self._name = name
+        if name is None:
+            raise ValueError("AttributeGroup 'name' cannot be None")
         self._print_name = print_name
+        if print_name is None:
+            raise ValueError("AttributeGroup 'print_name' cannot be None")
         self._data_types = data_types
+        if data_types is None:
+            raise ValueError("AttributeGroup 'data_types' cannot be None")
         self._geometry_types = geometry_types
         self._requested_srs = requested_srs
         self._min_attributes = min_attributes
+        if min_attributes is None:
+            raise ValueError("AttributeGroup 'min_attributes' cannot be None")
         self._max_attributes = max_attributes

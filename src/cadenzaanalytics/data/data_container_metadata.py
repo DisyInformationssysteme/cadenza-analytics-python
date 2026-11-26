@@ -18,5 +18,9 @@ class DataContainerMetadata(DataObject):
 
     def __init__(self, content_type: str, name: str, columns: List[ColumnMetadata] = None):
         self._content_type = content_type
+        if content_type is None:
+            raise ValueError("DataContainerMetadata 'content_type' cannot be None")
         self._name = name
+        if name is None:
+            raise ValueError("DataContainerMetadata 'name' cannot be None")
         self._columns = columns

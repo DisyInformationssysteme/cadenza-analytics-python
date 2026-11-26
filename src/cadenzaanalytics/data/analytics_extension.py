@@ -27,8 +27,14 @@ class AnalyticsExtension(DataObject):
                  attribute_groups: List[AttributeGroup],
                  parameters: List[Parameter] = None):
         self._print_name = print_name
+        if print_name is None:
+            raise ValueError("AnalyticsExtension 'print_name' cannot be None")
         self._extension_type = extension_type
+        if extension_type is None:
+            raise ValueError("AnalyticsExtension 'extension_type' cannot be None")
         self._attribute_groups = attribute_groups
+        if attribute_groups is None:
+            raise ValueError("AnalyticsExtension 'attribute_groups' cannot be None")
         self._parameters = parameters
         self._cadenza_analytics_version = __version__
 
